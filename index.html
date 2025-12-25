@@ -137,6 +137,16 @@
             margin-top: 4px;
         }
 
+        .timeline-date {
+            width: 100%;
+            text-align: left;
+            padding-left: 10px;
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
         /* Toggle Switch */
         .theme-switch {
             display: inline-block;
@@ -358,6 +368,7 @@
     </div>
 
     <div class="main-wrapper">
+        <div id="timeline-date" class="timeline-date hidden"></div>
         <!-- 04~08 Timeline -->
         <div id="timeline" class="timeline-container hidden">
             <!-- JS will populate this -->
@@ -399,6 +410,13 @@
             const now = new Date();
             const options = { month: 'long', day: 'numeric', weekday: 'long' };
             document.getElementById('current-date').innerText = now.toLocaleDateString('ko-KR', options);
+
+            // Timeline Date (Logic matches Python: Hour >= 9 implies Tomorrow)
+            let targetDate = new Date(now);
+            if (now.getHours() >= 9) {
+                targetDate.setDate(targetDate.getDate() + 1);
+            }
+            document.getElementById('timeline-date').innerText = targetDate.toLocaleDateString('ko-KR', options);
         }
         updateDate();
 
@@ -510,6 +528,7 @@
             });
 
             document.getElementById('loading').classList.add('hidden');
+            document.getElementById('timeline-date').classList.remove('hidden');
             document.getElementById('timeline').classList.remove('hidden');
             document.getElementById('attire').classList.remove('hidden');
         }
