@@ -3,7 +3,7 @@
     "time": "04:00",
     "temp": -10.0,
     "sky": "Clear",
-    "wind": 5.9,
+    "wind": 5.7,
     "pop": 0.0,
     "pty": 0
   },
@@ -11,7 +11,7 @@
     "time": "05:00",
     "temp": -10.0,
     "sky": "Clear",
-    "wind": 5.7,
+    "wind": 5.5,
     "pop": 0.0,
     "pty": 0
   },
@@ -27,7 +27,7 @@
     "time": "07:00",
     "temp": -10.0,
     "sky": "Clear",
-    "wind": 5.1,
+    "wind": 5.0,
     "pop": 0.0,
     "pty": 0
   },
