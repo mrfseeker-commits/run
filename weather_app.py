@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 # import pandas as pd (removed for optimization)
 import math
 import requests
+import os
 import xml.etree.ElementTree as ET
 import threading
 import webbrowser
@@ -91,10 +92,10 @@ class DataLoader:
 class WeatherFetcher:
     """
     Fetches weather from KMA APIHub (nph-dfs_shrt_grd).
-    Auth Key: JuUArlO6SrylAK5Tuoq8Ig
+    Auth Key: Value from Env or Empty
     """
     BASE_URL = "https://apihub.kma.go.kr/api/typ01/cgi-bin/url/nph-dfs_shrt_grd"
-    AUTH_KEY = "JuUArlO6SrylAK5Tuoq8Ig"
+    AUTH_KEY = os.environ.get("KMA_API_KEY", "")
     
     # Grid dimensions
     NX = 149
