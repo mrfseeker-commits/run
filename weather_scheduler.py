@@ -12,8 +12,9 @@ OUTPUT_FILE = "weather_data.json"
 
 class WeatherFetcher:
     BASE_URL = "https://apihub.kma.go.kr/api/typ01/cgi-bin/url/nph-dfs_shrt_grd"
-    AUTH_KEY = "JuUArlO6SrylAK5Tuoq8Ig" # Keep your key here
-    
+    # Get key from Environment Variable for security
+    AUTH_KEY = os.environ.get("KMA_API_KEY", "")
+        
     @staticmethod
     def get_tmfc():
         now = datetime.now()

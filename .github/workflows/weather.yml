@@ -25,6 +25,8 @@ jobs:
         run: pip install requests
         
       - name: Run Scheduler
+        env:
+          KMA_API_KEY: ${{ secrets.KMA_API_KEY }}
         run: python weather_scheduler.py
         
       - name: Commit and Push
