@@ -7,6 +7,10 @@ import os
 import xml.etree.ElementTree as ET
 import threading
 import webbrowser
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 # --- 1. Coordinate Converter ---
 class CoordinateConverter:

@@ -3,6 +3,10 @@ import time
 import requests
 import os
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # --- Configuration ---
 # Daejeon Yuseong-gu Guseong-dong (Grid X=67, Y=101)
