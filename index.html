@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAIST Track Weather</title>
+    <style>
+        :root {
+            /* Default Light Mode */
+            --bg-color: #f0f2f5;
+            --card-bg: #ffffff;
+            --text-main: #1a1a1a;
+            --text-sub: #444444;
+            --accent: #008844;
+            /* Darker Green for visibility */
+            --warning: #cc0000;
+            --timeline-border: #e0e0e0;
+            --toggle-bg: #ccc;
+            --header-img: url('bg_light.png');
+            --header-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            --header-text-color: #ffffff;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode Overrides */
+            --bg-color: #121212;
+            --card-bg: #1e1e1e;
+            --text-main: #ffffff;
+            --text-sub: #b0b0b0;
+            --accent: #00ff88;
+            /* Neon Green */
+            --warning: #ff4d4d;
+            --timeline-border: #333;
+            --toggle-bg: #333;
+            --header-img: url('bg_dark.png');
+            --header-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+            --header-text-color: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            /* Remove default padding to let header stretch */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Header Area with Background Image */
+        .header-container {
+            width: 100%;
+            height: 250px;
+            background-image: var(--header-img);
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            margin-bottom: -40px;
+            /* Overlap effect */
+            transition: background-image 0.5s ease-in-out;
+        }
+
+        .header-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.3));
+            /* Helps readability */
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            width: 90%;
+            max-width: 400px;
+        }
+
+        .title-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 5px;
+        }
+
+        .title {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--header-text-color);
+            text-shadow: var(--header-text-shadow);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 0;
+        }
+
+        .location {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--header-text-color);
+            text-shadow: var(--header-text-shadow);
+            opacity: 0.9;
+        }
+
+        /* Toggle Switch */
+        .theme-switch {
+            display: inline-block;
+            height: 24px;
+            position: relative;
+            width: 44px;
+        }
+
+        .theme-switch input {
+            display: none;
+        }
+
+        .slider {
+            background-color: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(4px);
+            bottom: 0;
+            cursor: pointer;
+            left: 0;
+            position: absolute;
+            right: 0;
+            top: 0;
+            transition: .4s;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .slider:before {
+            background-color: #fff;
+            bottom: 3px;
+            content: "";
+            height: 16px;
+            left: 3px;
+            position: absolute;
+            transition: .4s;
+            width: 16px;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: var(--accent);
+        }
+
+        input:checked+.slider:before {
+            transform: translateX(20px);
+        }
+
+        /* Main Content Helper */
+        .main-wrapper {
+            width: 100%;
+            max-width: 400px;
+            padding: 0 20px;
+            z-index: 5;
+            /* Above header */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Timeline Grid */
+        .timeline-container {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            gap: 6px;
+            background: var(--card-bg);
+            /* Add bg to container to stand out */
+            padding: 10px;
+            border-radius: 20px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid var(--timeline-border);
+        }
+
+        .time-slot {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 12px;
+            padding: 5px 0;
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .time-slot.active {
+            background: rgba(0, 150, 80, 0.1);
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        [data-theme="dark"] .time-slot.active {
+            background: rgba(0, 255, 136, 0.1);
+        }
+
+
+        .ts-hour {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .ts-icon {
+            font-size: 20px;
+            margin-bottom: 4px;
+        }
+
+        .ts-temp {
+            font-weight: bold;
+            font-size: 15px;
+        }
+
+        .ts-wind {
+            font-size: 10px;
+            opacity: 0.8;
+            margin-top: 2px;
+        }
+
+        /* Attire Card */
+        .attire-card {
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            /* Softer shadow */
+            text-align: center;
+            border: 1px solid var(--timeline-border);
+            transition: background 0.3s;
+            margin-bottom: 40px;
+        }
+
+        .attire-card.warning {
+            border-color: var(--warning);
+            background: rgba(255, 77, 77, 0.08);
+        }
+
+        .rec-header {
+            font-size: 13px;
+            color: var(--text-sub);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+        }
+
+        .rec-main {
+            font-size: 19px;
+            font-weight: bold;
+            color: var(--text-main);
+            margin-bottom: 25px;
+            line-height: 1.5;
+            word-break: keep-all;
+        }
+
+        /* Gear Grid */
+        .gear-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .gear-item {
+            background: var(--bg-color);
+            /* Slightly different from card */
+            border-radius: 16px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            aspect-ratio: 1;
+        }
+
+        .gear-icon {
+            font-size: 26px;
+            margin-bottom: 6px;
+        }
+
+        .gear-name {
+            font-size: 11px;
+            color: var(--text-sub);
+            font-weight: 600;
+        }
+
+        .loading {
+            color: #fff;
+            /* Loading text usually on header */
+            text-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+            font-style: italic;
+            margin-top: 20px;
+            z-index: 10;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="header-container">
+        <div class="header-overlay"></div>
+        <div class="header-content">
+            <div class="title-row">
+                <div class="title">KAIST TRACK<br>날씨정보</div>
+
+                <!-- Toggle Switch Inline -->
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider"></div>
+                </label>
+            </div>
+            <div class="location">[유성구 구성동]</div>
+
+            <div id="loading" class="loading">기상 데이터 분석중...</div>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <!-- 04~08 Timeline -->
+        <div id="timeline" class="timeline-container hidden">
+            <!-- JS will populate this -->
+        </div>
+
+        <!-- Recommendation -->
+        <div id="attire" class="attire-card hidden">
+            <div class="rec-header">Running Advice</div>
+            <div id="rec-text" class="rec-main">
+                <!-- Dynamic Text -->
+            </div>
+            <div id="gear-list" class="gear-grid">
+                <!-- Icons -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. Theme Logic (Default Light) ---
+        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+
+        function switchTheme(e) {
+            if (e.target.checked) {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'light');
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        toggleSwitch.addEventListener('change', switchTheme);
+
+        const currentTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        if (currentTheme === 'dark') toggleSwitch.checked = true;
+
+        // --- 2. Data & Rendering ---
+
+        function getIcon(sky, pty) {
+            if (pty === 1 || pty === 5) return "🌧️";
+            if (pty === 3 || pty === 7) return "🌨️";
+            if (pty === 2 || pty === 6) return "🌨️";
+
+            if (sky === "Sunny" || sky === "Clear") return "☀️";
+            if (sky === "Cloudy") return "☁️";
+            if (sky === "Overcast") return "🌥️";
+            return "☀️";
+        }
+
+        function render(data) {
+            const container = document.getElementById('timeline');
+            container.innerHTML = "";
+
+            let minTemp = 100;
+            let maxTemp = -100;
+            let isRain = false;
+            let isIce = false;
+
+            data.forEach((d, idx) => {
+                const el = document.createElement('div');
+                el.className = `time-slot ${idx === 2 ? 'active' : ''}`;
+
+                el.innerHTML = `
+                    <div class="ts-hour">${d.time}</div>
+                    <div class="ts-icon">${getIcon(d.sky, d.pty)}</div>
+                    <div class="ts-temp">${d.temp}°</div>
+                    <div class="ts-wind">${d.wind}m/s</div>
+                `;
+                container.appendChild(el);
+
+                if (d.temp < minTemp) minTemp = d.temp;
+                if (d.temp > maxTemp) maxTemp = d.temp;
+                if (d.pty > 0) isRain = true;
+                if (d.pty > 0 && d.temp < 0) isIce = true;
+            });
+
+            // Logic
+            const recText = document.getElementById('rec-text');
+            const gearList = document.getElementById('gear-list');
+            const card = document.getElementById('attire');
+
+            let gears = [];
+            let mainMsg = "";
+            let indoorRec = false;
+
+            if (minTemp <= -7) {
+                mainMsg = "영하 7도 이하 혹한입니다.<br>🚨 실내 트레드밀을 강력 추천합니다.";
+                indoorRec = true;
+            } else if (maxTemp >= 29) {
+                mainMsg = "너무 덥습니다.<br>🚨 실내 운동을 고려하세요.";
+                indoorRec = true;
+            } else if (isIce) {
+                mainMsg = "빙판길 사고 위험이 있습니다.<br>🚨 실내 트레드밀을 추천합니다.";
+                indoorRec = true;
+            } else if (isRain) {
+                mainMsg = "비/눈이 옵니다.<br>실내 운동이 안전합니다.";
+                indoorRec = true;
+            }
+
+            if (indoorRec) {
+                card.classList.add('warning');
+                gears.push({ icon: "🏃", name: "트레드밀" });
+                gears.push({ icon: "🏠", name: "실내운동" });
+                if (minTemp <= 0) gears.push({ icon: "🧣", name: "외출시 중무장" });
+            } else {
+                card.classList.remove('warning');
+                if (minTemp <= 0) {
+                    mainMsg = "체감온도가 낮으니<br>보온에 신경쓰세요.";
+                    gears.push({ icon: "👕", name: "기모 상의" });
+                    gears.push({ icon: "🧥", name: "방풍 자켓" });
+                    gears.push({ icon: "👖", name: "기모 타이즈" });
+                } else if (minTemp <= 5) {
+                    mainMsg = "쌀쌀한 공기입니다.<br>얇은 겉옷을 챙기세요.";
+                    gears.push({ icon: "👕", name: "긴팔 티셔츠" });
+                    gears.push({ icon: "🎽", name: "조끼" });
+                    gears.push({ icon: "👖", name: "긴바지" });
+                } else if (minTemp <= 10) {
+                    mainMsg = "달리기 상쾌한 날씨!<br>바람막이 정도면 충분해요.";
+                    gears.push({ icon: "🧥", name: "바람막이" });
+                    gears.push({ icon: "🩳", name: "반바지" });
+                } else {
+                    mainMsg = "최고의 러닝 날씨입니다!<br>가볍게 입고 나가세요.";
+                    gears.push({ icon: "🎽", name: "반팔/싱글렛" });
+                    gears.push({ icon: "🩳", name: "반바지" });
+                }
+
+                if (minTemp <= 3) {
+                    gears.push({ icon: "🧤", name: "장갑" });
+                    gears.push({ icon: "🎧", name: "귀마개" });
+                }
+            }
+
+            recText.innerHTML = mainMsg;
+            gearList.innerHTML = "";
+            gears.forEach(g => {
+                gearList.innerHTML += `
+                    <div class="gear-item">
+                        <div class="gear-icon">${g.icon}</div>
+                        <div class="gear-name">${g.name}</div>
+                    </div>
+                `;
+            });
+
+            document.getElementById('loading').classList.add('hidden');
+            document.getElementById('timeline').classList.remove('hidden');
+            document.getElementById('attire').classList.remove('hidden');
+        }
+
+        async function loadData() {
+            try {
+                // Fetch real data generated by Python script
+                // Add timestamp to prevent caching old data
+                const response = await fetch('weather_data.json?v=' + new Date().getTime());
+                if (!response.ok) throw new Error("File not found");
+                const data = await response.json();
+                render(data);
+            } catch (e) {
+                console.log("Using Mock Data (Fetch failed):", e);
+                // Fallback Mock Data for Demo/Local testing without python run
+                render([
+                    { time: "04:00", temp: -2, sky: "Clear", wind: 2.1, pop: 0, pty: 0 },
+                    { time: "05:00", temp: -3, sky: "Clear", wind: 2.5, pop: 0, pty: 0 },
+                    { time: "06:00", temp: -3, sky: "Cloudy", wind: 3.0, pop: 20, pty: 0 },
+                    { time: "07:00", temp: -2, sky: "Cloudy", wind: 2.8, pop: 0, pty: 0 },
+                    { time: "08:00", temp: 1, sky: "Sunny", wind: 1.5, pop: 0, pty: 0 },
+                ]);
+            }
+        }
+
+        loadData();
+    </script>
+</body>
+
+</html>
+```
