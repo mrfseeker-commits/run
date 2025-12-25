@@ -111,6 +111,15 @@
             margin: 0;
         }
 
+        .date-display {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--header-text-color);
+            text-shadow: var(--header-text-shadow);
+            margin-bottom: 5px;
+            opacity: 0.95;
+        }
+
         .location {
             font-size: 16px;
             font-weight: 600;
@@ -340,6 +349,7 @@
                     <div class="slider"></div>
                 </label>
             </div>
+            <div id="current-date" class="date-display"></div>
             <div class="location">[유성구 구성동]</div>
             <div class="signature">by Hogun</div>
 
@@ -383,6 +393,14 @@
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
         if (currentTheme === 'dark') toggleSwitch.checked = true;
+
+        // --- 1.5 Date Display ---
+        function updateDate() {
+            const now = new Date();
+            const options = { month: 'long', day: 'numeric', weekday: 'long' };
+            document.getElementById('current-date').innerText = now.toLocaleDateString('ko-KR', options);
+        }
+        updateDate();
 
         // --- 2. Data & Rendering ---
 
