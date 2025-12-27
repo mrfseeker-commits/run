@@ -17,26 +17,26 @@
   },
   {
     "time": "06:00",
-    "temp": -9.0,
-    "sky": "Overcast",
-    "wind": 0.6,
-    "pop": 30.0,
-    "pty": 0
+    "temp": -99.0,
+    "sky": "Unknown",
+    "wind": -99.0,
+    "pop": -99.0,
+    "pty": -99
   },
   {
     "time": "07:00",
-    "temp": -8.0,
-    "sky": "Cloudy",
-    "wind": 0.5,
-    "pop": 20.0,
-    "pty": 0
+    "temp": -99.0,
+    "sky": "Unknown",
+    "wind": -99.0,
+    "pop": -99.0,
+    "pty": -99
   },
   {
     "time": "08:00",
-    "temp": -8.0,
-    "sky": "Cloudy",
-    "wind": 0.1,
-    "pop": 20.0,
-    "pty": 0
+    "temp": -99.0,
+    "sky": "Unknown",
+    "wind": -99.0,
+    "pop": -99.0,
+    "pty": -99
   }
 ]
