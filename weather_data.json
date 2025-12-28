@@ -2,8 +2,8 @@
   {
     "time": "04:00",
     "temp": 3.0,
-    "sky": "Unknown",
-    "wind": 0.8,
+    "sky": "Overcast",
+    "wind": 0,
     "pop": 30.0,
     "pty": 0
   },
