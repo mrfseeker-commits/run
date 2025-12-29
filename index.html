@@ -267,6 +267,17 @@
             margin-top: 2px;
         }
 
+        .ts-pop {
+            font-size: 10px;
+            color: #3b82f6;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        [data-theme="dark"] .ts-pop {
+            color: #60a5fa;
+        }
+
         /* Attire Card */
         .attire-card {
             width: 100%;
@@ -473,6 +484,7 @@
                     <div class="ts-icon">${getIcon(d.sky, d.pty)}</div>
                     <div class="ts-temp">${d.temp}°</div>
                     <div class="ts-wind">${d.wind}m/s</div>
+                    ${d.pop > 0 ? `<div class="ts-pop">💧${d.pop}%</div>` : ''}
                 `;
                 container.appendChild(el);
 
