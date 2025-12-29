@@ -151,6 +151,13 @@
             border: 1px solid var(--timeline-border);
         }
 
+        .sunrise-info {
+            font-size: 13px;
+            color: var(--text-sub);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
         /* Toggle Switch */
         .theme-switch {
             display: inline-block;
@@ -393,7 +400,10 @@
     </div>
 
     <div class="main-wrapper">
-        <div id="timeline-date" class="timeline-date hidden"></div>
+        <div id="timeline-date" class="timeline-date hidden">
+            <div id="date-text"></div>
+            <div id="sunrise-info" class="sunrise-info"></div>
+        </div>
         <!-- 04~08 Timeline -->
         <div id="timeline" class="timeline-container hidden">
             <!-- JS will populate this -->
@@ -449,7 +459,26 @@
             const tMonth = targetDate.getMonth() + 1;
             const tDay = targetDate.getDate();
             const tWeekday = weekdays[targetDate.getDay()];
-            document.getElementById('timeline-date').innerText = `내일 새벽 - ${tMonth}월 ${tDay}일 ${tWeekday}요일`;
+            document.getElementById('date-text').innerText = `내일 새벽 - ${tMonth}월 ${tDay}일 ${tWeekday}요일`;
+
+            // Fetch sunrise time for Daejeon (36.35, 127.38)
+            fetchSunrise(targetDate);
+        }
+
+        async function fetchSunrise(targetDate) {
+            try {
+                const dateStr = targetDate.toISOString().split('T')[0];
+                const resp = await fetch(`https://api.sunrise-sunset.org/json?lat=36.35&lng=127.38&date=${dateStr}&formatted=0`);
+                const data = await resp.json();
+
+                if (data.status === 'OK') {
+                    const sunriseUTC = new Date(data.results.sunrise);
+                    const sunriseLocal = sunriseUTC.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    document.getElementById('sunrise-info').innerText = `🌅 일출 ${sunriseLocal}`;
+                }
+            } catch (e) {
+                console.log('Sunrise fetch failed:', e);
+            }
         }
         updateDate();
 
