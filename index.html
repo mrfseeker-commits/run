@@ -112,12 +112,12 @@
         }
 
         .date-display {
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 16px;
+            font-weight: 700;
             color: var(--header-text-color);
-            text-shadow: var(--header-text-shadow);
-            margin-bottom: 5px;
-            opacity: 0.95;
+            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+            margin-bottom: 8px;
+            opacity: 1;
         }
 
         .location {
@@ -139,12 +139,16 @@
 
         .timeline-date {
             width: 100%;
-            text-align: left;
-            padding-left: 10px;
-            margin-bottom: 8px;
-            font-size: 13px;
-            color: var(--text-sub);
-            font-weight: 600;
+            text-align: center;
+            padding: 12px 0;
+            margin-bottom: 10px;
+            font-size: 17px;
+            color: var(--text-main);
+            font-weight: 800;
+            background: var(--card-bg);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--timeline-border);
         }
 
         /* Toggle Switch */
@@ -420,15 +424,21 @@
         // --- 1.5 Date Display ---
         function updateDate() {
             const now = new Date();
-            const options = { month: 'long', day: 'numeric', weekday: 'long' };
-            document.getElementById('current-date').innerText = now.toLocaleDateString('ko-KR', options);
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+            const weekday = weekdays[now.getDay()];
+            document.getElementById('current-date').innerText = `오늘은 ${month}월 ${day}일 ${weekday}요일`;
 
             // Timeline Date (Logic matches Python: Hour >= 9 implies Tomorrow)
             let targetDate = new Date(now);
             if (now.getHours() >= 9) {
                 targetDate.setDate(targetDate.getDate() + 1);
             }
-            document.getElementById('timeline-date').innerText = targetDate.toLocaleDateString('ko-KR', options);
+            const tMonth = targetDate.getMonth() + 1;
+            const tDay = targetDate.getDate();
+            const tWeekday = weekdays[targetDate.getDay()];
+            document.getElementById('timeline-date').innerText = `내일 새벽 - ${tMonth}월 ${tDay}일 ${tWeekday}요일`;
         }
         updateDate();
 
