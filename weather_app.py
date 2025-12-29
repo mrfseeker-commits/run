@@ -91,176 +91,170 @@ class DataLoader:
         except Exception as e:
             print(f"[DEBUG] Load Failed: {e}")
             return False, str(e)
-# --- 3. Weather Fetcher (APIHub) ---
-# --- 3. Weather Fetcher (APIHub) ---
+# --- 3. Weather Fetcher (공공데이터포털 API) ---
 class WeatherFetcher:
     """
-    Fetches weather from KMA APIHub (nph-dfs_shrt_grd).
-    Auth Key: Value from Env or Empty
+    Fetches weather from Korea Open Data Portal (공공데이터포털).
+    Uses VilageFcstInfoService_2.0 for much faster response.
+    Single API call returns all weather categories at once.
     """
-    BASE_URL = "https://apihub.kma.go.kr/api/typ01/cgi-bin/url/nph-dfs_shrt_grd"
-    AUTH_KEY = os.environ.get("KMA_API_KEY", "")
+    BASE_URL = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
+    SERVICE_KEY = os.environ.get("DATA_GO_KR_API_KEY", "")
     
-    # Grid dimensions
-    NX = 149
-    NY = 253
-
-    @staticmethod
-    def get_tmfc():
-        """
-        Calculate the most recent base time (02, 05, 08, 11, 14, 17, 20, 23).
-        Returns string YYYYMMDDHHMM
-        """
-        from datetime import datetime, timedelta
-        now = datetime.now()
-        base_hours = [2, 5, 8, 11, 14, 17, 20, 23]
-        
-        candidates = []
-        for h in base_hours:
-            t = now.replace(hour=h, minute=0, second=0, microsecond=0)
-            if t <= now:
-                candidates.append(t)
-            else:
-                pass
-                
-        if not candidates:
-            # Must be early morning 00:00-01:59 -> use yesterday 23:00
-            t = now.replace(hour=23, minute=0, second=0, microsecond=0) - timedelta(days=1)
-            candidates.append(t)
-            
-        latest = candidates[-1]
-        return latest.strftime("%Y%m%d%H%M")
-
-    @staticmethod
-    def get_tmef(tmfc_str=None):
-        # Effective time: Standard hourly alignment
-        from datetime import datetime
-        now = datetime.now()
-        target = now.replace(minute=0, second=0, microsecond=0)
-        return target.strftime("%Y%m%d%H%M")
-
     _session = None
 
     @classmethod
     def get_session(cls):
         if cls._session is None:
             cls._session = requests.Session()
-            # Optional: efficient connection pooling
-            adapter = requests.adapters.HTTPAdapter(pool_connections=20, pool_maxsize=20, max_retries=3)
+            adapter = requests.adapters.HTTPAdapter(pool_connections=5, pool_maxsize=5, max_retries=3)
             cls._session.mount('https://', adapter)
             cls._session.mount('http://', adapter)
         return cls._session
 
     @staticmethod
-    def fetch_grid_data(var, tmfc, tmef):
+    def get_base_datetime():
         """
-        Fetches the grid for a single variable.
-        Returns a flat list of values.
+        Calculate the most recent base time for short-term forecast.
+        Base times: 0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300
+        API available: base_time + 10 minutes
         """
-        url = f"{WeatherFetcher.BASE_URL}?tmfc={tmfc}&tmef={tmef}&vars={var}&authKey={WeatherFetcher.AUTH_KEY}"
+        from datetime import datetime, timedelta
+        now = datetime.now()
+        base_hours = [2, 5, 8, 11, 14, 17, 20, 23]
         
-        import time
-        max_retries = 5
-        session = WeatherFetcher.get_session()
+        # Find the most recent base time that's available (now - 10 min buffer)
+        check_time = now - timedelta(minutes=10)
+        candidates = []
         
-        for attempt in range(max_retries):
-            try:
-                # 10s timeout, use session for Keep-Alive
-                resp = session.get(url, timeout=10)
-                resp.raise_for_status()
-                
-                # The format is a header lines followed by space/comma separated values.
-                import re
-                tokens = re.split(r'[,\s]+', resp.text)
-                values = [float(t) for t in tokens if t.strip() and not t.startswith('=')]
-                
-                if len(values) >= WeatherFetcher.NX * WeatherFetcher.NY:
-                   return values[-(WeatherFetcher.NX * WeatherFetcher.NY):]
-                # If short, retry
-            except Exception as e:
-                time.sleep(1.0) # Longer wait (1s)
-                continue
-                
-        # If all retries failed
-        print(f"[FERR] Fetch failed for {var} at {tmef} after {max_retries} attempts.")
-        return None
+        for h in base_hours:
+            t = check_time.replace(hour=h, minute=0, second=0, microsecond=0)
+            if t <= check_time:
+                candidates.append(t)
+        
+        if not candidates:
+            # Before 02:10 -> use yesterday 23:00
+            t = check_time.replace(hour=23, minute=0, second=0, microsecond=0) - timedelta(days=1)
+            candidates.append(t)
+        
+        latest = candidates[-1]
+        return latest.strftime("%Y%m%d"), latest.strftime("%H%M")
 
     @staticmethod
-    def add_hours(tmstr, hours):
-        from datetime import datetime, timedelta
-        dt = datetime.strptime(tmstr, "%Y%m%d%H%M")
-        target = dt + timedelta(hours=hours)
-        return target.strftime("%Y%m%d%H%M")
+    def fetch_all_forecasts(nx, ny, progress_cb=None):
+        """
+        Fetch all forecast data in 1-2 API calls.
+        Returns list of items with all weather categories.
+        """
+        base_date, base_time = WeatherFetcher.get_base_datetime()
+        
+        if progress_cb:
+            progress_cb(1, 3, "API 요청 중...")
+        
+        params = {
+            'serviceKey': WeatherFetcher.SERVICE_KEY,
+            'numOfRows': 1000,
+            'pageNo': 1,
+            'dataType': 'JSON',
+            'base_date': base_date,
+            'base_time': base_time,
+            'nx': nx,
+            'ny': ny
+        }
+        
+        try:
+            session = WeatherFetcher.get_session()
+            resp = session.get(WeatherFetcher.BASE_URL, params=params, timeout=30)
+            resp.raise_for_status()
+            
+            if progress_cb:
+                progress_cb(2, 3, "데이터 파싱 중...")
+            
+            data = resp.json()
+            
+            # Check for API errors
+            header = data.get('response', {}).get('header', {})
+            if header.get('resultCode') != '00':
+                print(f"API Error: {header.get('resultMsg')}")
+                return None
+            
+            items = data.get('response', {}).get('body', {}).get('items', {}).get('item', [])
+            
+            if progress_cb:
+                progress_cb(3, 3, "완료!")
+            
+            return items, base_date, base_time
+            
+        except Exception as e:
+            print(f"Fetch error: {e}")
+            return None, None, None
 
     @staticmethod
     def get_timeseries(grid_x, grid_y, count=36, progress_cb=None):
-        tmfc = WeatherFetcher.get_tmfc()
+        """
+        Get time series forecast data.
+        Returns list of dicts with tmef and weather values.
+        """
+        result = WeatherFetcher.fetch_all_forecasts(grid_x, grid_y, progress_cb)
         
-        # Determine timestamps
-        timestamps = []
-        for i in range(count):
-             base_tmef = WeatherFetcher.get_tmef(tmfc) 
-             ts = WeatherFetcher.add_hours(base_tmef, i)
-             timestamps.append(ts)
-
-        # Pre-allocate results with thread-safe locks
-        results_list = [{"tmef": ts, "_lock": threading.Lock()} for ts in timestamps]
+        if result[0] is None:
+            return []
         
-        targets = ["TMP", "SKY", "PTY", "WSD", "PCP", "SNO", "REH", "POP"]
+        items, base_date, base_time = result
         
-        # Flatten tasks: (hour_index, variable)
-        all_tasks = []
-        for idx in range(count):
-            for t in targets:
-                all_tasks.append((idx, t))
+        # Group items by forecast datetime
+        forecast_map = {}
         
-        total_tasks = len(all_tasks)
-        completed = 0
-        main_lock = threading.Lock() # for progress counter
-        
-        def fetch_task(hour_idx, var_name):
-            nonlocal completed
-            tmef = str(results_list[hour_idx]["tmef"])
+        for item in items:
+            fcst_date = item.get('fcstDate', '')
+            fcst_time = item.get('fcstTime', '')
+            category = item.get('category', '')
+            value = item.get('fcstValue', '')
             
-            # Fetch
-            data = WeatherFetcher.fetch_grid_data(var_name, tmfc, tmef)
+            key = f"{fcst_date}{fcst_time}"
+            if key not in forecast_map:
+                forecast_map[key] = {'tmef': key}
             
-            # Update result
-            if data:
-                # Calc grid index
-                # Data is likely Bottom-Up (Index 0 is South, Last is North)
-                # Previous formula assumed Top-Down (NY-1-y), which fetched Northern (colder) data.
-                g_idx = grid_y * WeatherFetcher.NX + grid_x
-                
-                val = None
-                if 0 <= g_idx < len(data):
-                    val = data[g_idx]
-                
-                # Update shared dict with specific lock
-                with results_list[hour_idx]["_lock"]:
-                    results_list[hour_idx][var_name] = val
-                    
-            # Progress update
-            with main_lock:
-                completed += 1
-                if progress_cb and completed % 5 == 0: # Update every 5 to reduce UI spam
-                    progress_cb(completed, total_tasks, f"데이터 수신 중... ({int(completed/total_tasks*100)}%)")
-
-        import concurrent.futures
-        # Very Conservative Parallelism
-        # 4 workers avoids KMA blocking/throttling.
-        with concurrent.futures.ThreadPoolExecutor(max_workers=4) as executor:
-            futures = [executor.submit(fetch_task, idx, t) for idx, t in all_tasks]
-            concurrent.futures.wait(futures)
-            
-        # Clean up locks from results
-        clean_results = []
-        for r in results_list:
-            d = r.copy()
-            del d["_lock"]
-            clean_results.append(d)
-            
-        return clean_results
+            # Parse value
+            try:
+                if category in ['TMP', 'WSD', 'REH', 'POP']:
+                    forecast_map[key][category] = float(value)
+                elif category in ['SKY', 'PTY', 'PCP', 'SNO']:
+                    # Handle categorical values
+                    if category == 'PCP':
+                        # Convert precipitation string to category
+                        if value == '강수없음':
+                            forecast_map[key][category] = 0
+                        elif '1mm' in value or '미만' in value:
+                            forecast_map[key][category] = 1
+                        elif '30' in value or '50' in value:
+                            forecast_map[key][category] = 3
+                        else:
+                            try:
+                                forecast_map[key][category] = 2  # Normal range
+                            except:
+                                forecast_map[key][category] = 0
+                    elif category == 'SNO':
+                        # Convert snow string to category
+                        if value == '적설없음':
+                            forecast_map[key][category] = 0
+                        elif '1cm' in value or '미만' in value:
+                            forecast_map[key][category] = 1
+                        else:
+                            forecast_map[key][category] = 2
+                    else:
+                        forecast_map[key][category] = int(value)
+            except:
+                pass
+        
+        # Sort by time and limit to count
+        sorted_keys = sorted(forecast_map.keys())[:count]
+        
+        results = []
+        for key in sorted_keys:
+            results.append(forecast_map[key])
+        
+        return results
 
 # --- 4. GUI Application ---
 class WeatherApp:

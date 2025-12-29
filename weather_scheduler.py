@@ -1,5 +1,4 @@
 import json
-import time
 import requests
 import os
 from datetime import datetime, timedelta
@@ -15,144 +14,214 @@ GRID_Y = 101
 OUTPUT_FILE = "weather_data.json"
 
 class WeatherFetcher:
-    BASE_URL = "https://apihub.kma.go.kr/api/typ01/cgi-bin/url/nph-dfs_shrt_grd"
-    # Get key from Environment Variable for security
-    AUTH_KEY = os.environ.get("KMA_API_KEY", "")
-        
+    """
+    Fetches weather from Korea Open Data Portal (공공데이터포털).
+    Uses VilageFcstInfoService_2.0 for much faster response.
+    """
+    BASE_URL = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0/getVilageFcst"
+    SERVICE_KEY = os.environ.get("DATA_GO_KR_API_KEY", "")
+    
     @staticmethod
-    def get_tmfc():
+    def get_base_datetime():
+        """
+        Calculate the most recent base time for short-term forecast.
+        Base times: 0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300
+        API available: base_time + 10 minutes
+        """
         now = datetime.now()
-        # KMA Base Times: 02, 05, 08, 11, 14, 17, 20, 23
         base_hours = [2, 5, 8, 11, 14, 17, 20, 23]
+        
+        # Find the most recent base time that's available (now - 10 min buffer)
+        check_time = now - timedelta(minutes=10)
         candidates = []
+        
         for h in base_hours:
-            t = now.replace(hour=h, minute=0, second=0, microsecond=0)
-            if t <= now:
+            t = check_time.replace(hour=h, minute=0, second=0, microsecond=0)
+            if t <= check_time:
                 candidates.append(t)
         
         if not candidates:
-            # If strictly before 02:00, use yesterday 23:00
-            t = now.replace(hour=23, minute=0, second=0, microsecond=0) - timedelta(days=1)
+            # Before 02:10 -> use yesterday 23:00
+            t = check_time.replace(hour=23, minute=0, second=0, microsecond=0) - timedelta(days=1)
             candidates.append(t)
-            
-        return candidates[-1].strftime("%Y%m%d%H%M")
-
+        
+        latest = candidates[-1]
+        return latest.strftime("%Y%m%d"), latest.strftime("%H%M")
+    
     @staticmethod
-    def get_session():
-        session = requests.Session()
-        adapter = requests.adapters.HTTPAdapter(max_retries=3)
-        session.mount('https://', adapter)
-        return session
-
-    @staticmethod
-    def fetch_data(tmfc, mode="2"):
-        # mode=2 implies getting all variables? Usually we request specific vars or all.
-        # Let's request specific vars for efficiency if supported, or rely on parsing.
-        # Actually in common usage, we just fetch variables one by one or parsed from single big request if supported.
-        # Simplest consistent way: Fetch common vars loop.
+    def fetch_forecast(nx, ny):
+        """
+        Fetch forecast data from public data portal.
+        Returns parsed data for morning hours (04:00 - 08:00).
+        """
+        base_date, base_time = WeatherFetcher.get_base_datetime()
         
-        vars_to_fetch = ["TMP", "SKY", "PTY", "WSD", "POP"]
-        tmef_start = (datetime.now().replace(minute=0,second=0) + timedelta(hours=0)).strftime("%Y%m%d%H%M")
+        params = {
+            'serviceKey': WeatherFetcher.SERVICE_KEY,
+            'numOfRows': 1000,
+            'pageNo': 1,
+            'dataType': 'JSON',
+            'base_date': base_date,
+            'base_time': base_time,
+            'nx': nx,
+            'ny': ny
+        }
         
-        # We need data for 04:00 ~ 08:00 TOMORROW (or Today if now is early morning?)
-        # User wants "Early Morning Run". 
-        # Logic: If it's currently afternoon/evening -> Show Tomorrow Morning.
-        # If it's currently morning (before 9AM) -> Show Today Morning.
-        
-        now_hour = datetime.now().hour
-        target_date = datetime.now()
-        if now_hour >= 9: 
-            target_date += timedelta(days=1) # Target Tomorrow
+        try:
+            resp = requests.get(WeatherFetcher.BASE_URL, params=params, timeout=30)
+            resp.raise_for_status()
             
-        target_times = []
-        for h in range(4, 9): # 04, 05, 06, 07, 08
-            t = target_date.replace(hour=h, minute=0, second=0, microsecond=0)
-            target_times.append(t.strftime("%Y%m%d%H%M"))
+            data = resp.json()
+            
+            # Check for API errors
+            header = data.get('response', {}).get('header', {})
+            if header.get('resultCode') != '00':
+                print(f"API Error: {header.get('resultMsg')}")
+                return None
+            
+            items = data.get('response', {}).get('body', {}).get('items', {}).get('item', [])
+            return items
+            
+        except Exception as e:
+            print(f"Fetch error: {e}")
+            return None
+
+
+def parse_forecast_items(items):
+    """
+    Parse API response items into structured forecast data.
+    Groups by fcstDate + fcstTime and extracts weather categories.
+    """
+    if not items:
+        return []
+    
+    # Group items by forecast datetime
+    forecast_map = {}
+    
+    for item in items:
+        fcst_date = item.get('fcstDate', '')
+        fcst_time = item.get('fcstTime', '')
+        category = item.get('category', '')
+        value = item.get('fcstValue', '')
         
-        # We need to find the correct tmef strings relative to tmfc.
-        # Just fetching by tmef is easiest if API supports specific tmef.
+        key = f"{fcst_date}{fcst_time}"
+        if key not in forecast_map:
+            forecast_map[key] = {'fcstDate': fcst_date, 'fcstTime': fcst_time}
         
-        session = WeatherFetcher.get_session()
-        data_map = { t: {} for t in target_times }
-        
-        for var in vars_to_fetch:
-            # We fetch a range or loop? Looping 5 times * 5 vars = 25 requests. Acceptable for backend.
-            for tmef in target_times:
-                url = f"{WeatherFetcher.BASE_URL}?tmfc={tmfc}&tmef={tmef}&vars={var}&authKey={WeatherFetcher.AUTH_KEY}"
-                try:
-                    resp = session.get(url, timeout=10)
-                    resp.raise_for_status()
-                    
-                    # Parse
-                    import re
-                    tokens = re.split(r'[,\s]+', resp.text)
-                    vals = [float(t) for t in tokens if t.strip() and not t.startswith('=')]
-                    
-                    # Grid index logic
-                    # NX=149, NY=253. Total = 37697
-                    # Index = Y * NX + X? Or X + Y * NX?
-                    # Guideline: (y * NX) + x is standard row-major.
-                    # HOWEVER, previous code had complex logic.
-                    # Let's stick to the verified index logic or just use standard.
-                    # Actually standard is usually flat array.
-                    # Given fixed location, let's trust the logic from working app if available.
-                    # But simpler: The app works with `values[-(NX*NY):]`.
-                    # Index = (GRID_Y) * 149 + GRID_X
-                    
-                    idx = (GRID_Y * 149) + GRID_X
-                    if len(vals) >= 149*253:
-                         real_vals = vals[-(149*253):]
-                         val = real_vals[idx]
-                         data_map[tmef][var] = val
-                except Exception as e:
-                    print(f"Error fetching {var} at {tmef}: {e}")
-                    pass
-                time.sleep(0.2)
-                
-        return data_map
+        forecast_map[key][category] = value
+    
+    return forecast_map
+
+
+def get_target_times():
+    """
+    Determine target morning hours (04:00 - 08:00).
+    If after 9 AM, target tomorrow's morning.
+    """
+    now = datetime.now()
+    target_date = now
+    
+    if now.hour >= 9:
+        target_date = now + timedelta(days=1)
+    
+    target_times = []
+    for h in range(4, 9):  # 04, 05, 06, 07, 08
+        t = target_date.replace(hour=h, minute=0, second=0, microsecond=0)
+        target_times.append(t.strftime("%Y%m%d%H00"))
+    
+    return target_times
+
 
 def main():
-    print("Starting Weather Update...")
-    tmfc = WeatherFetcher.get_tmfc()
-    print(f"Base Time: {tmfc}")
+    print("Starting Weather Update (Public Data Portal API)...")
     
-    raw_data = WeatherFetcher.fetch_data(tmfc)
+    # Fetch forecast
+    items = WeatherFetcher.fetch_forecast(GRID_X, GRID_Y)
     
-    # Transform to list for frontend
-    # Expected: [{time: "04:00", temp: -5, ...}, ...]
+    if not items:
+        print("Failed to fetch forecast data!")
+        return
+    
+    print(f"Fetched {len(items)} forecast items")
+    
+    # Parse items
+    forecast_map = parse_forecast_items(items)
+    
+    # Get target morning times
+    target_times = get_target_times()
+    print(f"Target times: {target_times}")
+    
+    # Extract data for target times
     output_list = []
     
-    # Sort keys to ensure order 04 -> 08
-    for tmkey in sorted(raw_data.keys()):
-        item = raw_data[tmkey]
-        # Skip if incomplete
-        if not item: continue
+    # Category mappings
+    sky_map = {
+        '1': 'Clear',
+        '3': 'Cloudy', 
+        '4': 'Overcast'
+    }
+    
+    for target in target_times:
+        fcst_date = target[:8]
+        fcst_time = target[8:]
+        key = f"{fcst_date}{fcst_time}"
         
-        # Format time "04:00"
-        time_str = f"{tmkey[8:10]}:00"
+        if key not in forecast_map:
+            print(f"No data for {key}")
+            continue
+        
+        data = forecast_map[key]
+        
+        # Parse values
+        try:
+            temp = float(data.get('TMP', -99))
+        except:
+            temp = -99
+            
+        try:
+            wind = float(data.get('WSD', 0))
+        except:
+            wind = 0
+            
+        try:
+            pop = int(data.get('POP', 0))
+        except:
+            pop = 0
+            
+        try:
+            pty = int(data.get('PTY', 0))
+        except:
+            pty = 0
+            
+        sky_code = data.get('SKY', '1')
+        sky = sky_map.get(sky_code, 'Unknown')
         
         obj = {
-            "time": time_str,
-            "temp": item.get("TMP", -99),
-            "sky": {1:"Sunny", 3:"Cloudy", 4:"Overcast"}.get(int(item.get("SKY", 0)), "Unknown"),
-            "wind": item.get("WSD", 0),
-            "pop": item.get("POP", 0),
-            "pty": int(item.get("PTY", 0))
+            "time": f"{fcst_time[:2]}:00",
+            "temp": temp,
+            "sky": sky,
+            "wind": wind,
+            "pop": pop,
+            "pty": pty
         }
-        # Sky mapping fix for Clear vs Sunny consistency
-        if obj['sky'] == "Sunny": obj['sky'] = "Clear"
         
         output_list.append(obj)
-        
-    # Valid check
+    
+    # Validate
     if not output_list:
-        print("No Data Collected!")
-        return # Don't overwrite with empty
-        
+        print("No data collected for target times!")
+        return
+    
+    # Save to file
     with open(OUTPUT_FILE, "w", encoding='utf-8') as f:
         json.dump(output_list, f, indent=2, ensure_ascii=False)
-        
+    
     print(f"Saved {len(output_list)} items to {OUTPUT_FILE}")
+    
+    # Print summary
+    for item in output_list:
+        print(f"  {item['time']}: {item['temp']}°C, {item['sky']}, 강수확률 {item['pop']}%")
+
 
 if __name__ == "__main__":
     main()
