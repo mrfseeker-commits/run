@@ -24,29 +24,28 @@ class WeatherFetcher:
     @staticmethod
     def get_base_datetime():
         """
-        Calculate the most recent base time for short-term forecast.
+        Calculate the best base time for short-term forecast.
+        For tomorrow morning (04:00-08:00) data, we need:
+        - Use today's 0200 forecast (provides data up to +70 hours)
+        - If before 02:10 today, use yesterday's 2300 forecast
+        
         Base times: 0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300
-        API available: base_time + 10 minutes
         """
         now = datetime.now()
-        base_hours = [2, 5, 8, 11, 14, 17, 20, 23]
         
-        # Find the most recent base time that's available (now - 10 min buffer)
-        check_time = now - timedelta(minutes=10)
-        candidates = []
+        # For GitHub Actions running hourly, we want stable base_time
+        # that always includes 04:00-08:00 for tomorrow
+        # Best option: use 0200 (if available) or 2300 from previous day
         
-        for h in base_hours:
-            t = check_time.replace(hour=h, minute=0, second=0, microsecond=0)
-            if t <= check_time:
-                candidates.append(t)
+        if now.hour > 2 or (now.hour == 2 and now.minute >= 10):
+            # After 02:10, use today's 0200 forecast
+            base_dt = now.replace(hour=2, minute=0, second=0, microsecond=0)
+        else:
+            # Before 02:10, use yesterday's 2300 forecast
+            yesterday = now - timedelta(days=1)
+            base_dt = yesterday.replace(hour=23, minute=0, second=0, microsecond=0)
         
-        if not candidates:
-            # Before 02:10 -> use yesterday 23:00
-            t = check_time.replace(hour=23, minute=0, second=0, microsecond=0) - timedelta(days=1)
-            candidates.append(t)
-        
-        latest = candidates[-1]
-        return latest.strftime("%Y%m%d"), latest.strftime("%H%M")
+        return base_dt.strftime("%Y%m%d"), base_dt.strftime("%H%M")
     
     @staticmethod
     def fetch_forecast(nx, ny):
