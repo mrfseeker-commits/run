@@ -3,7 +3,7 @@
     "time": "04:00",
     "temp": -5.0,
     "sky": "Clear",
-    "wind": 0.9,
+    "wind": 0.8,
     "pop": 0,
     "pty": 0
   },
@@ -11,7 +11,7 @@
     "time": "05:00",
     "temp": -5.0,
     "sky": "Clear",
-    "wind": 0.8,
+    "wind": 0.7,
     "pop": 0,
     "pty": 0
   },
@@ -19,7 +19,7 @@
     "time": "06:00",
     "temp": -5.0,
     "sky": "Clear",
-    "wind": 0.7,
+    "wind": 0.5,
     "pop": 0,
     "pty": 0
   },
@@ -27,7 +27,7 @@
     "time": "07:00",
     "temp": -6.0,
     "sky": "Clear",
-    "wind": 0.6,
+    "wind": 0.5,
     "pop": 0,
     "pty": 0
   },
