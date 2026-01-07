@@ -1,41 +1,41 @@
 [
   {
     "time": "04:00",
-    "temp": -5.0,
+    "temp": -6.0,
     "sky": "Clear",
-    "wind": 4.2,
+    "wind": 2.5,
     "pop": 0,
     "pty": 0
   },
   {
     "time": "05:00",
-    "temp": -6.0,
+    "temp": -7.0,
     "sky": "Clear",
-    "wind": 4.3,
+    "wind": 2.4,
     "pop": 0,
     "pty": 0
   },
   {
     "time": "06:00",
-    "temp": -6.0,
+    "temp": -7.0,
     "sky": "Clear",
-    "wind": 4.5,
+    "wind": 2.1,
     "pop": 0,
     "pty": 0
   },
   {
     "time": "07:00",
-    "temp": -7.0,
+    "temp": -8.0,
     "sky": "Clear",
-    "wind": 4.5,
+    "wind": 2.0,
     "pop": 0,
     "pty": 0
   },
   {
     "time": "08:00",
-    "temp": -7.0,
+    "temp": -8.0,
     "sky": "Clear",
-    "wind": 4.3,
+    "wind": 2.8,
     "pop": 0,
     "pty": 0
   }
