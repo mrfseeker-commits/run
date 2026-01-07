@@ -451,9 +451,9 @@
             const weekday = weekdays[now.getDay()];
             document.getElementById('current-date').innerText = `오늘은 ${month}월 ${day}일 ${weekday}요일`;
 
-            // Timeline Date (Logic matches Python: Hour >= 9 implies Tomorrow)
+            // Timeline Date (Logic matches Python: Hour >= 7 implies Tomorrow)
             let targetDate = new Date(now);
-            if (now.getHours() >= 9) {
+            if (now.getHours() >= 7) {
                 targetDate.setDate(targetDate.getDate() + 1);
             }
             const tMonth = targetDate.getMonth() + 1;

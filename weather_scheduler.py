@@ -115,12 +115,12 @@ def parse_forecast_items(items):
 def get_target_times():
     """
     Determine target morning hours (04:00 - 08:00).
-    If after 9 AM, target tomorrow's morning.
+    If after 7 AM, target tomorrow's morning.
     """
     now = datetime.now()
     target_date = now
     
-    if now.hour >= 9:
+    if now.hour >= 7:
         target_date = now + timedelta(days=1)
     
     target_times = []
