@@ -13,6 +13,10 @@ GRID_X = 67
 GRID_Y = 101
 OUTPUT_FILE = "weather_data.json"
 
+def get_kst_now():
+    """Returns current datetime in KST (UTC+9)."""
+    return datetime.utcnow() + timedelta(hours=9)
+
 class WeatherFetcher:
     """
     Fetches weather from Korea Open Data Portal (공공데이터포털).
@@ -31,7 +35,7 @@ class WeatherFetcher:
         
         Base times: 0200, 0500, 0800, 1100, 1400, 1700, 2000, 2300
         """
-        now = datetime.now()
+        now = get_kst_now()
         
         # For GitHub Actions running hourly, we want stable base_time
         # that always includes 04:00-08:00 for tomorrow
@@ -117,7 +121,7 @@ def get_target_times():
     Determine target morning hours (04:00 - 08:00).
     If after 7 AM, target tomorrow's morning.
     """
-    now = datetime.now()
+    now = get_kst_now()
     target_date = now
     
     if now.hour >= 7:
