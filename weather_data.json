@@ -1,7 +1,7 @@
 [
   {
     "time": "04:00",
-    "temp": -6.0,
+    "temp": -5.0,
     "sky": "Clear",
     "wind": 0.4,
     "pop": 0,
@@ -9,7 +9,7 @@
   },
   {
     "time": "05:00",
-    "temp": -6.0,
+    "temp": -5.0,
     "sky": "Clear",
     "wind": 0.5,
     "pop": 0,
@@ -33,7 +33,7 @@
   },
   {
     "time": "08:00",
-    "temp": -5.0,
+    "temp": -4.0,
     "sky": "Overcast",
     "wind": 0.8,
     "pop": 30,
