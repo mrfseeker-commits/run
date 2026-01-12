@@ -3,15 +3,15 @@
     "time": "04:00",
     "temp": 2.0,
     "sky": "Overcast",
-    "wind": 2.7,
+    "wind": 4.3,
     "pop": 30,
     "pty": 0
   },
   {
     "time": "05:00",
-    "temp": 2.0,
+    "temp": 1.0,
     "sky": "Overcast",
-    "wind": 3.0,
+    "wind": 4.3,
     "pop": 30,
     "pty": 0
   },
@@ -19,7 +19,7 @@
     "time": "06:00",
     "temp": 1.0,
     "sky": "Overcast",
-    "wind": 2.3,
+    "wind": 4.2,
     "pop": 30,
     "pty": 0
   },
@@ -27,7 +27,7 @@
     "time": "07:00",
     "temp": 0.0,
     "sky": "Overcast",
-    "wind": 2.5,
+    "wind": 3.8,
     "pop": 30,
     "pty": 0
   },
@@ -35,7 +35,7 @@
     "time": "08:00",
     "temp": -1.0,
     "sky": "Clear",
-    "wind": 3.6,
+    "wind": 3.5,
     "pop": 0,
     "pty": 0
   }
