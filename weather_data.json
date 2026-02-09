@@ -3,7 +3,7 @@
     "time": "04:00",
     "temp": -2.0,
     "sky": "Overcast",
-    "wind": 0.3,
+    "wind": 0.2,
     "pop": 30,
     "pty": 0
   },
@@ -35,7 +35,7 @@
     "time": "08:00",
     "temp": -1.0,
     "sky": "Overcast",
-    "wind": 1.0,
+    "wind": 0.9,
     "pop": 30,
     "pty": 0
   }
