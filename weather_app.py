@@ -273,7 +273,7 @@ class WeatherApp:
         
         # Initialize Logic
         # Data Loader (Optimized JSON)
-        json_path = r"C:\Users\강호건\Documents\cursor\openweather\weather_code.json"
+        json_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'weather_code.json')
         
         self.loader = DataLoader(json_path)
         
@@ -316,6 +316,15 @@ class WeatherApp:
         self.search_entry.bind('<Return>', self.on_enter)
         self.search_entry.bind('<Down>', self.on_arrow_down)
         
+        # UX: Add placeholder and keyboard shortcut
+        self.placeholder_text = "동/읍/면 검색 (예: 구성동)"
+        self.search_entry.insert(0, self.placeholder_text)
+        self.search_entry.config(fg='grey')
+        self.search_entry.bind('<FocusIn>', self.on_entry_focus_in)
+        self.search_entry.bind('<FocusOut>', self.on_entry_focus_out)
+
+        self.root.bind('<Control-f>', self.focus_search)
+
         btn_search = tk.Button(search_frame, text="날씨 조회", command=self.fetch_weather_btn)
         btn_search.pack(side='left')
 
@@ -399,11 +408,29 @@ class WeatherApp:
             btn = tk.Button(self.recent_buttons_frame, text=addr, command=make_cmd(addr), font=("Malgun Gothic", 9))
             btn.pack(side='left', padx=2)
 
+    def on_entry_focus_in(self, event):
+        if self.search_entry.get() == self.placeholder_text:
+            self.search_entry.delete(0, tk.END)
+            self.search_entry.config(fg='black')
+
+    def on_entry_focus_out(self, event):
+        if not self.search_entry.get():
+            self.search_entry.insert(0, self.placeholder_text)
+            self.search_entry.config(fg='grey')
+
+    def focus_search(self, event=None):
+        self.search_entry.focus_set()
+
     def on_search_change(self, *args):
         if getattr(self, 'ignore_search_change', False):
             return
             
         typed = self.search_var.get()
+
+        # UX: Ignore placeholder text
+        if typed == getattr(self, 'placeholder_text', ''):
+            return
+
         if not typed:
             self.listbox_frame.pack_forget()
             return
