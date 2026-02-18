@@ -167,7 +167,14 @@
         }
 
         .theme-switch input {
-            display: none;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .theme-switch input:focus-visible+.slider {
+            box-shadow: 0 0 0 2px var(--card-bg), 0 0 0 4px var(--accent);
         }
 
         .slider {
@@ -202,6 +209,27 @@
 
         input:checked+.slider:before {
             transform: translateX(20px);
+        }
+
+        /* Sun/Moon Icons on Track */
+        .slider:after {
+            content: '🌙';
+            position: absolute;
+            top: 50%;
+            right: 5px;
+            transform: translateY(-55%);
+            font-size: 14px;
+            line-height: 1;
+            transition: all 0.4s;
+            opacity: 0.8;
+        }
+
+        input:checked+.slider:after {
+            content: '☀️';
+            right: auto;
+            left: 5px;
+            color: #fff;
+            opacity: 1;
         }
 
         /* Main Content Helper */
@@ -387,7 +415,7 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
