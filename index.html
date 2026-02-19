@@ -167,7 +167,17 @@
         }
 
         .theme-switch input {
-            display: none;
+            /* Visually hidden but accessible */
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+            pointer-events: none;
+        }
+
+        /* Focus styles for keyboard accessibility */
+        .theme-switch input:focus-visible + .slider {
+            box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--accent);
         }
 
         .slider {
@@ -387,7 +397,7 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" role="switch" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
