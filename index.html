@@ -167,7 +167,15 @@
         }
 
         .theme-switch input {
-            display: none;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .theme-switch input:focus-visible + .slider {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
 
         .slider {
@@ -386,8 +394,8 @@
                 <div class="title">KAIST TRACK<br>날씨정보</div>
 
                 <!-- Toggle Switch Inline -->
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" role="switch" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
@@ -395,7 +403,7 @@
             <div class="location">[유성구 구성동]</div>
             <div class="signature">by Hogun</div>
 
-            <div id="loading" class="loading">기상 데이터 분석중...</div>
+            <div id="loading" class="loading" role="status" aria-live="polite">기상 데이터 분석중...</div>
         </div>
     </div>
 
@@ -425,7 +433,7 @@
 
     <script>
         // --- 1. Theme Logic (Default Light) ---
-        const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        const toggleSwitch = document.querySelector('#theme-toggle');
 
         function switchTheme(e) {
             if (e.target.checked) {
