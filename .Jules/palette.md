@@ -1,0 +1,3 @@
+## 2024-05-24 - Custom Checkbox Accessibility
+**Learning:** Using `display: none` for custom checkboxes completely removes them from the accessibility tree, preventing keyboard users from focusing them and screen readers from announcing them.
+**Action:** Always use the "visually hidden" pattern (opacity 0, width/height 0, absolute positioning) and add a `:focus-visible` outline to adjacent elements, along with `role="switch"` and `aria-label` where applicable, to ensure full accessibility for interactive components.
