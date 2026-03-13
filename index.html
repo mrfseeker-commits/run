@@ -166,8 +166,20 @@
             width: 44px;
         }
 
-        .theme-switch input {
-            display: none;
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        .theme-switch input:focus-visible+.slider {
+            box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--accent);
         }
 
         .slider {
@@ -387,7 +399,7 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" class="visually-hidden" role="switch" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
@@ -395,7 +407,7 @@
             <div class="location">[유성구 구성동]</div>
             <div class="signature">by Hogun</div>
 
-            <div id="loading" class="loading">기상 데이터 분석중...</div>
+            <div id="loading" class="loading" role="status">기상 데이터 분석중...</div>
         </div>
     </div>
 
