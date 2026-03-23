@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Toggle Switch Input State
+**Learning:** Using `display: none` on inputs completely removes them from the accessibility tree, breaking screen reader interaction and keyboard navigation. Custom CSS toggle switches must use a "visually hidden" pattern (e.g., `opacity: 0`, `width: 0`, `height: 0`, `position: absolute`) on the input element.
+**Action:** Always verify that hidden inputs used in custom interactive components (like toggle switches and checkboxes) use the visually hidden pattern instead of `display: none`. Additionally, ensure a `:focus-visible` outline is provided on the adjacent visible element (like a slider) so keyboard users can track focus.
