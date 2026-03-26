@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Custom Checkboxes
+**Learning:** For custom checkboxes like toggle switches, using `display: none` completely removes the element from the accessibility tree, breaking screen reader functionality and keyboard navigation (Tab). Adding `role="switch"` and `aria-label` won't work if the element is `display: none`.
+**Action:** Instead of `display: none`, use the 'visually hidden' pattern (`opacity: 0; width: 0; height: 0; position: absolute;`) on the input, and style the adjacent visible element (like a slider) with `:focus-visible` to ensure the focus state is visually clear during keyboard navigation.
