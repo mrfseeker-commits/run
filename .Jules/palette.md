@@ -1,0 +1,3 @@
+## 2026-03-12 - [Accessible Hidden Inputs for Custom Switches]
+**Learning:** Custom toggle switches using `display: none` on the underlying checkbox completely remove the element from the accessibility tree, preventing screen readers and keyboard navigation from interacting with it. Using the visually hidden pattern (`opacity: 0`, `position: absolute`, `width: 0`, `height: 0`) keeps it accessible. Also, `page.wait_for_selector` fails on visually hidden elements, so other wait conditions are needed when testing.
+**Action:** When creating custom inputs like toggle switches, always hide the native input visually instead of using `display: none`, and add a `:focus-visible` state to the adjacent visible element (like the slider track) to show the focus outline.
