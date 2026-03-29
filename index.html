@@ -204,6 +204,40 @@
             transform: translateX(20px);
         }
 
+        /* Palette UX: Icons on Toggle */
+        .slider .icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 14px;
+            line-height: 1;
+            z-index: 1;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .slider .sun {
+            right: 5px;
+            opacity: 1;
+        }
+
+        .slider .moon {
+            left: 5px;
+            opacity: 0;
+        }
+
+        input:checked + .slider .sun {
+            opacity: 0;
+        }
+
+        input:checked + .slider .moon {
+            opacity: 1;
+        }
+
+        .slider:before {
+            z-index: 2;
+        }
+
         /* Main Content Helper */
         .main-wrapper {
             width: 100%;
@@ -387,8 +421,11 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    <div class="slider"></div>
+                    <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" />
+                    <div class="slider">
+                        <span class="icon sun">☀️</span>
+                        <span class="icon moon">🌙</span>
+                    </div>
                 </label>
             </div>
             <div id="current-date" class="date-display"></div>
