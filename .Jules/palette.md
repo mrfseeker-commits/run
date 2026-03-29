@@ -1,0 +1,3 @@
+## 2024-05-15 - [Accessible Custom Checkbox]
+**Learning:** Accessible custom checkboxes should use the 'visually hidden' CSS pattern (opacity: 0, width: 0, height: 0, absolute position) instead of `display: none` to ensure accessibility for screen readers and keyboard navigation. Using `display: none` removes the element from the accessibility tree entirely, preventing focus and interaction. Adding `role="switch"` and `aria-label` provides correct semantics.
+**Action:** When implementing custom toggles or inputs, avoid `display: none`. Always use visually hidden techniques, ensure `:focus-visible` styling is applied to the visible sibling element to indicate keyboard focus, and include appropriate ARIA roles and labels.
