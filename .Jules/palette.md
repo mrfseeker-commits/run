@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Visually Hidden Inputs
+**Learning:** `display: none` completely removes inputs from accessibility tree, hiding them from screen readers and making them unfocusable via keyboard. Wait for selectors fail on `opacity: 0` in testing tools.
+**Action:** Use visually hidden techniques (opacity 0, absolute pos, 0 width/height) instead of `display: none`, and style adjacent elements using `:focus-visible` pseudo-class for accessible interactive hidden checkboxes. In test scripts, use `page.wait_for_timeout` or target adjacent visible elements.
