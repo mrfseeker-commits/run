@@ -167,7 +167,14 @@
         }
 
         .theme-switch input {
-            display: none;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+            margin: 0;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
         }
 
         .slider {
@@ -202,6 +209,11 @@
 
         input:checked+.slider:before {
             transform: translateX(20px);
+        }
+
+        input:focus-visible+.slider {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
 
         /* Main Content Helper */
@@ -387,7 +399,7 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" role="switch" aria-label="다크 모드 전환" aria-checked="false" />
                     <div class="slider"></div>
                 </label>
             </div>
@@ -431,16 +443,21 @@
             if (e.target.checked) {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
+                e.target.setAttribute('aria-checked', 'true');
             } else {
                 document.documentElement.setAttribute('data-theme', 'light');
                 localStorage.setItem('theme', 'light');
+                e.target.setAttribute('aria-checked', 'false');
             }
         }
         toggleSwitch.addEventListener('change', switchTheme);
 
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
-        if (currentTheme === 'dark') toggleSwitch.checked = true;
+        if (currentTheme === 'dark') {
+            toggleSwitch.checked = true;
+            toggleSwitch.setAttribute('aria-checked', 'true');
+        }
 
         // --- 1.5 Date Display ---
         function updateDate() {
