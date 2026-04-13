@@ -1,0 +1,3 @@
+## 2024-05-18 - Accessible Custom Checkboxes
+**Learning:** `display: none` completely removes elements from the accessibility tree and prevents them from receiving keyboard focus. This breaks screen reader interactions and keyboard navigation for custom toggles/checkboxes.
+**Action:** When styling custom form controls, always use a visually hidden CSS pattern (opacity: 0, width: 0, height: 0, absolute position) instead of `display: none`. Additionally, use the `:focus-visible` pseudo-class on the hidden input to style an adjacent visual element (e.g., `input:focus-visible + .slider`), ensuring keyboard users receive clear visual feedback.
