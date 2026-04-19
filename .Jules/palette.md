@@ -1,0 +1,3 @@
+## 2025-04-19 - Accessible Theme Toggle
+**Learning:** Using `display: none` on inputs (like custom toggle switches) completely hides them from screen readers and prevents them from receiving keyboard focus, making the UI inaccessible to visually impaired users and keyboard-only users.
+**Action:** Always use the "visually hidden" CSS pattern (`opacity: 0; width: 0; height: 0; position: absolute;`) for custom form inputs instead of `display: none`. Additionally, map the `:focus-visible` state of the hidden input to display a focus outline on an adjacent visible element (like the switch slider) to ensure keyboard users can track their focus.
