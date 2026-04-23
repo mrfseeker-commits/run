@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Custom Checkboxes
+**Learning:** Using `display: none` on `<input>` elements completely removes them from the accessibility tree, making them inaccessible to screen readers and impossible to focus via keyboard navigation.
+**Action:** When styling custom checkboxes or toggles, use the visually hidden pattern (`position: absolute; opacity: 0; width: 0; height: 0; margin: 0;`) on the input, and style the adjacent visual element (e.g., using `input:focus-visible + .slider`) to provide clear keyboard focus indicators. Ensure `role="switch"` and an `aria-label` are applied to the input element.
