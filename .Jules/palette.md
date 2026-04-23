@@ -1,0 +1,3 @@
+## 2024-05-24 - Visually Hidden Checkbox Pattern
+**Learning:** In `index.html`, using `display: none` on the theme toggle checkbox input prevents screen readers from discovering it and breaks keyboard focus. Using the visually hidden pattern (`opacity: 0`, `width: 0`, `height: 0`, `position: absolute`) allows the checkbox to be focusable and discoverable via keyboard and screen readers, while keeping it invisible.
+**Action:** Use the visually hidden CSS pattern instead of `display: none` for custom toggle switches and checkboxes to ensure keyboard accessibility. Also ensure adjacent sibling elements, like the toggle slider, implement `:focus-visible` outlines for visual indication.
