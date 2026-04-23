@@ -1,0 +1,3 @@
+## 2024-05-18 - Accessible custom toggle switch
+**Learning:** In standard HTML, hiding an underlying checkbox input for a toggle switch using `display: none` completely removes it from the accessibility tree. It becomes unfocusable for keyboard users and invisible to screen readers.
+**Action:** When implementing custom toggle switches (like a theme toggle), keep the native `<input type="checkbox">` in the DOM by visually hiding it (e.g., using `opacity: 0; width: 0; height: 0; position: absolute;`). Ensure keyboard navigation is supported by defining a `:focus-visible` state on a sibling element (e.g., `.theme-switch input:focus-visible + .slider`) and provide semantics with `role="switch"` and `aria-label`.
