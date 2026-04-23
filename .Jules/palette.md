@@ -1,0 +1,3 @@
+## 2024-05-23 - Theme Toggle Accessibility & Delight
+**Learning:** Custom toggle switches implemented with `display: none` inputs are inaccessible to keyboard users. The "visually hidden input" pattern (using `clip`, `width: 1px`, etc.) combined with `:focus-visible` styling on the label/slider restores accessibility while maintaining the custom design. Adding emojis (☀️/🌙) to the track improves affordance.
+**Action:** When styling custom checkboxes/radios, never use `display: none` on the input. Use the visually-hidden pattern and ensure a visible focus indicator exists on the custom UI element. Always add `aria-label` if no visible text label exists.
