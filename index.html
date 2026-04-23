@@ -166,8 +166,12 @@
             width: 44px;
         }
 
+        /* Accessible Hidden Input */
         .theme-switch input {
-            display: none;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
         }
 
         .slider {
@@ -184,10 +188,20 @@
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
+        /* Keyboard Focus Indicator */
+        .theme-switch input:focus-visible + .slider {
+            box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--accent);
+        }
+
         .slider:before {
             background-color: #fff;
             bottom: 3px;
-            content: "";
+            content: "☀️";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1;
+            font-size: 11px;
             height: 16px;
             left: 3px;
             position: absolute;
@@ -201,6 +215,7 @@
         }
 
         input:checked+.slider:before {
+            content: "🌙";
             transform: translateX(20px);
         }
 
@@ -387,7 +402,7 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" role="switch" />
                     <div class="slider"></div>
                 </label>
             </div>
