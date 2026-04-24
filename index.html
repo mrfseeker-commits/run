@@ -573,41 +573,55 @@
 
                 // Temp logic
                 let tempMsg = "";
-                if (minTemp <= -2) {
-                    tempMsg = "매우 추운 날씨입니다.<br>방한과 보온에 각별히 신경쓰세요.";
-                    gears.push({ icon: "👕", name: "기모 베이스레이어" });
-                    gears.push({ icon: "🧥", name: "보온 자켓" });
+                if (minTemp <= -5) {
+                    if (mainMsg === "") mainMsg = "매우 추운 날씨입니다.<br>체온 유지를 위해 철저한 방한이 필요합니다.";
+                    gears.push({ icon: "👕", name: "헤비 기모 베이스레이어" });
+                    gears.push({ icon: "🧥", name: "방풍/보온 러닝 자켓" });
                     gears.push({ icon: "👖", name: "기모 러닝 타이즈" });
                     gears.push({ icon: "🧤", name: "방한 장갑" });
                     gears.push({ icon: "🧣", name: "넥워머" });
-                    gears.push({ icon: "🎧", name: "귀마개" });
+                    gears.push({ icon: "🎧", name: "귀마개/비니" });
+                } else if (minTemp <= 0) {
+                    if (mainMsg === "") mainMsg = "영하의 날씨입니다.<br>레이어링을 통해 보온에 신경쓰세요.";
+                    gears.push({ icon: "👕", name: "기모 베이스레이어" });
+                    gears.push({ icon: "🧥", name: "경량 보온 자켓" });
+                    gears.push({ icon: "👖", name: "동계용 타이즈" });
+                    gears.push({ icon: "🧤", name: "러닝 장갑" });
+                    gears.push({ icon: "🎧", name: "귀마개 헤어밴드" });
                 } else if (minTemp <= 5) {
                     if (mainMsg === "") mainMsg = "쌀쌀한 공기입니다.<br>체온을 유지할 수 있는 겹쳐 입기를 추천합니다.";
-                    gears.push({ icon: "👕", name: "흡습속건 긴팔" });
-                    gears.push({ icon: "🎽", name: "러닝 조끼" });
+                    gears.push({ icon: "👕", name: "긴팔 베이스레이어" });
+                    if (!gears.find(g => g.name.includes("자켓"))) gears.push({ icon: "🧥", name: "바람막이/러닝 베스트" });
                     gears.push({ icon: "👖", name: "러닝 타이즈/긴바지" });
-                    gears.push({ icon: "🧤", name: "얇은 장갑" });
+                    gears.push({ icon: "🧤", name: "얇은 러닝 장갑" });
                 } else if (minTemp <= 10) {
                     if (mainMsg === "") mainMsg = "달리기 좋은 서늘한 날씨입니다.<br>바람막이 정도의 가벼운 아우터면 충분해요.";
-                    gears.push({ icon: "👕", name: "긴팔 티셔츠" });
+                    gears.push({ icon: "👕", name: "긴팔 티셔츠/기능성 롱슬리브" });
                     if (!gears.find(g => g.name.includes("자켓"))) gears.push({ icon: "🧥", name: "경량 바람막이" });
-                    gears.push({ icon: "🩳", name: "반바지 (또는 7부)" });
+                    gears.push({ icon: "🩳", name: "반바지 (또는 7부 타이즈)" });
                 } else if (minTemp <= 15) {
                     if (mainMsg === "") mainMsg = "최고의 러닝 날씨입니다!<br>가볍고 쾌적하게 입고 나가세요.";
-                    gears.push({ icon: "👕", name: "반팔 티셔츠" });
-                    gears.push({ icon: "🩳", name: "러닝 반바지" });
-                } else if (minTemp <= 22) {
+                    gears.push({ icon: "👕", name: "반팔 티셔츠/숏슬리브" });
+                    gears.push({ icon: "🩳", name: "러닝 숏팬츠" });
+                } else if (minTemp <= 20) {
                     if (mainMsg === "") mainMsg = "조금 덥게 느껴질 수 있습니다.<br>통기성이 좋은 복장을 추천합니다.";
-                    gears.push({ icon: "🎽", name: "싱글렛/반팔" });
+                    gears.push({ icon: "🎽", name: "싱글렛/기능성 반팔" });
                     gears.push({ icon: "🩳", name: "짧은 러닝 팬츠" });
                     gears.push({ icon: "😎", name: "스포츠 선글라스" });
-                } else {
-                    if (mainMsg === "") mainMsg = "더운 날씨입니다.<br>자외선 차단과 수분 보충에 신경쓰세요!";
+                } else if (minTemp <= 25) {
+                    if (mainMsg === "") mainMsg = "더운 날씨입니다.<br>수분 보충과 땀 배출이 중요합니다.";
                     gears.push({ icon: "🎽", name: "메쉬 싱글렛" });
-                    gears.push({ icon: "🩳", name: "숏팬츠" });
+                    gears.push({ icon: "🩳", name: "러닝 숏팬츠" });
                     gears.push({ icon: "🧢", name: "러닝 캡/썬바이저" });
                     gears.push({ icon: "😎", name: "스포츠 선글라스" });
-                    gears.push({ icon: "💧", name: "수분 보충 (물통)" });
+                } else {
+                    if (mainMsg === "") mainMsg = "매우 무더운 날씨입니다.<br>자외선 차단과 충분한 수분 보충에 각별히 신경쓰세요!";
+                    gears.push({ icon: "🎽", name: "초경량 메쉬 싱글렛" });
+                    gears.push({ icon: "🩳", name: "초경량 숏팬츠" });
+                    gears.push({ icon: "🧢", name: "통기성 썬바이저" });
+                    gears.push({ icon: "😎", name: "스포츠 선글라스" });
+                    gears.push({ icon: "💧", name: "수분 보충 필수 (소프트 플라스크/물통)" });
+                    gears.push({ icon: "🧴", name: "선크림" });
                 }
             }
 
