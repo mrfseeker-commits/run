@@ -1,0 +1,3 @@
+## 2024-04-26 - Accessible Theme Switch
+**Learning:** Native `<input type="checkbox">` elements functioning as toggle switches should not be hidden using `display: none;` as it removes them from the accessibility tree, making keyboard navigation and screen reader interaction impossible. They must be visually hidden using `opacity: 0; width: 0; height: 0; position: absolute;` instead.
+**Action:** Apply the "visually hidden" pattern and add `:focus-visible` to adjacent elements (`.slider`) to preserve keyboard focus indicators while keeping the UI clean. Always ensure inputs styled as switches have `role="switch"` and an appropriate `aria-label`.
