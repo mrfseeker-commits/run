@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Hidden Input Focus
+**Learning:** Custom toggle switches using `display: none` on native inputs break keyboard accessibility by hiding the focus state and making them undiscoverable to screen readers.
+**Action:** Always use the 'visually hidden' CSS pattern (`opacity: 0`, `width: 0`, `height: 0`, `position: absolute`) instead of `display: none`, and use `:focus-visible` on the adjacent visible element (`.slider`) to indicate focus.
