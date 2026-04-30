@@ -1,0 +1,3 @@
+## 2024-03-24 - Accessible Hidden Inputs for Custom Checkboxes
+**Learning:** `display: none` completely removes inputs from the accessibility tree, making custom toggle switches impossible to navigate via keyboard or screen reader.
+**Action:** Use the visually hidden pattern (`opacity: 0; width: 0; height: 0; position: absolute;`) instead of `display: none` for inputs like `<input type="checkbox" role="switch">`, and ensure adjacent visible elements have `:focus-visible` outline styles.
