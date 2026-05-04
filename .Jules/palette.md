@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Hidden Inputs
+**Learning:** Using `display: none` on inputs (like checkboxes for custom toggle switches) completely removes them from the accessibility tree, breaking screen reader and keyboard accessibility.
+**Action:** Use the "visually hidden" pattern (`opacity: 0; width: 0; height: 0; position: absolute;`) instead, and rely on `:focus-visible` styling on adjacent visible elements (like the `.slider`) to indicate keyboard focus.
