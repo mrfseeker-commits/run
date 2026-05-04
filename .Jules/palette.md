@@ -1,0 +1,3 @@
+## 2024-05-02 - Accessible Custom Toggle Switches
+**Learning:** Using `display: none` on native checkboxes to build custom toggle switches completely breaks keyboard navigation and screen reader support by removing the element from the accessibility tree. `page.wait_for_selector` also fails on visually hidden elements during testing.
+**Action:** Always use the "visually hidden" pattern (`opacity: 0; width: 0; position: absolute;`) for the native input instead of `display: none`. Apply `:focus-visible` styling to adjacent visible elements to provide clear keyboard focus indicators, and ensure `role="switch"` and `aria-label` are applied for screen readers.
