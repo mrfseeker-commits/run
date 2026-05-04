@@ -166,8 +166,34 @@
             width: 44px;
         }
 
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
         .theme-switch input {
-            display: none;
+            /* Use sr-only instead of display:none to keep it keyboard accessible */
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        /* Focus visible for keyboard accessibility */
+        .theme-switch input:focus-visible+.slider {
+            box-shadow: 0 0 0 2px var(--card-bg), 0 0 0 4px var(--accent);
         }
 
         .slider {
@@ -379,7 +405,7 @@
 
 <body>
 
-    <div class="header-container">
+    <header class="header-container">
         <div class="header-overlay"></div>
         <div class="header-content">
             <div class="title-row">
@@ -387,7 +413,7 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
@@ -397,9 +423,9 @@
 
             <div id="loading" class="loading">기상 데이터 분석중...</div>
         </div>
-    </div>
+    </header>
 
-    <div class="main-wrapper">
+    <main class="main-wrapper">
         <div id="timeline-date" class="timeline-date hidden">
             <div id="date-text"></div>
             <div id="sunrise-info" class="sunrise-info"></div>
@@ -420,8 +446,8 @@
             </div>
         </div>
 
-        <div class="footer-email">mrfseeker@gmail.com</div>
-    </div>
+        <footer class="footer-email">mrfseeker@gmail.com</footer>
+    </main>
 
     <script>
         // --- 1. Theme Logic (Default Light) ---
@@ -485,14 +511,14 @@
         // --- 2. Data & Rendering ---
 
         function getIcon(sky, pty) {
-            if (pty === 1 || pty === 5) return "🌧️";
-            if (pty === 3 || pty === 7) return "🌨️";
-            if (pty === 2 || pty === 6) return "🌨️";
+            if (pty === 1 || pty === 5) return '<span role="img" aria-label="비">🌧️</span>';
+            if (pty === 3 || pty === 7) return '<span role="img" aria-label="눈">🌨️</span>';
+            if (pty === 2 || pty === 6) return '<span role="img" aria-label="진눈깨비">🌨️</span>';
 
-            if (sky === "Sunny" || sky === "Clear") return "☀️";
-            if (sky === "Cloudy") return "☁️";
-            if (sky === "Overcast") return "🌥️";
-            return "☀️";
+            if (sky === "Sunny" || sky === "Clear") return '<span role="img" aria-label="맑음">☀️</span>';
+            if (sky === "Cloudy") return '<span role="img" aria-label="구름 조금">☁️</span>';
+            if (sky === "Overcast") return '<span role="img" aria-label="흐림">🌥️</span>';
+            return '<span role="img" aria-label="맑음">☀️</span>';
         }
 
         function render(data) {
