@@ -1,0 +1,3 @@
+## 2025-02-27 - Custom Checkbox Hidden Input Pattern
+**Learning:** Screen readers and keyboard navigation fail to work when `<input type="checkbox">` elements (used for custom toggle switches) are hidden using `display: none`. Furthermore, the visual focus ring (`:focus-visible`) cannot be displayed or tracked when the element is `display: none`.
+**Action:** Always use the 'visually hidden' CSS pattern (`opacity: 0`, `width: 0`, `height: 0`, `position: absolute`) instead of `display: none` for accessible hidden inputs. Also, explicitly define `:focus-visible` outline styles on adjacent visible elements (like a `.slider`) to ensure keyboard navigators know when the toggle is focused.
