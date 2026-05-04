@@ -167,7 +167,14 @@
         }
 
         .theme-switch input {
-            display: none;
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .theme-switch input:focus-visible+.slider {
+            box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px var(--accent);
         }
 
         .slider {
@@ -194,6 +201,38 @@
             transition: .4s;
             width: 16px;
             border-radius: 50%;
+            z-index: 2;
+        }
+
+        .slider .icon {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10px;
+            line-height: 1;
+            z-index: 1;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .slider .sun {
+            left: 6px;
+            opacity: 0;
+        }
+
+        .slider .moon {
+            right: 6px;
+            opacity: 1;
+        }
+
+        /* Show Sun when checked (Dark Mode) */
+        input:checked+.slider .sun {
+            opacity: 1;
+        }
+
+        /* Hide Moon when checked (Dark Mode) */
+        input:checked+.slider .moon {
+            opacity: 0;
         }
 
         input:checked+.slider {
@@ -387,8 +426,11 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
-                    <div class="slider"></div>
+                    <input type="checkbox" id="checkbox" role="switch" aria-label="다크 모드 전환" />
+                    <div class="slider">
+                        <span class="icon sun" aria-hidden="true">☀️</span>
+                        <span class="icon moon" aria-hidden="true">🌙</span>
+                    </div>
                 </label>
             </div>
             <div id="current-date" class="date-display"></div>
