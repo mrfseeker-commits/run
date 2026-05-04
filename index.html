@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KAIST Track Weather</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌤️</text></svg>">
     <style>
         :root {
             /* Default Light Mode */
@@ -167,7 +168,17 @@
         }
 
         .theme-switch input {
-            display: none;
+            /* Visually hidden but accessible */
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+            margin: 0;
+        }
+
+        /* Focus state for keyboard navigation */
+        .theme-switch input:focus-visible + .slider {
+            box-shadow: 0 0 0 2px var(--bg-color), 0 0 0 4px var(--accent);
         }
 
         .slider {
@@ -386,8 +397,8 @@
                 <div class="title">KAIST TRACK<br>날씨정보</div>
 
                 <!-- Toggle Switch Inline -->
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                <label class="theme-switch" for="theme-toggle">
+                    <input type="checkbox" id="theme-toggle" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
