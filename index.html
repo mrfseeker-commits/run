@@ -167,7 +167,16 @@
         }
 
         .theme-switch input {
-            display: none;
+            /* Visually hidden for a11y but focusable */
+            opacity: 0;
+            width: 0;
+            height: 0;
+            position: absolute;
+        }
+
+        .theme-switch input:focus-visible + .slider {
+            outline: 2px solid var(--accent);
+            outline-offset: 2px;
         }
 
         .slider {
@@ -187,7 +196,11 @@
         .slider:before {
             background-color: #fff;
             bottom: 3px;
-            content: "";
+            content: "☀️";
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
             height: 16px;
             left: 3px;
             position: absolute;
@@ -202,6 +215,7 @@
 
         input:checked+.slider:before {
             transform: translateX(20px);
+            content: "🌙";
         }
 
         /* Main Content Helper */
@@ -387,7 +401,7 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" role="switch" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
