@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Toggle Switch
+**Learning:** Hidden inputs (e.g. custom checkboxes with `display: none`) are completely inaccessible to screen readers and keyboard navigation. Using `.focus()` programmatically doesn't trigger visually hidden elements, so testing tools like Playwright need alternative strategies (like simulating the "Tab" key or checking adjacent elements) to confirm focus states.
+**Action:** When implementing custom toggle switches, always use the visually hidden pattern (`position: absolute; opacity: 0; width: 0; height: 0;`) instead of `display: none`. Ensure you provide keyboard accessibility by adding a `:focus-visible` ring on adjacent visual elements (e.g. `.slider`) and applying standard `role="switch"` and descriptive `aria-label`s.
