@@ -1,0 +1,3 @@
+## 2024-03-08 - Accessible Custom Toggle Switches
+**Learning:** Custom switches in `index.html` were originally built using `display: none;` on the hidden `<input type="checkbox">`. This completely removed the input from the accessibility tree, preventing screen readers from announcing it and making keyboard navigation impossible.
+**Action:** Always use the "visually hidden" pattern (`position: absolute; opacity: 0; width: 0; height: 0;`) for hidden inputs in custom UI controls. Additionally, ensure there is a visible focus indicator (e.g., using `:focus-visible` on the adjacent `+ .slider` or `+ label`) and that appropriate ARIA attributes (`role="switch"`, `aria-label`) are provided for screen readers.
