@@ -536,78 +536,103 @@
             let mainMsg = "";
             let indoorRec = false;
 
-            if (minTemp <= -7) {
-                mainMsg = "영하 7도 이하 혹한입니다.<br>🚨 실내 트레드밀을 강력 추천합니다.";
+            if (minTemp <= -15) {
+                mainMsg = "영하 15도 이하 극한의 혹한입니다.<br>🚨 동상 위험이 매우 높으므로 실내 트레드밀을 강력 추천합니다.";
                 indoorRec = true;
-            } else if (maxTemp >= 29) {
-                mainMsg = "너무 덥습니다. 온열 질환 주의!<br>🚨 가급적 실내 운동을 권장합니다.";
+            } else if (maxTemp >= 33) {
+                mainMsg = "33도 이상 폭염입니다. 온열 질환 주의!<br>🚨 가급적 실내 운동을 권장하며, 야외 런닝시 즉각 중지하세요.";
                 indoorRec = true;
             } else if (isIce) {
-                mainMsg = "빙판길 미끄럼 사고 위험이 높습니다.<br>🚨 실내 트레드밀을 추천합니다.";
+                mainMsg = "블랙아이스 등 빙판길 미끄럼 사고 위험이 높습니다.<br>🚨 낙상 위험으로 실내 트레드밀 훈련을 추천합니다.";
                 indoorRec = true;
-            } else if (maxWind >= 10) {
-                mainMsg = "바람이 매우 강합니다. (강풍)<br>🚨 안전을 위해 실내 운동을 권장합니다.";
+            } else if (maxWind >= 15) {
+                mainMsg = "초속 15m 이상의 태풍급 강풍입니다.<br>🚨 비산물에 의한 부상 위험이 있으므로 실내 운동을 권장합니다.";
                 indoorRec = true;
             } else if (isRain) {
-                mainMsg = "현재 비/눈이 내리고 있습니다.<br>안전에 유의하여 실내 운동을 권장합니다.";
+                mainMsg = "현재 강수가 진행 중입니다.<br>우중주 훈련이 아니라면 실내 트레드밀로 대체하세요.";
                 indoorRec = true;
             }
 
             if (indoorRec) {
                 card.classList.add('warning');
-                gears.push({ icon: "🏃", name: "트레드밀" });
-                gears.push({ icon: "🏠", name: "실내운동" });
-                if (minTemp <= 0) gears.push({ icon: "🧣", name: "외출시 롱패딩" });
+                gears.push({ icon: "🏃", name: "트레드밀 훈련" });
+                gears.push({ icon: "🏠", name: "인도어 크로스핏" });
+                if (minTemp <= 0) gears.push({ icon: "🧣", name: "헤비다운 파카" });
             } else {
                 card.classList.remove('warning');
 
-                // Wind logic
-                if (maxWind >= 5 && maxWind < 10) {
-                    mainMsg += "바람이 강해 체감온도가 낮을 수 있습니다.<br>";
-                    gears.push({ icon: "🧥", name: "방풍 자켓" });
-                } else if (hasPop) {
-                    mainMsg += "강수 확률이 있습니다. 가벼운 비에 대비하세요.<br>";
-                    gears.push({ icon: "🧥", name: "발수 자켓" });
-                    gears.push({ icon: "🧢", name: "러닝 캡(방수)" });
+                // Wind and Pop logic
+                let conditions = [];
+                if (maxWind >= 10) {
+                    conditions.push("강한 윈드칠(풍항)로 체감온도 저하가 예상됩니다.");
+                    gears.push({ icon: "🧥", name: "고어텍스 윈드쉴드" });
+                } else if (maxWind >= 5) {
+                    conditions.push("바람이 다소 붑니다.");
+                    gears.push({ icon: "🧥", name: "패커블 윈드브레이커" });
                 }
 
-                // Temp logic
-                let tempMsg = "";
-                if (minTemp <= -2) {
-                    tempMsg = "매우 추운 날씨입니다.<br>방한과 보온에 각별히 신경쓰세요.";
-                    gears.push({ icon: "👕", name: "기모 베이스레이어" });
-                    gears.push({ icon: "🧥", name: "보온 자켓" });
+                if (hasPop) {
+                    conditions.push("우천 가능성이 있습니다. 방수 대비를 권장합니다.");
+                    if (!gears.find(g => g.name.includes("윈드"))) {
+                        gears.push({ icon: "🧥", name: "초경량 발수 자켓" });
+                    }
+                    gears.push({ icon: "🧢", name: "발수 러닝 캡" });
+                }
+
+                if (conditions.length > 0) {
+                    mainMsg += conditions.join("<br>") + "<br>";
+                }
+
+                // Professional Temp logic
+                if (minTemp <= -10) {
+                    if (mainMsg === "") mainMsg = "영하 10도 이하의 혹한기입니다.<br>완벽한 3레이어링 시스템으로 체온 손실을 철저히 차단하세요.";
+                    gears.push({ icon: "👕", name: "메리노울 베이스레이어" });
+                    gears.push({ icon: "🧥", name: "인슐레이티드 미드레이어" });
+                    gears.push({ icon: "🧥", name: "헤비 윈드브레이커" });
+                    gears.push({ icon: "👖", name: "방풍 윈터 타이즈" });
+                    gears.push({ icon: "🧤", name: "방한용 벙어리 장갑" });
+                    gears.push({ icon: "🧣", name: "플리스 넥게이터" });
+                } else if (minTemp <= -5) {
+                    if (mainMsg === "") mainMsg = "영하권의 추운 날씨입니다.<br>코어 체온 유지를 위한 하프집업과 방풍 타이즈를 추천합니다.";
+                    gears.push({ icon: "👕", name: "써멀 베이스레이어" });
+                    gears.push({ icon: "🧥", name: "소프트쉘 자켓" });
                     gears.push({ icon: "👖", name: "기모 러닝 타이즈" });
-                    gears.push({ icon: "🧤", name: "방한 장갑" });
-                    gears.push({ icon: "🧣", name: "넥워머" });
-                    gears.push({ icon: "🎧", name: "귀마개" });
+                    gears.push({ icon: "🧤", name: "써멀 러닝 글로브" });
+                    gears.push({ icon: "🎧", name: "헤드밴드/귀마개" });
+                } else if (minTemp <= 0) {
+                    if (mainMsg === "") mainMsg = "영하 부근의 날씨입니다.<br>가벼운 3레이어링 또는 두꺼운 2레이어링 시스템이 적합합니다.";
+                    gears.push({ icon: "👕", name: "기모 롱슬리브" });
+                    gears.push({ icon: "🎽", name: "인슐레이티드 베스트" });
+                    gears.push({ icon: "👖", name: "미드웨이트 타이즈" });
+                    gears.push({ icon: "🧤", name: "경량 보온 장갑" });
                 } else if (minTemp <= 5) {
-                    if (mainMsg === "") mainMsg = "쌀쌀한 공기입니다.<br>체온을 유지할 수 있는 겹쳐 입기를 추천합니다.";
-                    gears.push({ icon: "👕", name: "흡습속건 긴팔" });
-                    gears.push({ icon: "🎽", name: "러닝 조끼" });
-                    gears.push({ icon: "👖", name: "러닝 타이즈/긴바지" });
-                    gears.push({ icon: "🧤", name: "얇은 장갑" });
+                    if (mainMsg === "") mainMsg = "초겨울 수준의 쌀쌀한 날씨입니다.<br>웜업 전 체온 유지를 위한 경량 아우터 활용을 추천합니다.";
+                    gears.push({ icon: "👕", name: "흡습속건 롱슬리브" });
+                    if (!gears.find(g => g.name.includes("윈드"))) gears.push({ icon: "🧥", name: "경량 바람막이" });
+                    gears.push({ icon: "👖", name: "러닝 타이즈/조거팬츠" });
+                    gears.push({ icon: "🧤", name: "라이트 글로브" });
                 } else if (minTemp <= 10) {
-                    if (mainMsg === "") mainMsg = "달리기 좋은 서늘한 날씨입니다.<br>바람막이 정도의 가벼운 아우터면 충분해요.";
-                    gears.push({ icon: "👕", name: "긴팔 티셔츠" });
-                    if (!gears.find(g => g.name.includes("자켓"))) gears.push({ icon: "🧥", name: "경량 바람막이" });
-                    gears.push({ icon: "🩳", name: "반바지 (또는 7부)" });
+                    if (mainMsg === "") mainMsg = "러닝 시 땀 배출과 통기성이 중요한 서늘한 날씨입니다.<br>체온 조절이 용이한 레이어링이 필요합니다.";
+                    gears.push({ icon: "👕", name: "미드웨이트 롱슬리브" });
+                    gears.push({ icon: "🩳", name: "5인치 러닝 숏츠" });
+                    gears.push({ icon: "🧦", name: "크루 삭스" });
                 } else if (minTemp <= 15) {
-                    if (mainMsg === "") mainMsg = "최고의 러닝 날씨입니다!<br>가볍고 쾌적하게 입고 나가세요.";
-                    gears.push({ icon: "👕", name: "반팔 티셔츠" });
-                    gears.push({ icon: "🩳", name: "러닝 반바지" });
+                    if (mainMsg === "") mainMsg = "러닝을 위한 최적의 기온입니다.<br>개인 기록(PB) 도전을 위한 최상의 컨디션입니다.";
+                    gears.push({ icon: "👕", name: "테크니컬 숏슬리브" });
+                    gears.push({ icon: "🩳", name: "3인치 레이싱 숏츠" });
+                    gears.push({ icon: "🧦", name: "초경량 러닝 삭스" });
                 } else if (minTemp <= 22) {
-                    if (mainMsg === "") mainMsg = "조금 덥게 느껴질 수 있습니다.<br>통기성이 좋은 복장을 추천합니다.";
-                    gears.push({ icon: "🎽", name: "싱글렛/반팔" });
-                    gears.push({ icon: "🩳", name: "짧은 러닝 팬츠" });
-                    gears.push({ icon: "😎", name: "스포츠 선글라스" });
+                    if (mainMsg === "") mainMsg = "다소 덥게 느껴질 수 있는 기온입니다.<br>열 배출이 우수한 초경량, 메쉬 소재를 추천합니다.";
+                    gears.push({ icon: "🎽", name: "에어로 싱글렛" });
+                    gears.push({ icon: "🩳", name: "하프 타이즈/스플릿 숏츠" });
+                    gears.push({ icon: "😎", name: "퍼포먼스 선글라스" });
                 } else {
-                    if (mainMsg === "") mainMsg = "더운 날씨입니다.<br>자외선 차단과 수분 보충에 신경쓰세요!";
-                    gears.push({ icon: "🎽", name: "메쉬 싱글렛" });
-                    gears.push({ icon: "🩳", name: "숏팬츠" });
-                    gears.push({ icon: "🧢", name: "러닝 캡/썬바이저" });
-                    gears.push({ icon: "😎", name: "스포츠 선글라스" });
-                    gears.push({ icon: "💧", name: "수분 보충 (물통)" });
+                    if (mainMsg === "") mainMsg = "고온 다습한 여름 날씨입니다.<br>심박수가 급격히 오를 수 있으므로 수분 보충 플라스크 지참이 필수입니다.";
+                    gears.push({ icon: "🎽", name: "레이싱 싱글렛" });
+                    gears.push({ icon: "🩳", name: "초경량 스플릿 숏츠" });
+                    gears.push({ icon: "🧢", name: "메쉬 썬바이저" });
+                    gears.push({ icon: "😎", name: "퍼포먼스 선글라스" });
+                    gears.push({ icon: "💧", name: "소프트 플라스크 (수분)" });
                 }
             }
 
