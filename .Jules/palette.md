@@ -1,0 +1,3 @@
+## 2024-05-07 - Accessible Theme Toggles
+**Learning:** Using `display: none` on custom checkboxes (like a theme toggle switch) completely removes the element from the accessibility tree, making it invisible to screen readers and keyboard navigation, breaking core a11y requirements.
+**Action:** Always use the 'visually hidden' pattern (`opacity: 0`, `width: 0`, `height: 0`, `position: absolute`) instead. This preserves keyboard focus capability and allows adding a visual focus indicator on the adjacent visible element via `:focus-visible` to satisfy both visual design and accessibility guidelines.
