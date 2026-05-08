@@ -1,0 +1,3 @@
+## 2026-05-08 - Accessible Custom Checkboxes
+**Learning:** Using `display: none` on native inputs for custom toggles/checkboxes removes them from the accessibility tree, making them completely inaccessible to keyboard navigation and screen readers.
+**Action:** Always use the 'visually hidden' CSS pattern (`position: absolute; opacity: 0; width: 0; height: 0;`) instead of `display: none` for custom checkboxes, and ensure adjacent visible elements have `:focus-visible` styles to indicate focus state.
