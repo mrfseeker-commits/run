@@ -1,0 +1,3 @@
+## 2024-05-09 - [Accessible Hidden Inputs]
+**Learning:** Using `display: none` completely hides elements from screen readers and makes them unfocusable via keyboard navigation.
+**Action:** Always use the "visually hidden" pattern (`opacity: 0`, `width: 0`, `height: 0`, `position: absolute`) for native elements like `<input type="checkbox">` that are custom-styled with adjacent elements like `.slider`. Combined with `:focus-visible` outlines on the visible custom element, it ensures full keyboard accessibility and screen reader support without breaking custom designs.
