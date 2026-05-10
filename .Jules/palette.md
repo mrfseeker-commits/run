@@ -1,0 +1,3 @@
+## 2024-05-10 - Custom Checkbox/Switch Accessibility
+**Learning:** In web development, custom checkboxes or switches are often implemented by hiding the native `<input>` using `display: none;` and styling a visual proxy (like a slider) instead. However, `display: none;` completely removes the element from the accessibility tree, making it invisible to screen readers and impossible to focus via keyboard navigation.
+**Action:** Always use the visually hidden pattern (`opacity: 0; width: 0; height: 0; position: absolute;`) instead of `display: none;` for custom form inputs. This ensures the input remains in the accessibility tree and can receive keyboard focus. Pair this with a `:focus-visible` outline on the visual proxy to indicate focus for keyboard users.
