@@ -1,0 +1,3 @@
+## 2024-05-17 - Accessible Custom Checkboxes
+**Learning:** Using `display: none;` on a custom checkbox completely removes it from the accessibility tree, making it invisible to screen readers and keyboard users.
+**Action:** Always use the 'visually hidden' CSS pattern (`opacity: 0; width: 0; height: 0; position: absolute;`) for custom checkboxes so they remain focusable and read by screen readers. Furthermore, ensure adjacent styling elements (like labels or custom sliders) have a visible focus indicator using the `:focus-visible` pseudo-class to aid keyboard navigation.
