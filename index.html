@@ -167,7 +167,20 @@
         }
 
         .theme-switch input {
-            display: none;
+            /* Visually hidden but accessible */
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border-width: 0;
+        }
+
+        .theme-switch input:focus-visible+.slider {
+            box-shadow: 0 0 0 2px #fff, 0 0 0 4px var(--accent);
         }
 
         .slider {
@@ -194,6 +207,20 @@
             transition: .4s;
             width: 16px;
             border-radius: 50%;
+            z-index: 2;
+        }
+
+        /* Icons for delight */
+        .slider:after {
+            content: "🌙";
+            position: absolute;
+            top: 50%;
+            right: 4px;
+            transform: translateY(-52%);
+            font-size: 12px;
+            line-height: 1;
+            transition: opacity 0.3s;
+            opacity: 0.8;
         }
 
         input:checked+.slider {
@@ -202,6 +229,14 @@
 
         input:checked+.slider:before {
             transform: translateX(20px);
+        }
+
+        input:checked+.slider:after {
+            content: "☀️";
+            right: auto;
+            left: 5px;
+            color: #fff;
+            opacity: 1;
         }
 
         /* Main Content Helper */
@@ -387,7 +422,7 @@
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                    <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
