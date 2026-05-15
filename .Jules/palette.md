@@ -1,0 +1,3 @@
+## 2026-05-15 - [Accessible Hidden Inputs]
+**Learning:** Using `display: none` for custom toggle switches hides the input from screen readers and prevents keyboard focus.
+**Action:** Always use the 'visually hidden' pattern (`opacity: 0`, `width: 0`, `height: 0`, `position: absolute`) and add a `:focus-visible` outline to adjacent styling elements to ensure accessibility for screen readers and keyboard navigation.
