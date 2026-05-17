@@ -1,0 +1,3 @@
+## 2026-05-17 - Accessible Custom Toggle Switches
+**Learning:** Using `display: none` on native `<input type="checkbox">` elements when building custom toggle switches completely removes them from the accessibility tree, making them unfocusable by keyboards and invisible to screen readers.
+**Action:** Instead of `display: none`, use the "visually hidden" pattern (`position: absolute; opacity: 0; width: 0; height: 0;`) for the input. Ensure it has an appropriate `role="switch"` and `aria-label`. Then, use the `:focus-visible` pseudo-class on the hidden input combined with the adjacent sibling selector (`+`) to apply a clear visual outline to the custom styled switch (e.g., the `.slider`) when navigated via keyboard.
