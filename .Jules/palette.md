@@ -1,0 +1,3 @@
+## 2024-05-24 - Accessible Custom Toggles
+**Learning:** Using `display: none` to hide inputs (like checkboxes) for custom toggles breaks keyboard navigation and makes them invisible to screen readers, preventing `:focus-visible` outlines from applying.
+**Action:** Use the visually hidden pattern (`opacity: 0; width: 0; height: 0; position: absolute;`) instead of `display: none`, and ensure to add `:focus-visible` outlines on adjacent visible elements (like `.slider`) to maintain keyboard accessibility.
