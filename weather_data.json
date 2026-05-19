@@ -1,9 +1,9 @@
 [
   {
     "time": "04:00",
-    "temp": 19.0,
+    "temp": 20.0,
     "sky": "Overcast",
-    "wind": 1.2,
+    "wind": 2.1,
     "pop": 30,
     "pty": 0
   },
@@ -11,32 +11,32 @@
     "time": "05:00",
     "temp": 19.0,
     "sky": "Overcast",
-    "wind": 0.4,
-    "pop": 30,
-    "pty": 0
+    "wind": 2.3,
+    "pop": 60,
+    "pty": 1
   },
   {
     "time": "06:00",
     "temp": 19.0,
     "sky": "Overcast",
-    "wind": 2.5,
-    "pop": 30,
-    "pty": 0
+    "wind": 3.0,
+    "pop": 60,
+    "pty": 1
   },
   {
     "time": "07:00",
     "temp": 19.0,
     "sky": "Overcast",
-    "wind": 3.9,
-    "pop": 30,
-    "pty": 0
+    "wind": 3.7,
+    "pop": 60,
+    "pty": 1
   },
   {
     "time": "08:00",
     "temp": 19.0,
     "sky": "Overcast",
-    "wind": 3.0,
-    "pop": 30,
-    "pty": 0
+    "wind": 3.4,
+    "pop": 60,
+    "pty": 1
   }
 ]
