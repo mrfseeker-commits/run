@@ -1,0 +1,3 @@
+## 2024-05-22 - Accessible Dark Mode Toggle
+**Learning:** Using `display: none` on native custom checkbox inputs (like the theme toggle) completely removes them from the accessibility tree, making it impossible for keyboard-only or screen reader users to toggle the theme.
+**Action:** When implementing custom toggle switches, apply the visually hidden pattern (`opacity: 0; width: 0; height: 0; position: absolute;`) instead of `display: none` to the input element, apply `role="switch"` and `aria-label`, and implement a clear `:focus-visible` state outline on a sibling or adjacent wrapper to provide visual feedback for keyboard navigation.
