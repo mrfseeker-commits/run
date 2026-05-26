@@ -1,0 +1,3 @@
+## 2024-05-26 - Accessible Custom Checkboxes
+**Learning:** Using `display: none` for custom checkboxes hides them from assistive technologies (like screen readers) and removes them from the document flow, making them unreachable via keyboard navigation (Tab).
+**Action:** Use the "visually hidden" pattern instead: `opacity: 0; width: 0; position: absolute;`. This keeps the element accessible via keyboard and screen readers while hiding it visually. Ensure there is a visible focus state (`:focus-visible`) for adjacent visible elements when the hidden input is focused.
