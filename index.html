@@ -386,8 +386,8 @@
                 <div class="title">KAIST TRACK<br>날씨정보</div>
 
                 <!-- Toggle Switch Inline -->
-                <label class="theme-switch" for="checkbox">
-                    <input type="checkbox" id="checkbox" />
+                <label class="theme-switch" for="checkbox" title="다크 모드 전환">
+                    <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" />
                     <div class="slider"></div>
                 </label>
             </div>
@@ -412,7 +412,7 @@
         <!-- Recommendation -->
         <div id="attire" class="attire-card hidden">
             <div class="rec-header">Running Advice</div>
-            <div id="rec-text" class="rec-main">
+            <div id="rec-text" class="rec-main" aria-live="polite">
                 <!-- Dynamic Text -->
             </div>
             <div id="gear-list" class="gear-grid">
@@ -495,6 +495,17 @@
             return "☀️";
         }
 
+        function getIconLabel(sky, pty) {
+            if (pty === 1 || pty === 5) return "비";
+            if (pty === 3 || pty === 7) return "눈";
+            if (pty === 2 || pty === 6) return "진눈깨비";
+
+            if (sky === "Sunny" || sky === "Clear") return "맑음";
+            if (sky === "Cloudy") return "구름";
+            if (sky === "Overcast") return "흐림";
+            return "맑음";
+        }
+
         function render(data) {
             const container = document.getElementById('timeline');
             container.innerHTML = "";
@@ -512,7 +523,7 @@
 
                 el.innerHTML = `
                     <div class="ts-hour">${d.time}</div>
-                    <div class="ts-icon">${getIcon(d.sky, d.pty)}</div>
+                    <div class="ts-icon" role="img" aria-label="${getIconLabel(d.sky, d.pty)}">${getIcon(d.sky, d.pty)}</div>
                     <div class="ts-temp">${d.temp}°</div>
                     <div class="ts-wind">${d.wind}m/s</div>
                     ${d.pop > 0 ? `<div class="ts-pop">💧${d.pop}%</div>` : ''}
