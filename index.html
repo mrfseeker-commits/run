@@ -549,7 +549,11 @@
                 mainMsg = "초속 15m 이상의 태풍급 강풍입니다.<br>🚨 비산물에 의한 부상 위험이 있으므로 실내 운동을 권장합니다.";
                 indoorRec = true;
             } else if (isRain) {
-                mainMsg = "현재 강수가 진행 중입니다.<br>우중주 훈련이 아니라면 실내 트레드밀로 대체하세요.";
+                let rainType = "강수";
+                if (data.some(d => d.pty === 1 || d.pty === 4)) rainType = "비";
+                if (data.some(d => d.pty === 3)) rainType = "눈";
+                if (data.some(d => d.pty === 2)) rainType = "비와 눈";
+                mainMsg = `예보상 ${rainType}가 내릴 예정입니다.<br>우중주 훈련이 아니라면 실내 트레드밀로 대체하세요.`;
                 indoorRec = true;
             }
 
