@@ -391,7 +391,7 @@
         <div class="header-overlay"></div>
         <div class="header-content">
             <div class="title-row">
-                <div class="title">KAIST TRACK<br>날씨정보</div>
+                <h1 class="title">KAIST TRACK<br>날씨정보</h1>
 
                 <!-- Toggle Switch Inline -->
                 <label class="theme-switch" for="checkbox" title="다크 모드 전환">
@@ -407,7 +407,7 @@
         </div>
     </div>
 
-    <div class="main-wrapper">
+    <main class="main-wrapper">
         <div id="timeline-date" class="timeline-date hidden">
             <div id="date-text"></div>
             <div id="sunrise-info" class="sunrise-info"></div>
@@ -419,7 +419,7 @@
 
         <!-- Recommendation -->
         <div id="attire" class="attire-card hidden">
-            <div class="rec-header">Running Advice</div>
+            <h2 class="rec-header">Running Advice</h2>
             <div id="rec-text" class="rec-main" aria-live="polite">
                 <!-- Dynamic Text -->
             </div>
@@ -429,7 +429,7 @@
         </div>
 
         <div class="footer-email">mrfseeker@gmail.com</div>
-    </div>
+    </main>
 
     <script>
         // --- 1. Theme Logic (Default Light) ---
@@ -656,7 +656,7 @@
             gears.forEach(g => {
                 gearList.innerHTML += `
                     <div class="gear-item">
-                        <div class="gear-icon">${g.icon}</div>
+                        <div class="gear-icon" aria-hidden="true">${g.icon}</div>
                         <div class="gear-name">${g.name}</div>
                     </div>
                 `;
