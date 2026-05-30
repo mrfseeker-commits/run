@@ -9,3 +9,7 @@
 ## 2026-05-28 - ARIA Switch Role Behavior
 **Learning:** When applying `role='switch'` to native `<input type='checkbox'>` elements, the `aria-checked` attribute is implicitly handled by the browser based on the `checked` state, so it does not need to be manually updated via JavaScript.
 **Action:** Use `role='switch'` on theme toggles and custom toggle checkboxes for better screen reader announcements without adding redundant state management code.
+
+## 2024-05-29 - Visual Feedback for Async Operations
+**Learning:** While `aria-live` is crucial for screen readers, sighted users also need clear visual feedback (like a spinner) during async operations to understand that the system is working, especially if data loading takes noticeable time.
+**Action:** Always include a visual loading indicator (spinner, progress bar, or skeleton) alongside the `aria-live` text for loading states.
