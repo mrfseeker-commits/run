@@ -9,3 +9,7 @@
 ## 2026-05-28 - ARIA Switch Role Behavior
 **Learning:** When applying `role='switch'` to native `<input type='checkbox'>` elements, the `aria-checked` attribute is implicitly handled by the browser based on the `checked` state, so it does not need to be manually updated via JavaScript.
 **Action:** Use `role='switch'` on theme toggles and custom toggle checkboxes for better screen reader announcements without adding redundant state management code.
+
+## 2026-06-03 - Semantic Landmarks and Decorative Emojis
+**Learning:** Using semantic landmarks (`<main>`, `<h1>`, `<h2>`) instead of `<div>` improves screen reader navigation. Emojis used purely for visual decoration within components (like gear icons) add noise for screen reader users and should be hidden.
+**Action:** Use proper heading hierarchy and landmark roles. Add `aria-hidden="true"` to decorative icons and emojis when text labels are already present.
