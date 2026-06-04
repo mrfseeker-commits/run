@@ -9,3 +9,7 @@
 ## 2026-05-28 - ARIA Switch Role Behavior
 **Learning:** When applying `role='switch'` to native `<input type='checkbox'>` elements, the `aria-checked` attribute is implicitly handled by the browser based on the `checked` state, so it does not need to be manually updated via JavaScript.
 **Action:** Use `role='switch'` on theme toggles and custom toggle checkboxes for better screen reader announcements without adding redundant state management code.
+
+## 2024-06-04 - Semantic HTML and Screen Readers
+**Learning:** Using generic `<div>` elements for major page sections like headers and main content makes it harder for screen reader users to navigate the structure. Additionally, decorative emojis used alongside text labels can cause redundant or confusing announcements if not properly hidden.
+**Action:** Use semantic HTML landmarks (e.g., `<main>`, `<header>`, `<h1>`, `<h2>`) instead of generic `<div>` elements for layout, and apply `aria-hidden="true"` to purely decorative emojis when text alternatives are present.
