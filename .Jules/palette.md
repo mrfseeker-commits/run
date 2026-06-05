@@ -9,3 +9,6 @@
 ## 2026-05-28 - ARIA Switch Role Behavior
 **Learning:** When applying `role='switch'` to native `<input type='checkbox'>` elements, the `aria-checked` attribute is implicitly handled by the browser based on the `checked` state, so it does not need to be manually updated via JavaScript.
 **Action:** Use `role='switch'` on theme toggles and custom toggle checkboxes for better screen reader announcements without adding redundant state management code.
+## 2026-06-02 - Semantic HTML Landmarks and Reduced Screen Reader Noise
+**Learning:** Using generic `<div>` elements for major page sections and purely decorative icons without `aria-hidden="true"` creates noise and poor navigation for screen reader users.
+**Action:** Always replace layout wrappers with semantic landmarks like `<main>` and `<header>`, apply proper heading tags (`<h1>`, `<h2>`) with CSS resets for default margins, and hide redundant icons from the accessibility tree when a text label already exists.
