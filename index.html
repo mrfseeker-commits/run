@@ -138,6 +138,7 @@
         }
 
         .timeline-date {
+            margin-top: 0;
             width: 100%;
             text-align: center;
             padding: 12px 0;
@@ -409,10 +410,10 @@
     </header>
 
     <main class="main-wrapper">
-        <div id="timeline-date" class="timeline-date hidden">
-            <div id="date-text"></div>
-            <div id="sunrise-info" class="sunrise-info"></div>
-        </div>
+        <h2 id="timeline-date" class="timeline-date hidden">
+            <span id="date-text" style="display: block;"></span>
+            <span id="sunrise-info" class="sunrise-info" style="display: block;"></span>
+        </h2>
         <!-- 04~08 Timeline -->
         <div id="timeline" class="timeline-container hidden">
             <!-- JS will populate this -->
@@ -483,7 +484,7 @@
                 if (data.status === 'OK') {
                     const sunriseUTC = new Date(data.results.sunrise);
                     const sunriseLocal = sunriseUTC.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
-                    document.getElementById('sunrise-info').innerText = `🌅 일출 ${sunriseLocal}`;
+                    document.getElementById('sunrise-info').innerHTML = `<span aria-hidden="true">🌅</span> 일출 ${sunriseLocal}`;
                 }
             } catch (e) {
                 console.log('Sunrise fetch failed:', e);
@@ -557,16 +558,16 @@
             let indoorRec = false;
 
             if (minTemp <= -20) {
-                mainMsg = "영하 20도 이하의 극한의 한파입니다. 동상 위험이 매우 높습니다.<br>🚨 실내 트레드밀 훈련을 강력히 권장합니다.";
+                mainMsg = "영하 20도 이하의 극한의 한파입니다. 동상 위험이 매우 높습니다.<br><span aria-hidden=\"true\">🚨</span> 실내 트레드밀 훈련을 강력히 권장합니다.";
                 indoorRec = true;
             } else if (maxTemp >= 35) {
-                mainMsg = "35도 이상의 폭염입니다. 열사병 등 온열 질환 위험이 매우 높습니다!<br>🚨 실내 훈련으로 대체할 것을 강력히 권장합니다.";
+                mainMsg = "35도 이상의 폭염입니다. 열사병 등 온열 질환 위험이 매우 높습니다!<br><span aria-hidden=\"true\">🚨</span> 실내 훈련으로 대체할 것을 강력히 권장합니다.";
                 indoorRec = true;
             } else if (isIce) {
-                mainMsg = "노면 결빙(블랙아이스)으로 인한 낙상 위험이 높습니다.<br>🚨 실내 트레드밀 훈련을 권장합니다.";
+                mainMsg = "노면 결빙(블랙아이스)으로 인한 낙상 위험이 높습니다.<br><span aria-hidden=\"true\">🚨</span> 실내 트레드밀 훈련을 권장합니다.";
                 indoorRec = true;
             } else if (maxWind >= 10) {
-                mainMsg = "초속 10m 이상의 강풍이 불고 있습니다. 체온 유지와 호흡이 어렵습니다.<br>🚨 안전을 위해 실내 운동을 권장합니다.";
+                mainMsg = "초속 10m 이상의 강풍이 불고 있습니다. 체온 유지와 호흡이 어렵습니다.<br><span aria-hidden=\"true\">🚨</span> 안전을 위해 실내 운동을 권장합니다.";
                 indoorRec = true;
             } else if (isRain && maxTemp < 10) {
                 mainMsg = "저온 강우/강설 상태입니다. 저체온증 위험이 있습니다.<br>안전에 유의하여 실내 운동을 권장합니다.";
