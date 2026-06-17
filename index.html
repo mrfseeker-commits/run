@@ -340,25 +340,33 @@
 
         .gear-item {
             background: var(--bg-color);
-            /* Slightly different from card */
             border-radius: 16px;
-            padding: 12px;
+            padding: 16px 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
-            aspect-ratio: 1;
+            justify-content: flex-start;
         }
 
         .gear-icon {
             font-size: 26px;
-            margin-bottom: 6px;
+            margin-bottom: 8px;
         }
 
         .gear-name {
+            font-size: 13px;
+            color: var(--text-main);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .gear-desc {
             font-size: 11px;
             color: var(--text-sub);
-            font-weight: 600;
+            text-align: center;
+            line-height: 1.3;
+            word-break: keep-all;
         }
 
         .loading {
@@ -575,84 +583,84 @@
 
             if (indoorRec) {
                 card.classList.add('warning');
-                gears.push({ icon: "🏃", name: "트레드밀/실내 트랙" });
-                gears.push({ icon: "🏠", name: "실내 보강 운동" });
-                if (minTemp <= 0) gears.push({ icon: "🧣", name: "외출 시 헤비 구스다운" });
+                gears.push({ icon: "🏃", name: "트레드밀/실내 트랙", desc: "안전한 실내 훈련 환경" });
+                gears.push({ icon: "🏠", name: "실내 보강 운동", desc: "코어 및 하체 근력 강화" });
+                if (minTemp <= 0) gears.push({ icon: "🧣", name: "헤비 구스다운", desc: "운동 전후 급격한 체온 저하 방지" });
             } else {
                 card.classList.remove('warning');
 
                 // Wind logic
                 if (maxWind >= 5 && maxWind < 10) {
                     mainMsg += "바람이 다소 강해 체감온도가 급격히 떨어질 수 있습니다.<br>";
-                    gears.push({ icon: "🧥", name: "고기능성 방풍/투습 윈드브레이커 (체온 손실 방지)" });
+                    gears.push({ icon: "🧥", name: "방풍 윈드브레이커", desc: "체감 온도 저하 및 체력 소모 방지" });
                 } else if (hasPop || isRain) {
                     mainMsg += "강수 확률이 있거나 비/눈이 내립니다. 체온 저하를 막을 우중런 대비가 필요합니다.<br>";
-                    gears.push({ icon: "🧥", name: "고어텍스 쉘/초경량 방수 재킷 (심실링 처리)" });
-                    gears.push({ icon: "🧢", name: "발수 러닝 캡 (시야 확보 및 우천 대비)" });
+                    gears.push({ icon: "🧥", name: "고어텍스 방수 재킷", desc: "비바람 완벽 차단 및 투습 기능" });
+                    gears.push({ icon: "🧢", name: "발수 러닝 캡", desc: "빗물로부터 시야 확보 및 보온" });
                 }
 
                 // Temp logic
                 if (minTemp <= -15) {
                     if (mainMsg === "") mainMsg = "영하 15도 이하의 맹추위입니다.<br>3-Layer 시스템(베이스-미들-아우터) 적용과 피부 노출 차단이 필수적입니다.";
-                    gears.push({ icon: "👕", name: "고중량 메리노 울 베이스레이어 (보온/투습 극대화)" });
-                    gears.push({ icon: "🧥", name: "고기능성 보온/방풍 하이브리드 러닝 재킷 (투습 코팅)" });
-                    gears.push({ icon: "👖", name: "방풍 패널 적용 기모 윈터 타이즈 (근육 체온 유지)" });
-                    gears.push({ icon: "🧤", name: "방풍 커버형 벙어리 러닝 장갑 (동상 방지)" });
-                    gears.push({ icon: "🧣", name: "풀커버 넥게이터/바라클라바 (호흡기 보호)" });
-                    gears.push({ icon: "🧢", name: "귀 덮개형 메리노 울 방한 비니" });
+                    gears.push({ icon: "👕", name: "메리노 울 베이스레이어", desc: "땀을 흡수하면서도 강력한 보온력 유지" });
+                    gears.push({ icon: "🧥", name: "보온/방풍 러닝 재킷", desc: "바람을 막고 체열을 가두는 핵심 아우터" });
+                    gears.push({ icon: "👖", name: "기모 윈터 타이즈", desc: "근육 경직을 막는 방풍 패널 적용 타이즈" });
+                    gears.push({ icon: "🧤", name: "벙어리 러닝 장갑", desc: "손끝 동상 방지를 위한 두꺼운 커버형 장갑" });
+                    gears.push({ icon: "🧣", name: "바라클라바", desc: "찬 공기로부터 호흡기와 안면부 보호" });
+                    gears.push({ icon: "🧢", name: "방한 비니", desc: "머리로 빠져나가는 열 70% 차단" });
                 } else if (minTemp <= -10) {
                     if (mainMsg === "") mainMsg = "영하 10도 이하의 강추위입니다.<br>보온성과 땀 배출(투습)의 밸런스를 고려한 레이어링이 요구됩니다.";
-                    gears.push({ icon: "👕", name: "고기능성 기모 안감 웜업 베이스레이어 (투습/보온)" });
-                    gears.push({ icon: "🧥", name: "초경량 패딩 조끼(코어 보온) 또는 방풍 윈드쉘" });
-                    gears.push({ icon: "👖", name: "헤비웨이트 기모 러닝 타이즈 (열 손실 차단)" });
-                    gears.push({ icon: "🧤", name: "보온성 스마트폰 터치 방한 장갑" });
-                    gears.push({ icon: "🧣", name: "흡습속건 멀티스카프(넥워머)" });
-                    gears.push({ icon: "🎧", name: "기모 방한용 귀마개/헤드밴드" });
+                    gears.push({ icon: "👕", name: "기모 웜업 베이스레이어", desc: "피부와 밀착되어 체온을 유지하는 내의" });
+                    gears.push({ icon: "🧥", name: "초경량 패딩 조끼", desc: "팔 움직임은 자유롭게, 코어 온도는 따뜻하게" });
+                    gears.push({ icon: "👖", name: "헤비웨이트 러닝 타이즈", desc: "두꺼운 기모 안감으로 하체 열 손실 차단" });
+                    gears.push({ icon: "🧤", name: "방한 장갑", desc: "보온성과 스마트폰 터치 기능을 겸비한 장갑" });
+                    gears.push({ icon: "🧣", name: "멀티스카프(넥워머)", desc: "목으로 들어오는 찬바람 완벽 차단" });
+                    gears.push({ icon: "🎧", name: "기모 귀마개", desc: "귀 동상 방지용 플리스 소재 헤드밴드" });
                 } else if (minTemp <= -5) {
                     if (mainMsg === "") mainMsg = "영하권의 추운 날씨입니다.<br>러닝 역동성을 해치지 않는 슬림핏 레이어링 시스템을 추천합니다.";
-                    gears.push({ icon: "👕", name: "미드웨이트 기모 롱슬리브 (흡습속건/보온)" });
-                    gears.push({ icon: "🧥", name: "패커블 초경량 윈드브레이커 (체온 조절용)" });
-                    gears.push({ icon: "👖", name: "동계용 경량 러닝 타이즈 또는 슬림핏 우븐 팬츠" });
-                    gears.push({ icon: "🧤", name: "라이너급 보온 러닝 장갑" });
-                    gears.push({ icon: "🎧", name: "초경량 보온 헤드밴드 (귀 덮개형)" });
+                    gears.push({ icon: "👕", name: "기모 롱슬리브", desc: "적당한 보온력과 우수한 땀 배출 능력" });
+                    gears.push({ icon: "🧥", name: "경량 윈드브레이커", desc: "달리다 더우면 쉽게 벗어 휴대할 수 있는 아우터" });
+                    gears.push({ icon: "👖", name: "동계용 러닝 타이즈", desc: "가벼운 기모 안감으로 쾌적한 보온성 제공" });
+                    gears.push({ icon: "🧤", name: "라이너급 장갑", desc: "초기 런업 시 손 시림을 막아주는 얇은 장갑" });
+                    gears.push({ icon: "🎧", name: "경량 헤드밴드", desc: "땀 흡수와 귀 보온을 동시에 해결" });
                 } else if (minTemp <= 0) {
                     if (mainMsg === "") mainMsg = "쌀쌀한 초겨울 날씨입니다.<br>초기 보온과 런업 후 체온 유지를 위한 복장이 적합합니다.";
-                    gears.push({ icon: "👕", name: "미드웨이트 긴팔 러닝셔츠 (체온 조절용)" });
-                    gears.push({ icon: "🎽", name: "초경량 나일론 러닝 베스트 (코어 온도 유지)" });
-                    gears.push({ icon: "👖", name: "7부 기장 러닝 타이즈 또는 긴 기장 조거 팬츠" });
-                    gears.push({ icon: "🧤", name: "초경량 메쉬 라이너 장갑 (통기성)" });
+                    gears.push({ icon: "👕", name: "미드웨이트 러닝셔츠", desc: "초겨울에 적합한 두께감의 기능성 긴팔" });
+                    gears.push({ icon: "🎽", name: "나일론 러닝 베스트", desc: "바람을 막아주어 코어 체온 유지에 탁월" });
+                    gears.push({ icon: "👖", name: "7부 러닝 타이즈", desc: "종아리는 시원하게, 허벅지는 따뜻하게 보호" });
+                    gears.push({ icon: "🧤", name: "초경량 메쉬 장갑", desc: "바람만 가볍게 막아주는 간절기용 장갑" });
                 } else if (minTemp <= 5) {
-                    if (mainMsg === "") mainMsg = "선선한 늦가을/초봄 날씨입니다.<br>가벼운 긴팔이나 반팔에 암슬리브를 매치해 유연하게 체온을 조절하세요.";
-                    gears.push({ icon: "👕", name: "경량 기능성 긴팔 티셔츠 (흡습속건)" });
-                    gears.push({ icon: "🩳", name: "5인치 2-in-1 러닝 쇼츠 또는 7부 타이즈" });
-                    gears.push({ icon: "💪", name: "컴프레션 기능성 암슬리브 (착탈식 체온 조절)" });
+                    if (mainMsg === "") mainMsg = "선선한 늦가을/초봄 날씨입니다.<br>가벼운 긴팔이나 반팔에 암슬리브를 매치해 유연하게 체온 조절하세요.";
+                    gears.push({ icon: "👕", name: "경량 긴팔 티셔츠", desc: "쾌적한 착용감의 흡습속건 기능성 소재" });
+                    gears.push({ icon: "🩳", name: "5인치 2-in-1 쇼츠", desc: "이너 타이즈가 있어 허벅지 쓸림 방지 및 가벼운 보온" });
+                    gears.push({ icon: "💪", name: "기능성 암슬리브", desc: "덥거나 추울 때 쉽게 올리고 내리며 체온 조절" });
                 } else if (minTemp <= 10) {
                     if (mainMsg === "") mainMsg = "장거리 훈련에 이상적인 상쾌한 날씨입니다.<br>땀 배출이 원활한 통기성 위주의 가벼운 복장이 좋습니다.";
-                    gears.push({ icon: "👕", name: "초경량 숏슬리브(반팔) 기능성 티셔츠" });
-                    if (!gears.find(g => g.name.includes("윈드브레이커") || g.name.includes("재킷"))) gears.push({ icon: "🧥", name: "휴대용 패커블 초경량 윈드브레이커 (돌풍 대비)" });
-                    gears.push({ icon: "🩳", name: "3~5인치 경량 러닝 쇼츠" });
-                    gears.push({ icon: "🧦", name: "미드 컷 러닝 양말 (물집 방지 핏)" });
+                    gears.push({ icon: "👕", name: "경량 숏슬리브", desc: "통기성이 뛰어나 장거리 훈련에도 쾌적함 유지" });
+                    if (!gears.find(g => g.name.includes("윈드브레이커") || g.name.includes("재킷") || g.name.includes("베스트"))) gears.push({ icon: "🧥", name: "패커블 윈드브레이커", desc: "갑작스러운 돌풍 대비용 주머니 사이즈 아우터" });
+                    gears.push({ icon: "🩳", name: "경량 러닝 쇼츠", desc: "움직임이 자유로운 3~5인치 길이의 반바지" });
+                    gears.push({ icon: "🧦", name: "미드 컷 러닝 양말", desc: "발목을 감싸주어 이물질 유입 방지 및 물집 예방" });
                 } else if (minTemp <= 15) {
                     if (mainMsg === "") mainMsg = "페이스를 끌어올리기 최적의 기온입니다!<br>기록 단축(PB)을 위한 최경량 레이스 기어를 추천합니다.";
-                    gears.push({ icon: "🎽", name: "초경량 에어로 레이싱 싱글렛" });
-                    gears.push({ icon: "🩳", name: "3인치 초경량 스플릿 쇼츠 (가동범위 극대화)" });
-                    gears.push({ icon: "🧦", name: "초경량 통기성 컴프레션 러닝 양말" });
-                    gears.push({ icon: "😎", name: "스포츠 고글 (바람 및 눈부심 방지)" });
+                    gears.push({ icon: "🎽", name: "에어로 레이싱 싱글렛", desc: "최소한의 원단으로 무게를 줄인 대회용 상의" });
+                    gears.push({ icon: "🩳", name: "3인치 스플릿 쇼츠", desc: "옆트임이 깊어 다리 가동범위를 극대화한 바지" });
+                    gears.push({ icon: "🧦", name: "컴프레션 러닝 양말", desc: "발의 피로도를 낮추고 혈액순환을 돕는 기능성 양말" });
+                    gears.push({ icon: "😎", name: "스포츠 고글", desc: "주행풍과 눈부심을 막아주어 시야 확보" });
                 } else if (minTemp <= 22) {
                     if (mainMsg === "") mainMsg = "페이스가 올라가면 덥게 느껴질 수 있는 기온입니다.<br>열 배출과 쿨링 기능이 탁월한 소재를 착용하세요.";
-                    gears.push({ icon: "🎽", name: "풀 메쉬 쿨링 에어로 싱글렛" });
-                    gears.push({ icon: "🩳", name: "2~3인치 초단기장 엘리트 쇼츠" });
-                    gears.push({ icon: "😎", name: "초경량 자외선 차단 스포츠 고글" });
-                    gears.push({ icon: "💧", name: "소프트 플라스크 (수분 보충)" });
+                    gears.push({ icon: "🎽", name: "쿨링 에어로 싱글렛", desc: "풀 메쉬 소재로 즉각적인 열 배출 효과" });
+                    gears.push({ icon: "🩳", name: "엘리트 쇼츠", desc: "통풍이 극대화된 2~3인치 초단기장 반바지" });
+                    gears.push({ icon: "😎", name: "자외선 차단 고글", desc: "강한 자외선으로부터 눈 보호 및 피로도 감소" });
+                    gears.push({ icon: "💧", name: "소프트 플라스크", desc: "장거리 런닝 시 휴대가 간편한 수분 보충 물통" });
                 } else {
                     if (mainMsg === "") mainMsg = "무더운 한여름 훈련입니다.<br>열사병 주의! 즉각적인 쿨링과 자외선 차단, 수분 보충 시스템이 필수입니다.";
-                    gears.push({ icon: "🎽", name: "초경량 아이스 쿨링 싱글렛 (냉감 소재)" });
-                    gears.push({ icon: "🩳", name: "2인치 엘리트 레이싱 스플릿 쇼츠" });
-                    gears.push({ icon: "🧢", name: "초경량 메쉬 썬바이저/러닝 캡 (자외선 차단/열 배출)" });
-                    gears.push({ icon: "😎", name: "변색/미러 렌즈 스포츠 선글라스 (눈 피로 방지)" });
-                    gears.push({ icon: "🎽", name: "하이드레이션 베스트 (장거리/트레일 겸용)" });
-                    gears.push({ icon: "💧", name: "전해질 음료 및 소프트 플라스크 필수" });
-                    gears.push({ icon: "🧴", name: "워터프루프 스포츠 선크림 (자외선 차단)" });
+                    gears.push({ icon: "🎽", name: "아이스 쿨링 싱글렛", desc: "냉감 소재로 체감 온도를 낮춰주는 상의" });
+                    gears.push({ icon: "🩳", name: "2인치 레이싱 쇼츠", desc: "가장 짧고 가벼워 땀에 젖어도 무겁지 않은 바지" });
+                    gears.push({ icon: "🧢", name: "메쉬 썬바이저", desc: "정수리 열은 방출하고 안면부 자외선은 차단" });
+                    gears.push({ icon: "😎", name: "미러 스포츠 선글라스", desc: "강렬한 태양빛 반사 및 눈의 피로 최소화" });
+                    gears.push({ icon: "🎽", name: "하이드레이션 베스트", desc: "충분한 물과 보급식을 챙길 수 있는 러닝 조끼" });
+                    gears.push({ icon: "💧", name: "전해질 음료 필수", desc: "땀으로 배출된 염분과 미네랄을 즉시 보충" });
+                    gears.push({ icon: "🧴", name: "스포츠 선크림", desc: "땀에 쉽게 지워지지 않는 워터프루프 자외선 차단제" });
                 }
             }
 
@@ -663,6 +671,7 @@
                     <div class="gear-item">
                         <div class="gear-icon" aria-hidden="true">${g.icon}</div>
                         <div class="gear-name">${g.name}</div>
+                        <div class="gear-desc">${g.desc}</div>
                     </div>
                 `;
             });
