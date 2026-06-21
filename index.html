@@ -141,6 +141,7 @@
             width: 100%;
             text-align: center;
             padding: 12px 0;
+            margin-top: 0;
             margin-bottom: 10px;
             font-size: 17px;
             color: var(--text-main);
@@ -409,10 +410,10 @@
     </header>
 
     <main class="main-wrapper">
-        <div id="timeline-date" class="timeline-date hidden">
-            <div id="date-text"></div>
-            <div id="sunrise-info" class="sunrise-info"></div>
-        </div>
+        <h2 id="timeline-date" class="timeline-date hidden">
+            <span id="date-text" style="display: block;"></span>
+            <span id="sunrise-info" class="sunrise-info" style="display: block;"></span>
+        </h2>
         <!-- 04~08 Timeline -->
         <div id="timeline" class="timeline-container hidden">
             <!-- JS will populate this -->
