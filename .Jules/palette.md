@@ -13,3 +13,7 @@
 ## 2024-05-18 - Semantic Landmarks and Decorative Emojis
 **Learning:** Purely visual structural `<div>` elements hinder screen reader navigation and should be replaced with semantic landmarks like `<header>`, `<main>`, `<h1>`, and `<h2>` for better accessibility. Additionally, purely decorative emojis within icons or inline text cause redundant audio announcements for screen readers and should be hidden using `aria-hidden="true"`. Note that changing `<div>` tags to heading elements can cause layout shifts due to default margins, requiring resets like `margin-top: 0`.
 **Action:** When inspecting structural markup, look for generic containers functioning as headers or main content areas and convert them to semantic tags. Also scan for decorative emojis used as icons and apply `aria-hidden="true"` to them to declutter the accessibility tree. Always test layout after adding headings to catch unexpected default margin shifts.
+
+## 2024-06-16 - Dynamic Injection of Accessible Emojis
+**Learning:** When programmatically wrapping purely decorative emojis in `<span aria-hidden="true">`, replacing `.innerText` with `.innerHTML` is necessary for the browser to correctly parse and render the injected HTML tags.
+**Action:** Always verify that DOM assignment methods match the intended format when injecting accessibility markup via JavaScript.
