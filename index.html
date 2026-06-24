@@ -152,6 +152,129 @@
             border: 1px solid var(--timeline-border);
         }
 
+        .view-tabs {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+            padding: 5px;
+            margin-bottom: 12px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 14px;
+            background: var(--card-bg);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .view-tab {
+            appearance: none;
+            border: 0;
+            border-radius: 10px;
+            padding: 10px 8px;
+            background: transparent;
+            color: var(--text-sub);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .view-tab.active {
+            background: var(--accent);
+            color: #fff;
+            box-shadow: 0 3px 9px rgba(0, 136, 68, 0.22);
+        }
+
+        [data-theme="dark"] .view-tab.active {
+            color: #071a11;
+        }
+
+        .view-panel {
+            width: 100%;
+        }
+
+        .schedule-panel {
+            padding: 20px;
+            margin-bottom: 40px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 24px;
+            background: var(--card-bg);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+
+        .schedule-heading {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .schedule-meta {
+            margin: 5px 0 18px;
+            color: var(--text-sub);
+            font-size: 11px;
+        }
+
+        .schedule-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .schedule-item {
+            display: grid;
+            grid-template-columns: 54px minmax(0, 1fr);
+            align-items: center;
+            gap: 12px;
+            padding: 14px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 15px;
+            background: var(--bg-color);
+        }
+
+        .schedule-date {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 54px;
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--accent);
+            font-size: 18px;
+            font-weight: 900;
+        }
+
+        .schedule-date small {
+            margin-top: 1px;
+            color: var(--text-sub);
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .schedule-training {
+            min-width: 0;
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.45;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .schedule-source {
+            display: inline-block;
+            margin-top: 16px;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 700;
+            text-decoration: none;
+        }
+
+        .schedule-empty {
+            padding: 28px 10px;
+            color: var(--text-sub);
+            font-size: 13px;
+            text-align: center;
+        }
+
         #date-text {
             display: block;
         }
@@ -447,25 +570,41 @@
     </header>
 
     <main class="main-wrapper">
-        <h2 id="timeline-date" class="timeline-date hidden">
-            <span id="date-text"></span>
-            <span id="sunrise-info" class="sunrise-info"></span>
-        </h2>
-        <!-- 04~08 Timeline -->
-        <div id="timeline" class="timeline-container hidden">
-            <!-- JS will populate this -->
+        <nav class="view-tabs" aria-label="페이지 보기">
+            <button class="view-tab active" type="button" data-view="weather" aria-selected="true">날씨·복장</button>
+            <button class="view-tab" type="button" data-view="schedule" aria-selected="false">주간 훈련</button>
+        </nav>
+
+        <div id="weather-panel" class="view-panel">
+            <h2 id="timeline-date" class="timeline-date hidden">
+                <span id="date-text"></span>
+                <span id="sunrise-info" class="sunrise-info"></span>
+            </h2>
+            <!-- 04~08 Timeline -->
+            <div id="timeline" class="timeline-container hidden">
+                <!-- JS will populate this -->
+            </div>
+
+            <!-- Recommendation -->
+            <div id="attire" class="attire-card hidden">
+                <h2 class="rec-header">Running Advice</h2>
+                <div id="rec-text" class="rec-main" aria-live="polite">
+                    <!-- Dynamic Text -->
+                </div>
+                <div id="gear-list" class="gear-grid">
+                    <!-- Icons -->
+                </div>
+            </div>
         </div>
 
-        <!-- Recommendation -->
-        <div id="attire" class="attire-card hidden">
-            <h2 class="rec-header">Running Advice</h2>
-            <div id="rec-text" class="rec-main" aria-live="polite">
-                <!-- Dynamic Text -->
+        <section id="schedule-panel" class="view-panel schedule-panel hidden" aria-labelledby="schedule-heading">
+            <h2 id="schedule-heading" class="schedule-heading">주간 훈련 일정</h2>
+            <p id="schedule-meta" class="schedule-meta">일정을 불러오는 중입니다.</p>
+            <div id="schedule-list" class="schedule-list">
+                <div class="schedule-empty">훈련 일정을 불러오는 중입니다.</div>
             </div>
-            <div id="gear-list" class="gear-grid">
-                <!-- Icons -->
-            </div>
-        </div>
+            <a id="schedule-source" class="schedule-source hidden" href="#" target="_blank" rel="noopener">네이버 카페 원문 보기 →</a>
+        </section>
 
         <div class="footer-email">mrfseeker@gmail.com</div>
     </main>
@@ -495,6 +634,69 @@
         const GOGGLE_SUNRISE_CUTOFF = 6 * 60 + 30;
         let sunriseMinutes = null;
         let latestWeatherData = null;
+
+        function initViewTabs() {
+            const tabs = document.querySelectorAll('.view-tab');
+            const weatherPanel = document.getElementById('weather-panel');
+            const schedulePanel = document.getElementById('schedule-panel');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const showSchedule = tab.dataset.view === 'schedule';
+                    tabs.forEach(item => {
+                        const active = item === tab;
+                        item.classList.toggle('active', active);
+                        item.setAttribute('aria-selected', String(active));
+                    });
+                    weatherPanel.classList.toggle('hidden', showSchedule);
+                    schedulePanel.classList.toggle('hidden', !showSchedule);
+                });
+            });
+        }
+
+        async function loadTrainingSchedule() {
+            const meta = document.getElementById('schedule-meta');
+            const list = document.getElementById('schedule-list');
+            const sourceLink = document.getElementById('schedule-source');
+
+            try {
+                const response = await fetch('training_schedule.json?v=' + Date.now());
+                if (!response.ok) throw new Error('Schedule not found');
+                const data = await response.json();
+                const schedules = Array.isArray(data.schedule) ? data.schedule : [];
+
+                meta.textContent = `${data.week_label || '주간 훈련'} · 화/목/토/일`;
+                list.innerHTML = '';
+
+                if (!schedules.length) {
+                    list.innerHTML = '<div class="schedule-empty">등록된 주간 훈련 일정이 없습니다.</div>';
+                    return;
+                }
+
+                schedules.forEach(item => {
+                    const date = new Date(`${item.date}T00:00:00`);
+                    const monthDay = `${date.getMonth() + 1}/${date.getDate()}`;
+                    list.innerHTML += `
+                        <article class="schedule-item">
+                            <div class="schedule-date">
+                                ${monthDay}
+                                <small>${item.day}요일</small>
+                            </div>
+                            <div class="schedule-training">${item.training}</div>
+                        </article>
+                    `;
+                });
+
+                if (data.source_url) {
+                    sourceLink.href = data.source_url;
+                    sourceLink.classList.remove('hidden');
+                }
+            } catch (error) {
+                meta.textContent = '주간 훈련';
+                list.innerHTML = '<div class="schedule-empty">일정을 불러오지 못했습니다.</div>';
+                console.log('Training schedule load failed:', error);
+            }
+        }
 
         function updateDate() {
             const now = new Date();
@@ -826,6 +1028,8 @@
         }
 
         loadData();
+        initViewTabs();
+        loadTrainingSchedule();
     </script>
 </body>
 

@@ -1,0 +1,31 @@
+{
+  "article_id": 3472,
+  "article_title": "6월4주 주간 일정/정산",
+  "week_label": "6월 4주",
+  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3472?menuid=13&referrerAllArticles=false",
+  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA2MjFfMTM4/MDAxNzgyMDQ3MzI2NDI3.LM6RyqB70tEJvCRAKpLVJdbtE7WCPRI0k57djMQR3UIg.VHnPMvfoIfN1UrhXL9W2gM1UkrYkmx5MWbQptTesrI0g.PNG/image.png?type=w1600",
+  "published_at": "2026-06-21T22:13:00+09:00",
+  "updated_at": "2026-06-24T17:30:00+09:00",
+  "schedule": [
+    {
+      "date": "2026-06-23",
+      "day": "화",
+      "training": "카이스트 빌드업런"
+    },
+    {
+      "date": "2026-06-25",
+      "day": "목",
+      "training": "카이스트 1000m × 5set"
+    },
+    {
+      "date": "2026-06-27",
+      "day": "토",
+      "training": "카이스트 5000m × 1set"
+    },
+    {
+      "date": "2026-06-28",
+      "day": "일",
+      "training": "계족산 2회전"
+    }
+  ]
+}
