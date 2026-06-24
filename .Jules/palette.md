@@ -17,3 +17,7 @@
 ## 2024-06-19 - Semantic HTML and Headings Validation
 **Learning:** When converting structural `<div>` elements to semantic `<h2>` headings for screen reader navigation, you must ensure that all child elements are phrasing elements (like `<span>`). HTML5 specification does not allow flow elements (`<div>`) inside heading tags. Additionally, changing structural `<div>`s to headings will apply default browser `margin-top` styles which must be explicitly reset (`margin-top: 0`) to maintain the layout.
 **Action:** Always convert nested `<div>`s to `<span>`s when changing their parent container to an `<h1>` - `<h6>` heading, and explicitly check and reset default heading margins.
+
+## 2026-06-22 - ARIA Live for Dynamic Timelines
+**Learning:** Dynamic content areas like a time-based weather forecast (timeline) are not announced by screen readers when they populate after a loading state unless they have an `aria-live` attribute.
+**Action:** Add `aria-live="polite"` to container elements that receive dynamic DOM updates (like forecast timelines) to ensure screen reader users are notified when the content is ready.
