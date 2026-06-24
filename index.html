@@ -368,6 +368,62 @@
             border: 1px solid var(--timeline-border);
         }
 
+        .forecast-training-card {
+            width: 100%;
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr);
+            align-items: center;
+            gap: 13px;
+            padding: 15px;
+            margin: -8px 0 20px;
+            border: 1px solid rgba(0, 136, 68, 0.24);
+            border-radius: 17px;
+            background: linear-gradient(135deg, rgba(0, 136, 68, 0.12), rgba(0, 136, 68, 0.04));
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+        }
+
+        [data-theme="dark"] .forecast-training-card {
+            border-color: rgba(0, 255, 136, 0.25);
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.12), rgba(0, 255, 136, 0.03));
+        }
+
+        .forecast-training-icon {
+            width: 48px;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 14px;
+            background: var(--card-bg);
+            font-size: 24px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .forecast-training-label {
+            color: var(--accent);
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .forecast-training-title {
+            margin-top: 3px;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 900;
+            line-height: 1.4;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .forecast-training-date {
+            margin-top: 3px;
+            color: var(--text-sub);
+            font-size: 10px;
+            font-weight: 600;
+        }
+
         .time-slot {
             flex: 1;
             display: flex;
@@ -585,6 +641,15 @@
                 <!-- JS will populate this -->
             </div>
 
+            <article id="forecast-training" class="forecast-training-card hidden">
+                <div class="forecast-training-icon" aria-hidden="true">🏃</div>
+                <div>
+                    <div class="forecast-training-label">Tomorrow Training</div>
+                    <div id="forecast-training-title" class="forecast-training-title"></div>
+                    <div id="forecast-training-date" class="forecast-training-date"></div>
+                </div>
+            </article>
+
             <!-- Recommendation -->
             <div id="attire" class="attire-card hidden">
                 <h2 class="rec-header">Running Advice</h2>
@@ -634,6 +699,35 @@
         const GOGGLE_SUNRISE_CUTOFF = 6 * 60 + 30;
         let sunriseMinutes = null;
         let latestWeatherData = null;
+        let trainingScheduleData = null;
+        let forecastDateKey = null;
+
+        function toLocalDateKey(date) {
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        function renderForecastTraining() {
+            const card = document.getElementById('forecast-training');
+            const title = document.getElementById('forecast-training-title');
+            const dateText = document.getElementById('forecast-training-date');
+            const schedules = trainingScheduleData?.schedule || [];
+            const training = schedules.find(item => item.date === forecastDateKey);
+
+            if (!training) {
+                card.classList.add('hidden');
+                title.textContent = '';
+                dateText.textContent = '';
+                return;
+            }
+
+            const date = new Date(`${training.date}T00:00:00`);
+            title.textContent = training.training;
+            dateText.textContent = `${date.getMonth() + 1}월 ${date.getDate()}일 ${training.day}요일 새벽`;
+            card.classList.remove('hidden');
+        }
 
         function initViewTabs() {
             const tabs = document.querySelectorAll('.view-tab');
@@ -664,6 +758,8 @@
                 if (!response.ok) throw new Error('Schedule not found');
                 const data = await response.json();
                 const schedules = Array.isArray(data.schedule) ? data.schedule : [];
+                trainingScheduleData = data;
+                renderForecastTraining();
 
                 meta.textContent = `${data.week_label || '주간 훈련'} · 화/목/토/일`;
                 list.innerHTML = '';
@@ -711,6 +807,8 @@
             if (now.getHours() >= 7) {
                 targetDate.setDate(targetDate.getDate() + 1);
             }
+            forecastDateKey = toLocalDateKey(targetDate);
+            renderForecastTraining();
             const tMonth = targetDate.getMonth() + 1;
             const tDay = targetDate.getDate();
             const tWeekday = weekdays[targetDate.getDay()];
