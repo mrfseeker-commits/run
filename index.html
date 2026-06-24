@@ -337,34 +337,54 @@
             word-break: keep-all;
         }
 
-        /* Gear Grid */
+                /* Gear Grid */
         .gear-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: 1fr;
             gap: 12px;
         }
 
         .gear-item {
             background: var(--bg-color);
-            /* Slightly different from card */
             border-radius: 16px;
-            padding: 12px;
+            padding: 12px 16px;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             align-items: center;
-            justify-content: center;
-            aspect-ratio: 1;
+            justify-content: flex-start;
+            text-align: left;
         }
 
         .gear-icon {
             font-size: 26px;
-            margin-bottom: 6px;
+            margin-bottom: 0;
+            margin-right: 16px;
+            flex-shrink: 0;
+        }
+
+        .gear-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .gear-name {
-            font-size: 11px;
+            font-size: 14px;
+            color: var(--text-main);
+            font-weight: 700;
+            margin-bottom: 4px;
+            word-break: keep-all;
+            overflow-wrap: break-word;
+        }
+
+        .gear-desc {
+            font-size: 12px;
             color: var(--text-sub);
-            font-weight: 600;
+            line-height: 1.4;
+            word-break: keep-all;
+            overflow-wrap: break-word;
         }
 
         .loading {
@@ -529,6 +549,7 @@
             let maxTemp = -100;
             let maxWind = 0;
             let isRain = false;
+            let isSnow = false;
             let isIce = false;
             let hasPop = false;
 
@@ -548,7 +569,8 @@
                 if (d.temp < minTemp) minTemp = d.temp;
                 if (d.temp > maxTemp) maxTemp = d.temp;
                 if (d.wind > maxWind) maxWind = d.wind;
-                if (d.pty > 0) isRain = true;
+                if (d.pty === 1 || d.pty === 5) isRain = true;
+                if (d.pty === 2 || d.pty === 3 || d.pty === 6 || d.pty === 7) isSnow = true;
                 if (d.pty > 0 && d.temp < 0) isIce = true;
                 if (d.pop >= 30) hasPop = true;
             });
@@ -591,8 +613,15 @@
                 if (maxWind >= 5 && maxWind < 10) {
                     mainMsg += "바람이 다소 강해 체감온도가 급격히 떨어질 수 있습니다.<br>";
                     gears.push({ icon: "🧥", name: "고기능성 방풍/투습 윈드브레이커", desc: "바람을 차단하여 체온 손실을 방지하고 내부 습기를 배출합니다." });
+                }
+
+                if (isSnow) {
+                    mainMsg += "눈이 내리고 있습니다. 체온 저하 및 눈길 미끄러움에 철저히 대비해야 합니다.<br>";
+                    gears.push({ icon: "🧥", name: "고어텍스 쉘/초경량 방수 재킷", desc: "눈이 녹아 스며드는 것을 막고 체온을 완벽히 보호합니다." });
+                    gears.push({ icon: "👟", name: "트레일 러닝화", desc: "눈길 러닝 시 접지력을 극대화하여 미끄러짐을 방지합니다." });
+                    gears.push({ icon: "🧢", name: "발수 러닝 캡", desc: "눈으로부터 시야를 확보하고 머리의 체온 저하를 막아줍니다." });
                 } else if (hasPop || isRain) {
-                    mainMsg += "강수 확률이 있거나 비/눈이 내립니다. 체온 저하를 막을 우중런 대비가 필요합니다.<br>";
+                    mainMsg += "강수 확률이 있거나 비가 내립니다. 체온 저하를 막을 우중런 대비가 필요합니다.<br>";
                     gears.push({ icon: "🧥", name: "고어텍스 쉘/초경량 방수 재킷", desc: "심실링 처리로 빗물을 완벽히 차단하며 체온을 유지합니다." });
                     gears.push({ icon: "🧢", name: "발수 러닝 캡", desc: "우천 시 시야를 확보하고 머리의 체온 저하를 막아줍니다." });
                 }
@@ -644,12 +673,23 @@
                     gears.push({ icon: "🩳", name: "3인치 초경량 스플릿 쇼츠", desc: "다리의 가동범위를 극대화하여 스피드 훈련에 적합합니다." });
                     gears.push({ icon: "🧦", name: "초경량 통기성 러닝 양말", desc: "발의 열과 땀을 빠르게 배출하여 쾌적함을 극대화합니다." });
                     gears.push({ icon: "😎", name: "스포츠 고글", desc: "주행풍과 눈부심을 막아주어 시야 확보에 도움을 줍니다." });
+                } else if (minTemp <= 18) {
+                    if (mainMsg === "") mainMsg = "쾌적하게 달리기 좋은 따뜻한 날씨입니다.<br>가벼운 복장으로 자유로운 러닝을 즐기세요.";
+                    gears.push({ icon: "🎽", name: "기능성 숏슬리브 또는 싱글렛", desc: "가볍고 통기성이 좋은 소재로 체온을 조절합니다." });
+                    gears.push({ icon: "🩳", name: "3~5인치 러닝 쇼츠", desc: "편안한 활동성을 제공하는 가벼운 쇼츠입니다." });
+                    gears.push({ icon: "😎", name: "자외선 차단 스포츠 고글", desc: "햇빛으로부터 눈을 보호하고 시야를 확보합니다." });
                 } else if (minTemp <= 22) {
                     if (mainMsg === "") mainMsg = "페이스가 올라가면 덥게 느껴질 수 있는 기온입니다.<br>열 배출과 쿨링 기능이 탁월한 소재를 착용하세요.";
                     gears.push({ icon: "🎽", name: "풀 메쉬 쿨링 에어로 싱글렛", desc: "탁월한 통기성으로 몸의 열기를 빠르게 식혀줍니다." });
                     gears.push({ icon: "🩳", name: "2~3인치 초단기장 엘리트 쇼츠", desc: "최고의 쿨링 효과와 활동성을 보장합니다." });
                     gears.push({ icon: "😎", name: "초경량 자외선 차단 스포츠 고글", desc: "강한 자외선으로부터 눈을 완벽하게 보호합니다." });
                     gears.push({ icon: "💧", name: "소프트 플라스크", desc: "훈련 중 간편하고 즉각적인 수분 보충을 도와줍니다." });
+                } else if (minTemp <= 26) {
+                    if (mainMsg === "") mainMsg = "다소 더운 날씨입니다.<br>수분 보충과 쿨링에 신경 쓰며 무리하지 않는 러닝이 필요합니다.";
+                    gears.push({ icon: "🎽", name: "아이스 쿨링 소재 싱글렛", desc: "체온 상승을 억제하고 쾌적함을 유지합니다." });
+                    gears.push({ icon: "🩳", name: "초경량 통기성 레이싱 쇼츠", desc: "땀 배출이 빠르고 열을 가두지 않는 쇼츠입니다." });
+                    gears.push({ icon: "🧢", name: "러닝용 메쉬 캡", desc: "직사광선을 차단하고 머리의 열을 배출합니다." });
+                    gears.push({ icon: "💧", name: "수분 보충용 플라스크", desc: "주기적인 수분 보충을 위해 휴대하세요." });
                 } else {
                     if (mainMsg === "") mainMsg = "무더운 한여름 훈련입니다.<br>열사병 주의! 즉각적인 쿨링과 자외선 차단, 수분 보충 시스템이 필수입니다.";
                     gears.push({ icon: "🎽", name: "초경량 아이스 쿨링 싱글렛", desc: "특수 냉감 소재로 제작되어 피부 온도를 즉각적으로 낮춰줍니다." });
@@ -665,15 +705,16 @@
             recText.innerHTML = mainMsg;
             gearList.innerHTML = "";
             gears.forEach(g => {
-                gearList.innerHTML += `
-                    <div class="gear-item">
-                        <div class="gear-icon" aria-hidden="true">${g.icon}</div>
-                        <div class="gear-info">
-                            <div class="gear-name">${g.name}</div>
-                            ${g.desc ? `<div class="gear-desc">${g.desc}</div>` : ''}
-                        </div>
+                const item = document.createElement('div');
+                item.className = 'gear-item';
+                item.innerHTML = `
+                    <div class="gear-icon" aria-hidden="true">${g.icon}</div>
+                    <div class="gear-info">
+                        <div class="gear-name">${g.name}</div>
+                        ${g.desc ? `<div class="gear-desc">${g.desc}</div>` : ''}
                     </div>
                 `;
+                gearList.appendChild(item);
             });
 
             document.getElementById('loading').classList.add('hidden');
