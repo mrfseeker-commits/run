@@ -369,20 +369,17 @@
             word-break: keep-all;
         }
 
-        .gear-icon {
-            width: 52px;
-            height: 52px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex: 0 0 52px;
-            margin-bottom: 11px;
-            border-radius: 50%;
-            background: var(--card-bg);
+        .gear-photo {
+            width: 100%;
+            height: 92px;
+            display: block;
+            flex: 0 0 92px;
+            margin-bottom: 12px;
+            border-radius: 12px;
             border: 1px solid var(--timeline-border);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            font-size: 29px;
-            line-height: 1;
+            box-shadow: 0 5px 14px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
+            object-position: center;
         }
 
         .gear-name {
@@ -567,6 +564,37 @@
             return "맑음";
         }
 
+        function getGearImage(name) {
+            const imageRules = [
+                {
+                    keywords: ["고글", "선글라스"],
+                    path: "assets/gear/eyewear.webp"
+                },
+                {
+                    keywords: ["땀밴드", "헤드밴드", "비니", "방한모", "귀마개", "캡", "바라클라바", "스카프"],
+                    path: "assets/gear/headwear.webp"
+                },
+                {
+                    keywords: ["플라스크", "음료", "전해질", "하이드레이션", "수분"],
+                    path: "assets/gear/hydration.webp"
+                },
+                {
+                    keywords: ["재킷", "윈드브레이커", "윈드쉘", "쉘", "조끼", "베스트", "패딩", "구스다운"],
+                    path: "assets/gear/outerwear.webp"
+                },
+                {
+                    keywords: ["쇼츠", "타이즈", "팬츠", "양말"],
+                    path: "assets/gear/bottoms.webp"
+                }
+            ];
+
+            const match = imageRules.find(rule =>
+                rule.keywords.some(keyword => name.includes(keyword))
+            );
+
+            return match ? match.path : "assets/gear/tops.webp";
+        }
+
         function render(data) {
             const container = document.getElementById('timeline');
             container.innerHTML = "";
@@ -728,9 +756,10 @@
             recText.innerHTML = mainMsg;
             gearList.innerHTML = "";
             gears.forEach(g => {
+                const imagePath = getGearImage(g.name);
                 gearList.innerHTML += `
                     <div class="gear-item">
-                        <div class="gear-icon" aria-hidden="true">${g.icon}</div>
+                        <img class="gear-photo" src="${imagePath}" alt="" loading="lazy">
                         <div class="gear-info">
                             <div class="gear-name">${g.name}</div>
                             ${g.desc ? `<div class="gear-desc">${g.desc}</div>` : ''}
