@@ -340,20 +340,33 @@
         /* Gear Grid */
         .gear-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 12px;
+            width: 100%;
+            min-width: 0;
         }
 
         .gear-item {
             background: var(--bg-color);
             /* Slightly different from card */
             border-radius: 16px;
-            padding: 12px;
+            padding: 16px 12px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            aspect-ratio: 1;
+            min-width: 0;
+            min-height: 150px;
+            overflow: hidden;
+        }
+
+        .gear-info,
+        .gear-name,
+        .gear-desc {
+            width: 100%;
+            min-width: 0;
+            overflow-wrap: anywhere;
+            word-break: keep-all;
         }
 
         .gear-icon {
@@ -708,4 +721,3 @@
 </body>
 
 </html>
-```
