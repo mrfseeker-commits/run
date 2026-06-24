@@ -605,6 +605,9 @@
             let isRain = false;
             let isIce = false;
             let hasPop = false;
+            let hasRainForecast = false;
+            let hasSnowForecast = false;
+            let hasSleetForecast = false;
             let hasClearRunningWeather = false;
 
             data.forEach((d, idx) => {
@@ -624,8 +627,22 @@
                 if (d.temp > maxTemp) maxTemp = d.temp;
                 if (d.wind > maxWind) maxWind = d.wind;
                 if (d.pty > 0) isRain = true;
-                if (d.pty > 0 && d.temp < 0) isIce = true;
+                if ([1, 2, 5, 6].includes(d.pty) && d.temp < 0) isIce = true;
                 if (d.pop >= 30) hasPop = true;
+
+                if (d.pty === 1 || d.pty === 5) {
+                    hasRainForecast = true;
+                } else if (d.pty === 3 || d.pty === 7) {
+                    hasSnowForecast = true;
+                } else if (d.pty === 2 || d.pty === 6) {
+                    if (d.temp >= 2) {
+                        hasRainForecast = true;
+                    } else if (d.temp <= 0) {
+                        hasSnowForecast = true;
+                    } else {
+                        hasSleetForecast = true;
+                    }
+                }
 
                 const [hour, minute = 0] = d.time.split(':').map(Number);
                 const forecastMinutes = hour * 60 + minute;
@@ -638,6 +655,17 @@
             const needsGoggles = sunriseMinutes !== null &&
                 sunriseMinutes <= GOGGLE_SUNRISE_CUTOFF &&
                 hasClearRunningWeather && !isRain;
+            const precipitationLabel = hasSnowForecast && !hasRainForecast
+                ? "눈"
+                : hasRainForecast && !hasSnowForecast
+                    ? "비"
+                    : hasSleetForecast || (hasSnowForecast && hasRainForecast)
+                        ? "진눈깨비"
+                        : minTemp <= 0
+                            ? "눈"
+                            : minTemp >= 2
+                                ? "비"
+                                : "강수";
 
             // Logic
             const recText = document.getElementById('rec-text');
@@ -661,7 +689,7 @@
                 mainMsg = "초속 10m 이상의 강풍이 불고 있습니다. 체온 유지와 호흡이 어렵습니다.<br><span aria-hidden=\"true\">🚨</span> 안전을 위해 실내 운동을 권장합니다.";
                 indoorRec = true;
             } else if (isRain && maxTemp < 10) {
-                mainMsg = "저온 강우/강설 상태입니다. 저체온증 위험이 있습니다.<br>안전에 유의하여 실내 운동을 권장합니다.";
+                mainMsg = `저온 ${precipitationLabel} 예보입니다. 저체온증 위험이 있습니다.<br>안전에 유의하여 실내 운동을 권장합니다.`;
                 indoorRec = true;
             }
 
@@ -678,9 +706,9 @@
                     mainMsg += "바람이 다소 강해 체감온도가 급격히 떨어질 수 있습니다.<br>";
                     gears.push({ icon: "🧥", name: "고기능성 방풍/투습 윈드브레이커", desc: "바람을 차단하여 체온 손실을 방지하고 내부 습기를 배출합니다." });
                 } else if (hasPop || isRain) {
-                    mainMsg += "강수 확률이 있거나 비/눈이 내립니다. 체온 저하를 막을 우중런 대비가 필요합니다.<br>";
-                    gears.push({ icon: "🧥", name: "고어텍스 쉘/초경량 방수 재킷", desc: "심실링 처리로 빗물을 완벽히 차단하며 체온을 유지합니다." });
-                    gears.push({ icon: "🧢", name: "발수 러닝 캡", desc: "우천 시 시야를 확보하고 머리의 체온 저하를 막아줍니다." });
+                    mainMsg += `${precipitationLabel} 예보가 있습니다. 체온 저하를 막을 대비가 필요합니다.<br>`;
+                    gears.push({ icon: "🧥", name: "고어텍스 쉘/초경량 방수 재킷", desc: `${precipitationLabel} 상황에서 체온을 유지하도록 돕습니다.` });
+                    gears.push({ icon: "🧢", name: "발수 러닝 캡", desc: `${precipitationLabel} 예보 시 시야를 확보하고 머리의 체온 저하를 막아줍니다.` });
                 }
 
                 // Temp logic
