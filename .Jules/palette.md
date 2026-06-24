@@ -17,3 +17,7 @@
 ## 2024-06-19 - Semantic HTML and Headings Validation
 **Learning:** When converting structural `<div>` elements to semantic `<h2>` headings for screen reader navigation, you must ensure that all child elements are phrasing elements (like `<span>`). HTML5 specification does not allow flow elements (`<div>`) inside heading tags. Additionally, changing structural `<div>`s to headings will apply default browser `margin-top` styles which must be explicitly reset (`margin-top: 0`) to maintain the layout.
 **Action:** Always convert nested `<div>`s to `<span>`s when changing their parent container to an `<h1>` - `<h6>` heading, and explicitly check and reset default heading margins.
+
+## 2024-06-25 - Flexible text layouts for Korean
+**Learning:** When designing or updating UI layouts with Korean text, prefer flexible layouts and appropriately scaled font sizes to prevent text overflow.
+**Action:** For flex containers, apply `flex: 1; min-width: 0;` to the text container and `word-break: keep-all; overflow-wrap: break-word;` to the text elements to ensure proper text wrapping.
