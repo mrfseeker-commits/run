@@ -471,6 +471,12 @@
         if (currentTheme === 'dark') toggleSwitch.checked = true;
 
         // --- 1.5 Date Display ---
+        const RUN_START_MINUTES = 5 * 60 + 30;
+        const RUN_END_MINUTES = 7 * 60;
+        const GOGGLE_SUNRISE_CUTOFF = 6 * 60 + 30;
+        let sunriseMinutes = null;
+        let latestWeatherData = null;
+
         function updateDate() {
             const now = new Date();
             const month = now.getMonth() + 1;
@@ -502,7 +508,12 @@
                 if (data.status === 'OK') {
                     const sunriseUTC = new Date(data.results.sunrise);
                     const sunriseLocal = sunriseUTC.toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false });
+                    sunriseMinutes = sunriseUTC.getHours() * 60 + sunriseUTC.getMinutes();
                     document.getElementById('sunrise-info').innerHTML = `<span aria-hidden="true">🌅</span> 일출 ${sunriseLocal}`;
+
+                    if (latestWeatherData) {
+                        render(latestWeatherData);
+                    }
                 }
             } catch (e) {
                 console.log('Sunrise fetch failed:', e);
@@ -544,6 +555,7 @@
             let isRain = false;
             let isIce = false;
             let hasPop = false;
+            let hasClearRunningWeather = false;
 
             data.forEach((d, idx) => {
                 const el = document.createElement('div');
@@ -564,7 +576,18 @@
                 if (d.pty > 0) isRain = true;
                 if (d.pty > 0 && d.temp < 0) isIce = true;
                 if (d.pop >= 30) hasPop = true;
+
+                const [hour, minute = 0] = d.time.split(':').map(Number);
+                const forecastMinutes = hour * 60 + minute;
+                if (forecastMinutes >= RUN_START_MINUTES && forecastMinutes <= RUN_END_MINUTES &&
+                    d.pty === 0 && (d.sky === "Sunny" || d.sky === "Clear")) {
+                    hasClearRunningWeather = true;
+                }
             });
+
+            const needsGoggles = sunriseMinutes !== null &&
+                sunriseMinutes <= GOGGLE_SUNRISE_CUTOFF &&
+                hasClearRunningWeather && !isRain;
 
             // Logic
             const recText = document.getElementById('rec-text');
@@ -626,14 +649,12 @@
                     gears.push({ icon: "👖", name: "헤비웨이트 기모 타이즈", desc: "강력한 기모 안감으로 하체 열 손실을 차단합니다." });
                     gears.push({ icon: "🧤", name: "스마트폰 터치 방한 장갑", desc: "보온성을 유지하며 스마트기기 조작이 가능합니다." });
                     gears.push({ icon: "🧣", name: "흡습속건 멀티스카프", desc: "목의 체온을 보호하고 필요 시 안면을 덮어줍니다." });
-                    gears.push({ icon: "🎧", name: "기모 방한용 귀마개", desc: "가볍고 따뜻하게 귀를 보호해줍니다." });
                 } else if (minTemp <= -5) {
                     if (mainMsg === "") mainMsg = "영하권의 추운 날씨입니다.<br>러닝 역동성을 해치지 않는 슬림핏 레이어링 시스템을 추천합니다.";
                     gears.push({ icon: "👕", name: "미드웨이트 기모 롱슬리브", desc: "적당한 두께감으로 흡습속건 및 보온 기능이 탁월합니다." });
                     gears.push({ icon: "🧥", name: "패커블 초경량 윈드브레이커", desc: "기온 변화에 따라 쉽게 입고 벗을 수 있는 체온 조절용 아우터입니다." });
                     gears.push({ icon: "👖", name: "동계용 경량 러닝 타이즈", desc: "답답하지 않으면서도 찬 바람을 막아주는 슬림핏 타이즈입니다." });
                     gears.push({ icon: "🧤", name: "라이너급 보온 러닝 장갑", desc: "가벼운 보온을 제공해 손의 불편함을 최소화합니다." });
-                    gears.push({ icon: "🎧", name: "초경량 보온 헤드밴드", desc: "머리의 땀을 배출하면서 귀를 따뜻하게 덮어줍니다." });
                 } else if (minTemp <= 0) {
                     if (mainMsg === "") mainMsg = "쌀쌀한 초겨울 날씨입니다.<br>초기 보온과 런업 후 체온 유지를 위한 복장이 적합합니다.";
                     gears.push({ icon: "👕", name: "미드웨이트 긴팔 러닝셔츠", desc: "런업 전 체온을 보호하고 땀 배출을 돕습니다." });
@@ -656,22 +677,29 @@
                     gears.push({ icon: "🎽", name: "초경량 에어로 레이싱 싱글렛", desc: "공기 저항을 최소화하고 극강의 가벼움을 선사합니다." });
                     gears.push({ icon: "🩳", name: "3인치 초경량 스플릿 쇼츠", desc: "다리의 가동범위를 극대화하여 스피드 훈련에 적합합니다." });
                     gears.push({ icon: "🧦", name: "초경량 통기성 러닝 양말", desc: "발의 열과 땀을 빠르게 배출하여 쾌적함을 극대화합니다." });
-                    gears.push({ icon: "😎", name: "스포츠 고글", desc: "주행풍과 눈부심을 막아주어 시야 확보에 도움을 줍니다." });
                 } else if (minTemp <= 22) {
                     if (mainMsg === "") mainMsg = "페이스가 올라가면 덥게 느껴질 수 있는 기온입니다.<br>열 배출과 쿨링 기능이 탁월한 소재를 착용하세요.";
                     gears.push({ icon: "🎽", name: "풀 메쉬 쿨링 에어로 싱글렛", desc: "탁월한 통기성으로 몸의 열기를 빠르게 식혀줍니다." });
                     gears.push({ icon: "🩳", name: "2~3인치 초단기장 엘리트 쇼츠", desc: "최고의 쿨링 효과와 활동성을 보장합니다." });
-                    gears.push({ icon: "😎", name: "초경량 자외선 차단 스포츠 고글", desc: "강한 자외선으로부터 눈을 완벽하게 보호합니다." });
                     gears.push({ icon: "💧", name: "소프트 플라스크", desc: "훈련 중 간편하고 즉각적인 수분 보충을 도와줍니다." });
                 } else {
                     if (mainMsg === "") mainMsg = "무더운 한여름 훈련입니다.<br>열사병 주의! 즉각적인 쿨링과 자외선 차단, 수분 보충 시스템이 필수입니다.";
                     gears.push({ icon: "🎽", name: "초경량 아이스 쿨링 싱글렛", desc: "특수 냉감 소재로 제작되어 피부 온도를 즉각적으로 낮춰줍니다." });
                     gears.push({ icon: "🩳", name: "2인치 엘리트 레이싱 스플릿 쇼츠", desc: "여름철 열 배출을 위한 최적의 초경량 레이스 기어입니다." });
-                    gears.push({ icon: "🧢", name: "초경량 메쉬 썬바이저/러닝 캡", desc: "머리의 열은 배출하면서 강렬한 직사광선을 차단합니다." });
-                    gears.push({ icon: "😎", name: "미러 렌즈 스포츠 선글라스", desc: "눈의 피로를 최소화하고 시야를 선명하게 유지합니다." });
                     gears.push({ icon: "🎽", name: "하이드레이션 베스트", desc: "장거리 훈련 시 충분한 식수와 보급품을 휴대할 수 있습니다." });
                     gears.push({ icon: "💧", name: "전해질 음료 및 플라스크", desc: "땀으로 배출된 전해질을 빠르게 채워 탈수를 예방합니다." });
                     gears.push({ icon: "🧴", name: "워터프루프 스포츠 선크림", desc: "땀에 지워지지 않아 러닝 내내 피부를 강력하게 보호합니다." });
+                }
+
+                // Head and eye protection for the 05:30~07:00 running window
+                if (minTemp <= 0 && !gears.some(g => g.name.includes("비니") || g.name.includes("방한모"))) {
+                    gears.push({ icon: "🧢", name: "흡습속건 방한 러닝 비니", desc: "차가운 새벽 공기에서 머리와 귀의 열 손실을 줄여줍니다." });
+                } else if (maxTemp >= 18 && !gears.some(g => g.name.includes("땀밴드"))) {
+                    gears.push({ icon: "💦", name: "흡습속건 러닝 땀밴드", desc: "더운 날 이마의 땀을 흡수해 눈으로 흐르는 것을 막아줍니다." });
+                }
+
+                if (needsGoggles) {
+                    gears.push({ icon: "😎", name: "새벽 저광량 스포츠 고글", desc: "일출 후 맑은 구간의 낮은 각도 햇빛과 눈부심을 줄여줍니다." });
                 }
             }
 
@@ -702,17 +730,19 @@
                 const response = await fetch('weather_data.json?v=' + new Date().getTime());
                 if (!response.ok) throw new Error("File not found");
                 const data = await response.json();
+                latestWeatherData = data;
                 render(data);
             } catch (e) {
                 console.log("Using Mock Data (Fetch failed):", e);
                 // Fallback Mock Data for Demo/Local testing without python run
-                render([
+                latestWeatherData = [
                     { time: "04:00", temp: -2, sky: "Clear", wind: 2.1, pop: 0, pty: 0 },
                     { time: "05:00", temp: -3, sky: "Clear", wind: 2.5, pop: 0, pty: 0 },
                     { time: "06:00", temp: -3, sky: "Cloudy", wind: 3.0, pop: 20, pty: 0 },
                     { time: "07:00", temp: -2, sky: "Cloudy", wind: 2.8, pop: 0, pty: 0 },
                     { time: "08:00", temp: 1, sky: "Sunny", wind: 1.5, pop: 0, pty: 0 },
-                ]);
+                ];
+                render(latestWeatherData);
             }
         }
 
