@@ -498,13 +498,13 @@
         }
 
         .rec-header {
-            font-size: 13px;
-            color: var(--text-sub);
+            font-size: 16px;
+            color: var(--text-main);
             margin-top: 0;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 700;
+            letter-spacing: 1.8px;
+            font-weight: 900;
         }
 
         .rec-main {
@@ -958,7 +958,7 @@
             "고어텍스 쉘/초경량 방수 재킷": "고어텍스 방수/투습 재킷",
             "발수 러닝 캡": "방수 러닝 캡",
             "흡습속건 방한 러닝 비니": "보온 비니",
-            "흡습속건 러닝 땀밴드": "헤드밴드",
+            "러닝 땀밴드": "헤드밴드",
             "새벽 저광량 스포츠 고글": "고글형 스포츠 선글라스"
         };
 
@@ -1147,7 +1147,7 @@
                     if (mainMsg === "") mainMsg = "페이스가 올라가면 덥게 느껴질 수 있는 기온입니다.<br>열 배출과 쿨링 기능이 탁월한 소재를 착용하세요.";
                     gears.push({ icon: "🎽", name: "초경량 메시 싱글렛", desc: "탁월한 통기성으로 몸의 열기를 빠르게 식혀줍니다." });
                     gears.push({ icon: "🩳", name: "1~3인치 스플릿 쇼츠", desc: "최고의 쿨링 효과와 활동성을 보장합니다." });
-                    gears.push({ icon: "🧢", name: "헤드밴드", desc: "이마의 땀을 잡아 시야를 유지합니다." });
+                    gears.push({ icon: "🧢", name: "러닝 땀밴드", desc: "이마의 땀을 잡아 시야를 유지합니다." });
                 } else {
                     if (mainMsg === "") mainMsg = "무더운 한여름 훈련입니다.<br>열사병 주의! 즉각적인 쿨링과 자외선 차단, 수분 보충 시스템이 필수입니다.";
                     gears.push({ icon: "🎽", name: "초경량 메시 싱글렛", desc: "특수 냉감 소재처럼 열 배출을 빠르게 돕는 최경량 상의입니다." });
@@ -1161,7 +1161,7 @@
                 if (minTemp <= 0 && !gears.some(g => g.name.includes("비니") || g.name.includes("방한모"))) {
                     gears.push({ icon: "🧢", name: "흡습속건 방한 러닝 비니", desc: "차가운 새벽 공기에서 머리와 귀의 열 손실을 줄여줍니다." });
                 } else if (maxTemp >= 18 && !gears.some(g => g.name.includes("땀밴드"))) {
-                    gears.push({ icon: "💦", name: "흡습속건 러닝 땀밴드", desc: "더운 날 이마의 땀을 흡수해 눈으로 흐르는 것을 막아줍니다." });
+                    gears.push({ icon: "💦", name: "러닝 땀밴드", desc: "더운 날 이마의 땀을 흡수해 눈으로 흐르는 것을 막아줍니다." });
                 }
 
                 if (needsGoggles) {
