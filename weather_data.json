@@ -3,20 +3,12 @@
     "time": "04:00",
     "temp": 20.0,
     "sky": "Clear",
-    "wind": 0.6,
+    "wind": 0.5,
     "pop": 0,
     "pty": 0
   },
   {
     "time": "05:00",
-    "temp": 19.0,
-    "sky": "Clear",
-    "wind": 0.4,
-    "pop": 0,
-    "pty": 0
-  },
-  {
-    "time": "06:00",
     "temp": 20.0,
     "sky": "Clear",
     "wind": 0.1,
@@ -24,10 +16,18 @@
     "pty": 0
   },
   {
+    "time": "06:00",
+    "temp": 20.0,
+    "sky": "Clear",
+    "wind": 0.3,
+    "pop": 0,
+    "pty": 0
+  },
+  {
     "time": "07:00",
     "temp": 21.0,
     "sky": "Clear",
-    "wind": 0.2,
+    "wind": 0.3,
     "pop": 0,
     "pty": 0
   },
