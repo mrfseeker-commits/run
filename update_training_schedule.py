@@ -24,6 +24,7 @@ MENU_URL = f"https://cafe.naver.com/f-e/cafes/{CAFE_ID}/menus/{MENU_ID}"
 OUTPUT_PATH = Path(__file__).with_name("training_schedule.json")
 TARGET_DAYS = {"화", "목", "토", "일"}
 KST = ZoneInfo("Asia/Seoul")
+PREVIOUS_MONTH_THRESHOLD = 20
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
@@ -32,6 +33,19 @@ USER_AGENT = (
 
 def normalize_text(text: str) -> str:
     text = text.replace("×", "x").replace("X", "x")
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def normalize_training_text(text: str) -> str:
+    text = normalize_text(text)
+    text = text.replace("회선", "회전")
+    text = re.sub(r"\b([125])0000\s*x\s*", r"\g<1>000m x ", text)
+    text = re.sub(r"\b(1000|2000|5000)\s*m?\s*x\s*", r"\1m x ", text)
+    text = re.sub(r"\b(1000|2000|5000)m\s*x\s*156\b", r"\1m x 1set", text)
+    text = re.sub(r"\b(1000|2000|5000)m\s*x\s*1\s*56\b", r"\1m x 1set", text)
+    text = re.sub(r"\b(1000|2000|5000)m\s*x\s*([0-9]+(?:\.[0-9]+)?)\s*(?:5et|set|sct|sel)?\b", r"\1m x \2set", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s*x\s*", " × ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
@@ -144,7 +158,7 @@ def infer_year(month: int, day: int, now: datetime) -> int:
     return year
 
 
-def parse_rows(text: str, now: datetime) -> list[dict]:
+def parse_rows(text: str, now: datetime, default_month: int | None = None) -> list[dict]:
     cleaned = text.replace("|", " ").replace("（", "(").replace("）", ")")
     cleaned = re.sub(r"(?<=\d)[Il](?=\d)", "1", cleaned)
     lines = [normalize_text(line) for line in cleaned.splitlines() if line.strip()]
@@ -152,26 +166,30 @@ def parse_rows(text: str, now: datetime) -> list[dict]:
 
     for index, line in enumerate(lines):
         match = re.search(
-            r"(?<!\d)(\d{1,2})\s*[\(\[\{]?\s*([월화수목금토일])\s*[\)\]\}]?",
+            r"(?<!\d)(?:(\d{1,2})\s*/\s*)?(\d{1,2})\s*[\(\[\{]?\s*([월화수목금토일])\s*[\)\]\}]?",
             line,
         )
         if not match:
             continue
 
-        day_number = int(match.group(1))
-        weekday = match.group(2)
+        row_month = int(match.group(1)) if match.group(1) else None
+        day_number = int(match.group(2))
+        weekday = match.group(3)
         if weekday not in TARGET_DAYS:
             continue
+        if row_month is None and default_month and day_number > PREVIOUS_MONTH_THRESHOLD:
+            row_month = default_month - 1 if default_month > 1 else 12
 
         training = line[match.end() :].strip(" :-")
         if len(training) < 2 and index + 1 < len(lines):
             training = lines[index + 1].strip(" :-")
-        training = normalize_text(training)
+        training = normalize_training_text(training)
         if not training or training in {"일", "훈련내용"}:
             continue
 
         rows.append(
             {
+                "month": row_month,
                 "day_number": day_number,
                 "day": weekday,
                 "training": training,
@@ -180,7 +198,7 @@ def parse_rows(text: str, now: datetime) -> list[dict]:
 
     unique = {}
     for row in rows:
-        unique[(row["day_number"], row["day"])] = row
+        unique[(row["month"], row["day_number"], row["day"])] = row
     return list(unique.values())
 
 
@@ -192,14 +210,15 @@ def build_schedule(article: dict, image_url: str, ocr_text: str) -> dict:
         raise RuntimeError("일정의 월을 인식하지 못했습니다.")
     month = int(month_match.group(1))
 
-    rows = parse_rows(ocr_text, now)
+    rows = parse_rows(ocr_text, now, month)
     if len(rows) < 3:
         raise RuntimeError(f"필요한 일정 행을 충분히 인식하지 못했습니다: {rows}")
 
     schedule = []
     for row in rows:
-        year = infer_year(month, row["day_number"], now)
-        date = datetime(year, month, row["day_number"]).date()
+        row_month = row.get("month") or month
+        year = infer_year(row_month, row["day_number"], now)
+        date = datetime(year, row_month, row["day_number"]).date()
         schedule.append(
             {
                 "date": date.isoformat(),
@@ -230,7 +249,7 @@ def load_existing() -> dict:
 def update_from_cafe() -> bool:
     article = find_latest_article()
     existing = load_existing()
-    if existing.get("article_id") == article["article_id"]:
+    if existing.get("article_id") == article["article_id"] and not has_likely_ocr_errors(existing):
         print(f"이미 반영된 게시물입니다: {article['title']}")
         return False
 
@@ -261,6 +280,21 @@ def update_from_cafe() -> bool:
     return True
 
 
+def has_likely_ocr_errors(data: dict) -> bool:
+    for item in data.get("schedule", []):
+        training = item.get("training", "")
+        date = item.get("date", "")
+        if re.search(r"\b[125]0000\b", training):
+            return True
+        if re.search(r"\b156\b", training):
+            return True
+        if "회선" in training:
+            return True
+        if data.get("week_label", "").startswith("7월") and date.startswith("2026-07-30"):
+            return True
+    return False
+
+
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=Path, help="로컬 이미지 OCR 테스트")
@@ -269,8 +303,13 @@ def main() -> int:
     if args.image:
         image = Image.open(args.image).convert("RGB")
         now = datetime.now(KST)
+        default_month = None
         for text in run_ocr(image):
-            rows = parse_rows(text, now)
+            week = parse_week_label("", text)
+            match = re.search(r"(\d{1,2})월", week)
+            if match:
+                default_month = int(match.group(1))
+            rows = parse_rows(text, now, default_month)
             if rows:
                 print(json.dumps(rows, ensure_ascii=False, indent=2))
                 return 0
