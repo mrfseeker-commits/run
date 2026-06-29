@@ -967,13 +967,16 @@
                 const response = await fetch('marathon_schedule.json?v=' + Date.now());
                 if (!response.ok) throw new Error('Marathon schedule not found');
                 const data = await response.json();
-                const races = Array.isArray(data.races) ? data.races : [];
+                const today = new Date();
+                const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+                const races = (Array.isArray(data.races) ? data.races : [])
+                    .filter(race => new Date(`${race.date}T00:00:00`) >= todayStart);
 
-                meta.textContent = `${data.title || '2026 하반기 마라톤 일정'} · ${races.length}개 대회`;
+                meta.textContent = `${data.title || '2026 하반기 마라톤 일정'} · 남은 ${races.length}개 대회`;
                 list.innerHTML = '';
 
                 if (!races.length) {
-                    list.innerHTML = '<div class="schedule-empty">등록된 대회 일정이 없습니다.</div>';
+                    list.innerHTML = '<div class="schedule-empty">남은 대회 일정이 없습니다.</div>';
                     return;
                 }
 
