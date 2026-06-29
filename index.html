@@ -213,6 +213,71 @@
             font-size: 11px;
         }
 
+        .weather-links {
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
+            margin: 14px 0 20px;
+        }
+
+        .weather-link {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+            padding: 13px 14px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 16px;
+            background: var(--card-bg);
+            color: var(--text-main);
+            text-decoration: none;
+            box-shadow: 0 5px 16px rgba(0, 0, 0, 0.06);
+            transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+        }
+
+        .weather-link:hover {
+            border-color: var(--accent);
+            transform: translateY(-1px);
+            box-shadow: 0 9px 22px rgba(0, 0, 0, 0.1);
+        }
+
+        .weather-link-icon {
+            width: 38px;
+            height: 38px;
+            flex: 0 0 38px;
+            display: grid;
+            place-items: center;
+            border-radius: 13px;
+            background: rgba(0, 136, 68, 0.1);
+            font-size: 20px;
+        }
+
+        [data-theme="dark"] .weather-link-icon {
+            background: rgba(0, 255, 136, 0.12);
+        }
+
+        .weather-link-text {
+            min-width: 0;
+        }
+
+        .weather-link-title {
+            display: block;
+            font-size: 13px;
+            font-weight: 900;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+        }
+
+        .weather-link-desc {
+            display: block;
+            margin-top: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            color: var(--text-sub);
+            line-height: 1.25;
+        }
+
         .schedule-list {
             display: grid;
             gap: 10px;
@@ -592,6 +657,12 @@
             display: none;
         }
 
+        @media (max-width: 420px) {
+            .weather-links {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .footer-email {
             margin-top: 20px;
             margin-bottom: 20px;
@@ -640,6 +711,23 @@
             <!-- 04~08 Timeline -->
             <div id="timeline" class="timeline-container hidden">
                 <!-- JS will populate this -->
+            </div>
+
+            <div class="weather-links" aria-label="실시간 기상 확인 링크">
+                <a class="weather-link" href="https://radar.kma.go.kr/radar/main.do?cgiId=PR" target="_blank" rel="noopener">
+                    <span class="weather-link-icon" aria-hidden="true">📡</span>
+                    <span class="weather-link-text">
+                        <span class="weather-link-title">기상청 레이더</span>
+                        <span class="weather-link-desc">비구름·강수 이동 확인</span>
+                    </span>
+                </a>
+                <a class="weather-link" href="https://d.kbs.co.kr/special/cctvShare?cctvId=9970" target="_blank" rel="noopener">
+                    <span class="weather-link-icon" aria-hidden="true">🎥</span>
+                    <span class="weather-link-text">
+                        <span class="weather-link-title">갑천 실시간 영상</span>
+                        <span class="weather-link-desc">노면·현장 상태 확인</span>
+                    </span>
+                </a>
             </div>
 
             <article id="forecast-training" class="forecast-training-card hidden">
