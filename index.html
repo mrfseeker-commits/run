@@ -155,7 +155,7 @@
         .view-tabs {
             width: 100%;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
             gap: 6px;
             padding: 5px;
             margin-bottom: 12px;
@@ -173,7 +173,7 @@
             background: transparent;
             color: var(--text-sub);
             font: inherit;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
             cursor: pointer;
         }
@@ -192,7 +192,8 @@
             width: 100%;
         }
 
-        .schedule-panel {
+        .schedule-panel,
+        .marathon-panel {
             padding: 20px;
             margin-bottom: 40px;
             border: 1px solid var(--timeline-border);
@@ -201,13 +202,15 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
         }
 
-        .schedule-heading {
+        .schedule-heading,
+        .marathon-heading {
             margin: 0;
             font-size: 20px;
             font-weight: 900;
         }
 
-        .schedule-meta {
+        .schedule-meta,
+        .marathon-meta {
             margin: 5px 0 18px;
             color: var(--text-sub);
             font-size: 11px;
@@ -338,6 +341,85 @@
             color: var(--text-sub);
             font-size: 13px;
             text-align: center;
+        }
+
+        .marathon-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .marathon-item {
+            display: grid;
+            grid-template-columns: 74px minmax(0, 1fr);
+            gap: 12px;
+            align-items: stretch;
+            padding: 13px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 16px;
+            background: var(--bg-color);
+        }
+
+        .marathon-dday {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 72px;
+            border-radius: 14px;
+            background: var(--card-bg);
+            color: var(--accent);
+            font-size: 18px;
+            font-weight: 950;
+            letter-spacing: -0.04em;
+            text-align: center;
+        }
+
+        .marathon-dday small {
+            margin-top: 4px;
+            color: var(--text-sub);
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.25;
+            letter-spacing: -0.02em;
+        }
+
+        .marathon-info {
+            min-width: 0;
+            align-self: center;
+        }
+
+        .marathon-name {
+            color: var(--text-main);
+            font-size: 14px;
+            font-weight: 900;
+            line-height: 1.35;
+            word-break: keep-all;
+            overflow-wrap: anywhere;
+        }
+
+        .marathon-details {
+            margin-top: 6px;
+            color: var(--text-sub);
+            font-size: 11px;
+            font-weight: 700;
+            line-height: 1.45;
+            word-break: keep-all;
+        }
+
+        .marathon-note {
+            display: inline-block;
+            margin-top: 7px;
+            padding: 4px 7px;
+            border-radius: 999px;
+            background: rgba(0, 136, 68, 0.1);
+            color: var(--accent);
+            font-size: 10px;
+            font-weight: 800;
+            line-height: 1.2;
+        }
+
+        [data-theme="dark"] .marathon-note {
+            background: rgba(0, 255, 136, 0.12);
         }
 
         #date-text {
@@ -661,6 +743,22 @@
             .weather-links {
                 grid-template-columns: 1fr;
             }
+
+            .view-tab {
+                padding: 10px 4px;
+                font-size: 11px;
+            }
+
+            .marathon-item {
+                grid-template-columns: 66px minmax(0, 1fr);
+                gap: 10px;
+                padding: 12px;
+            }
+
+            .marathon-dday {
+                min-height: 68px;
+                font-size: 16px;
+            }
         }
 
         .footer-email {
@@ -701,6 +799,7 @@
         <nav class="view-tabs" aria-label="페이지 보기">
             <button class="view-tab active" type="button" data-view="weather" aria-selected="true">날씨·복장</button>
             <button class="view-tab" type="button" data-view="schedule" aria-selected="false">주간 훈련</button>
+            <button class="view-tab" type="button" data-view="marathon" aria-selected="false">대회 D-Day</button>
         </nav>
 
         <div id="weather-panel" class="view-panel">
@@ -758,6 +857,14 @@
                 <div class="schedule-empty">훈련 일정을 불러오는 중입니다.</div>
             </div>
             <a id="schedule-source" class="schedule-source hidden" href="#" target="_blank" rel="noopener">네이버 카페 원문 보기 →</a>
+        </section>
+
+        <section id="marathon-panel" class="view-panel marathon-panel hidden" aria-labelledby="marathon-heading">
+            <h2 id="marathon-heading" class="marathon-heading">하반기 마라톤 D-Day</h2>
+            <p id="marathon-meta" class="marathon-meta">대회 일정을 불러오는 중입니다.</p>
+            <div id="marathon-list" class="marathon-list">
+                <div class="schedule-empty">대회 일정을 불러오는 중입니다.</div>
+            </div>
         </section>
 
         <div class="footer-email">mrfseeker@gmail.com</div>
@@ -820,21 +927,79 @@
 
         function initViewTabs() {
             const tabs = document.querySelectorAll('.view-tab');
-            const weatherPanel = document.getElementById('weather-panel');
-            const schedulePanel = document.getElementById('schedule-panel');
+            const panels = {
+                weather: document.getElementById('weather-panel'),
+                schedule: document.getElementById('schedule-panel'),
+                marathon: document.getElementById('marathon-panel')
+            };
 
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    const showSchedule = tab.dataset.view === 'schedule';
+                    const activeView = tab.dataset.view;
                     tabs.forEach(item => {
                         const active = item === tab;
                         item.classList.toggle('active', active);
                         item.setAttribute('aria-selected', String(active));
                     });
-                    weatherPanel.classList.toggle('hidden', showSchedule);
-                    schedulePanel.classList.toggle('hidden', !showSchedule);
+                    Object.entries(panels).forEach(([view, panel]) => {
+                        panel.classList.toggle('hidden', view !== activeView);
+                    });
                 });
             });
+        }
+
+        function getDdayText(dateKey) {
+            const today = new Date();
+            const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+            const target = new Date(`${dateKey}T00:00:00`);
+            const diffDays = Math.round((target - todayStart) / 86400000);
+            if (diffDays === 0) return 'D-Day';
+            if (diffDays > 0) return `D-${diffDays}`;
+            return `D+${Math.abs(diffDays)}`;
+        }
+
+        async function loadMarathonSchedule() {
+            const meta = document.getElementById('marathon-meta');
+            const list = document.getElementById('marathon-list');
+            const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+
+            try {
+                const response = await fetch('marathon_schedule.json?v=' + Date.now());
+                if (!response.ok) throw new Error('Marathon schedule not found');
+                const data = await response.json();
+                const races = Array.isArray(data.races) ? data.races : [];
+
+                meta.textContent = `${data.title || '2026 하반기 마라톤 일정'} · ${races.length}개 대회`;
+                list.innerHTML = '';
+
+                if (!races.length) {
+                    list.innerHTML = '<div class="schedule-empty">등록된 대회 일정이 없습니다.</div>';
+                    return;
+                }
+
+                races.forEach(race => {
+                    const date = new Date(`${race.date}T00:00:00`);
+                    const dateText = `${date.getMonth() + 1}/${date.getDate()} ${weekdays[date.getDay()]}요일`;
+                    const note = race.note ? `<span class="marathon-note">${race.note}</span>` : '';
+                    list.innerHTML += `
+                        <article class="marathon-item">
+                            <div class="marathon-dday">
+                                ${getDdayText(race.date)}
+                                <small>${dateText}</small>
+                            </div>
+                            <div class="marathon-info">
+                                <div class="marathon-name">${race.name}</div>
+                                <div class="marathon-details">${race.location} · ${race.events}</div>
+                                ${note}
+                            </div>
+                        </article>
+                    `;
+                });
+            } catch (error) {
+                meta.textContent = '하반기 마라톤 일정';
+                list.innerHTML = '<div class="schedule-empty">대회 일정을 불러오지 못했습니다.</div>';
+                console.log('Marathon schedule load failed:', error);
+            }
         }
 
         async function loadTrainingSchedule() {
@@ -1307,6 +1472,7 @@
         loadData();
         initViewTabs();
         loadTrainingSchedule();
+        loadMarathonSchedule();
     </script>
 </body>
 
