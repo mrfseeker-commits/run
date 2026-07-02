@@ -116,26 +116,29 @@
         }
 
         .theme-control {
-            display: inline-flex;
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 9px;
-            padding: 7px 10px 7px 12px;
-            margin-bottom: 13px;
-            border: 1px solid rgba(255, 255, 255, 0.26);
+            justify-content: space-between;
+            gap: 12px;
+            width: min(230px, 86%);
+            min-height: 54px;
+            padding: 9px 13px 9px 16px;
+            margin: 18px auto 0;
+            border: 1px solid rgba(255, 255, 255, 0.28);
             border-radius: 999px;
-            background: rgba(0, 0, 0, 0.32);
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+            background: rgba(0, 0, 0, 0.36);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
             backdrop-filter: blur(4px);
         }
 
         .theme-label {
-            min-width: 62px;
+            min-width: 0;
             color: #fff;
-            font-size: 12px;
+            font-size: 14px;
             font-weight: 900;
             line-height: 1;
             text-align: left;
+            white-space: nowrap;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
         }
 
@@ -809,16 +812,16 @@
             <div class="title-row">
                 <h1 class="title">KAIST TRACK<br>날씨정보</h1>
             </div>
+            <div id="current-date" class="date-display"></div>
+            <div class="location">[유성구 구성동]</div>
+            <div class="signature">by Hogun</div>
             <div class="theme-control" aria-label="테마 전환">
-                <span id="theme-label" class="theme-label">라이트모드</span>
+                <span id="theme-label" class="theme-label">☀️ 라이트모드</span>
                 <label class="theme-switch" for="checkbox" title="다크 모드 전환">
                     <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" role="switch" />
                     <div class="slider"></div>
                 </label>
             </div>
-            <div id="current-date" class="date-display"></div>
-            <div class="location">[유성구 구성동]</div>
-            <div class="signature">by Hogun</div>
 
             <div id="loading" class="loading" role="status" aria-live="polite">기상 데이터 분석중...</div>
         </div>
@@ -905,7 +908,7 @@
         const themeLabel = document.getElementById('theme-label');
 
         function updateThemeLabel(theme) {
-            const label = theme === 'dark' ? '다크모드' : '라이트모드';
+            const label = theme === 'dark' ? '🌙 다크모드' : '☀️ 라이트모드';
             themeLabel.textContent = label;
             toggleSwitch.setAttribute('aria-label', `${label} 사용 중, 테마 전환`);
         }
