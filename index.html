@@ -91,6 +91,7 @@
             text-align: center;
             width: 90%;
             max-width: 400px;
+            transform: translateY(56px);
         }
 
         .title-row {
@@ -116,13 +117,13 @@
         }
 
         .theme-control {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
             align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            width: min(230px, 86%);
+            gap: 10px;
+            width: min(330px, 92%);
             min-height: 54px;
-            padding: 9px 13px 9px 16px;
+            padding: 9px 14px;
             margin: 18px auto 0;
             border: 1px solid rgba(255, 255, 255, 0.28);
             border-radius: 999px;
@@ -132,21 +133,28 @@
         }
 
         .theme-label {
-            min-width: 0;
             color: #fff;
-            font-size: 14px;
-            font-weight: 900;
+            font-size: 13px;
+            font-weight: 850;
             line-height: 1;
-            text-align: left;
+            text-align: center;
             white-space: nowrap;
+            opacity: 0.58;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
+            transition: opacity 0.2s ease, color 0.2s ease, transform 0.2s ease;
+        }
+
+        .theme-label.active {
+            color: #fff;
+            opacity: 1;
+            transform: scale(1.03);
         }
 
         .date-display {
-            font-size: 16px;
-            font-weight: 700;
+            font-size: 19px;
+            font-weight: 900;
             color: var(--header-text-color);
-            text-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.75), 0 0 2px rgba(0, 0, 0, 0.8);
             margin-bottom: 8px;
             opacity: 1;
         }
@@ -816,11 +824,12 @@
             <div class="location">[유성구 구성동]</div>
             <div class="signature">by Hogun</div>
             <div class="theme-control" aria-label="테마 전환">
-                <span id="theme-label" class="theme-label">☀️ 라이트모드</span>
+                <span id="theme-label-light" class="theme-label">☀️ 라이트모드</span>
                 <label class="theme-switch" for="checkbox" title="다크 모드 전환">
                     <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" role="switch" />
                     <div class="slider"></div>
                 </label>
+                <span id="theme-label-dark" class="theme-label">🌙 다크모드</span>
             </div>
 
             <div id="loading" class="loading" role="status" aria-live="polite">기상 데이터 분석중...</div>
@@ -905,11 +914,13 @@
     <script>
         // --- 1. Theme Logic (Default Light) ---
         const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-        const themeLabel = document.getElementById('theme-label');
+        const lightThemeLabel = document.getElementById('theme-label-light');
+        const darkThemeLabel = document.getElementById('theme-label-dark');
 
         function updateThemeLabel(theme) {
-            const label = theme === 'dark' ? '🌙 다크모드' : '☀️ 라이트모드';
-            themeLabel.textContent = label;
+            const label = theme === 'dark' ? '다크모드' : '라이트모드';
+            lightThemeLabel.classList.toggle('active', theme === 'light');
+            darkThemeLabel.classList.toggle('active', theme === 'dark');
             toggleSwitch.setAttribute('aria-label', `${label} 사용 중, 테마 전환`);
         }
 
