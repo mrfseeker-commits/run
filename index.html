@@ -94,21 +94,49 @@
         }
 
         .title-row {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 5px;
+            display: inline-block;
+            padding: 13px 18px 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            border-radius: 18px;
+            background: linear-gradient(135deg, rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.2));
+            box-shadow: 0 12px 34px rgba(0, 0, 0, 0.24);
+            backdrop-filter: blur(3px);
         }
 
         .title {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 900;
             color: var(--header-text-color);
-            text-shadow: var(--header-text-shadow);
+            text-shadow: 0 3px 14px rgba(0, 0, 0, 0.85), 0 0 2px rgba(0, 0, 0, 0.9);
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.2px;
+            line-height: 1.08;
             margin: 0;
+        }
+
+        .theme-control {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            padding: 7px 10px 7px 12px;
+            margin-bottom: 13px;
+            border: 1px solid rgba(255, 255, 255, 0.26);
+            border-radius: 999px;
+            background: rgba(0, 0, 0, 0.32);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+            backdrop-filter: blur(4px);
+        }
+
+        .theme-label {
+            min-width: 62px;
+            color: #fff;
+            font-size: 12px;
+            font-weight: 900;
+            line-height: 1;
+            text-align: left;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.75);
         }
 
         .date-display {
@@ -780,8 +808,9 @@
         <div class="header-content">
             <div class="title-row">
                 <h1 class="title">KAIST TRACK<br>날씨정보</h1>
-
-                <!-- Toggle Switch Inline -->
+            </div>
+            <div class="theme-control" aria-label="테마 전환">
+                <span id="theme-label" class="theme-label">라이트모드</span>
                 <label class="theme-switch" for="checkbox" title="다크 모드 전환">
                     <input type="checkbox" id="checkbox" aria-label="다크 모드 전환" role="switch" />
                     <div class="slider"></div>
@@ -873,21 +902,26 @@
     <script>
         // --- 1. Theme Logic (Default Light) ---
         const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+        const themeLabel = document.getElementById('theme-label');
+
+        function updateThemeLabel(theme) {
+            const label = theme === 'dark' ? '다크모드' : '라이트모드';
+            themeLabel.textContent = label;
+            toggleSwitch.setAttribute('aria-label', `${label} 사용 중, 테마 전환`);
+        }
 
         function switchTheme(e) {
-            if (e.target.checked) {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.documentElement.setAttribute('data-theme', 'light');
-                localStorage.setItem('theme', 'light');
-            }
+            const nextTheme = e.target.checked ? 'dark' : 'light';
+            document.documentElement.setAttribute('data-theme', nextTheme);
+            localStorage.setItem('theme', nextTheme);
+            updateThemeLabel(nextTheme);
         }
         toggleSwitch.addEventListener('change', switchTheme);
 
         const currentTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', currentTheme);
         if (currentTheme === 'dark') toggleSwitch.checked = true;
+        updateThemeLabel(currentTheme);
 
         // --- 1.5 Date Display ---
         const RUN_START_MINUTES = 5 * 60 + 30;
