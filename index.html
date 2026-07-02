@@ -1405,9 +1405,12 @@
                     mainMsg += "바람이 다소 강해 체감온도가 급격히 떨어질 수 있습니다.<br>";
                     gears.push({ icon: "🧥", name: "고기능성 방풍/투습 윈드브레이커", desc: "바람을 차단하여 체온 손실을 방지하고 내부 습기를 배출합니다." });
                 } else if (hasPop || isRain) {
-                    mainMsg += `${precipitationLabel} 예보가 있습니다. 체온 저하를 막을 대비가 필요합니다.<br>`;
-                    gears.push({ icon: "🧥", name: "고어텍스 쉘/초경량 방수 재킷", desc: `${precipitationLabel} 상황에서 체온을 유지하도록 돕습니다.` });
-                    gears.push({ icon: "🧢", name: "발수 러닝 캡", desc: `${precipitationLabel} 예보 시 시야를 확보하고 머리의 체온 저하를 막아줍니다.` });
+                    const isWarmRain = precipitationLabel === "비" && minTemp >= 15;
+                    mainMsg += isWarmRain
+                        ? `${precipitationLabel} 예보가 있습니다. 젖은 노면과 시야, 피부 쓸림에 대비하세요.<br>`
+                        : `${precipitationLabel} 예보가 있습니다. 체온 저하를 막을 대비가 필요합니다.<br>`;
+                    gears.push({ icon: "🧥", name: "고어텍스 쉘/초경량 방수 재킷", desc: isWarmRain ? "비를 막되 내부 열이 차지 않도록 통기성을 우선하세요." : `${precipitationLabel} 상황에서 체온을 유지하도록 돕습니다.` });
+                    gears.push({ icon: "🧢", name: "발수 러닝 캡", desc: isWarmRain ? "빗물이 눈으로 흘러드는 것을 줄여 시야를 확보합니다." : `${precipitationLabel} 예보 시 시야를 확보하고 머리의 체온 저하를 막아줍니다.` });
                     if (hasSnowForecast || minTemp <= 2) {
                         gears.push({ icon: "👟", name: "고어텍스 방수 러닝화", desc: "젖은 노면과 차가운 물기를 막아 발의 체온 저하를 줄입니다." });
                         gears.push({ icon: "🧤", name: "완전 방수 소재의 장갑", desc: "눈이나 차가운 비가 손에 스며드는 것을 막습니다." });
