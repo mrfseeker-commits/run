@@ -1,31 +1,31 @@
 {
-  "article_id": 3485,
-  "article_title": "7월1주 주간 일정/정산",
-  "week_label": "7월 1주",
-  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3485?menuid=13&referrerAllArticles=false",
-  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA2MjhfMjMy/MDAxNzgyNjU3MDEzMzg4.SlypsKLpXtPYemDpbo8hiya6bEWOhqxu1YkxaqyVyUYg.8JH3QG3y2gKyyysubS-WTcDYlstMjMU5ADBwGmv-DvEg.PNG/image.png?type=w1600",
+  "article_id": 3499,
+  "article_title": "7월2주 주간 일정/정산",
+  "week_label": "7월 2주",
+  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3499?menuid=13&referrerAllArticles=false",
+  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA3MDVfMjgz/MDAxNzgzMjYyMjkxODQ1.8UPK8XgCW4_-ihY7VDR23Mkw_wpvZzT-kn-UmnyQSAQg.TO0PRDe74pBDhQD_gb6NSy8OP3y40Owykf4iyFbuYPkg.PNG/image.png?type=w1600",
   "published_at": null,
-  "updated_at": "2026-06-29T00:08:57+09:00",
+  "updated_at": "2026-07-06T00:04:48+09:00",
   "schedule": [
     {
-      "date": "2026-06-30",
+      "date": "2026-07-07",
       "day": "화",
       "training": "카이스트 빌드업런"
     },
     {
-      "date": "2026-07-02",
+      "date": "2026-07-09",
       "day": "목",
-      "training": "카이스트 2000m × 2.5set"
+      "training": "카이스트 1000m × 5set"
     },
     {
-      "date": "2026-07-04",
+      "date": "2026-07-11",
       "day": "토",
       "training": "카이스트 5000m × 1set"
     },
     {
-      "date": "2026-07-05",
+      "date": "2026-07-12",
       "day": "일",
-      "training": "계족산 2회전"
+      "training": "계족산 2외전"
     }
   ]
 }
