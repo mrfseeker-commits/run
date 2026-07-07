@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="light dark">
     <title>KAIST Track Weather</title>
     <style>
         :root {
@@ -20,6 +21,7 @@
             --header-img: url('bg_light.png');
             --header-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
             --header-text-color: #ffffff;
+            color-scheme: only light;
         }
 
         [data-theme="dark"] {
@@ -36,6 +38,7 @@
             --header-img: url('bg_dark.png');
             --header-text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
             --header-text-color: #ffffff;
+            color-scheme: dark;
         }
 
         * {
@@ -54,6 +57,7 @@
             align-items: center;
             min-height: 100vh;
             transition: background-color 0.3s, color 0.3s;
+            color-scheme: inherit;
         }
 
         /* Header Area with Background Image */
