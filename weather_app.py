@@ -267,6 +267,11 @@ class NaverCompareFetcher:
         "WEATHERNEWS": "웨더뉴스",
         "ACCUWEATHER": "아큐웨더",
     }
+    PROVIDER_ORDER = {
+        "ACCUWEATHER": 0,
+        "TWC": 1,
+        "WEATHERNEWS": 2,
+    }
 
     _session = None
 
@@ -336,6 +341,8 @@ class NaverCompareFetcher:
                     "updated_at": updated_at,
                     "rows": normalized_rows,
                 })
+
+        services.sort(key=lambda service: cls.PROVIDER_ORDER.get(service["provider_code"], 99))
 
         return services
 

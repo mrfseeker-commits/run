@@ -26,12 +26,12 @@ class NaverCompareFetcherTest(unittest.TestCase):
 
         services = NaverCompareFetcher.parse_hourly_services(html, start_hour=4, end_hour=8)
 
-        self.assertEqual([service["provider"] for service in services], ["웨더채널", "아큐웨더"])
-        self.assertEqual([row["time"] for row in services[0]["rows"]], ["07/09 04:00", "07/09 08:00"])
-        self.assertEqual(services[0]["rows"][0]["weather"], "비")
-        self.assertEqual(services[0]["rows"][0]["rain_probability"], "80%")
-        self.assertEqual(services[1]["rows"][0]["temperature"], "24.0℃")
-        self.assertEqual(services[1]["updated_at"], "2026-07-09 15:30")
+        self.assertEqual([service["provider"] for service in services], ["아큐웨더", "웨더채널"])
+        self.assertEqual(services[0]["rows"][0]["temperature"], "24.0℃")
+        self.assertEqual(services[0]["updated_at"], "2026-07-09 15:30")
+        self.assertEqual([row["time"] for row in services[1]["rows"]], ["07/09 04:00", "07/09 08:00"])
+        self.assertEqual(services[1]["rows"][0]["weather"], "비")
+        self.assertEqual(services[1]["rows"][0]["rain_probability"], "80%")
 
     def test_parse_hourly_services_uses_requested_target_date(self):
         html = (

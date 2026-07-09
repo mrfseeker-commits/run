@@ -100,6 +100,11 @@ class NaverCompareFetcher:
         "WEATHERNEWS": "웨더뉴스",
         "ACCUWEATHER": "아큐웨더",
     }
+    PROVIDER_ORDER = {
+        "ACCUWEATHER": 0,
+        "TWC": 1,
+        "WEATHERNEWS": 2,
+    }
 
     @classmethod
     def fetch_hourly_services(cls, region_code=NAVER_COMPARE_REGION_CODE, start_hour=4, end_hour=8, target_date=None):
@@ -151,6 +156,8 @@ class NaverCompareFetcher:
                     "updated_at": updated_at,
                     "rows": normalized_rows,
                 })
+
+        services.sort(key=lambda service: cls.PROVIDER_ORDER.get(service["provider_code"], 99))
 
         return {
             "region_code": NAVER_COMPARE_REGION_CODE,

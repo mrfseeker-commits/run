@@ -1355,8 +1355,14 @@
             const meta = document.getElementById('service-forecast-meta');
             const list = document.getElementById('service-forecast-list');
             const link = document.getElementById('service-forecast-link');
+            const providerOrder = { ACCUWEATHER: 0, TWC: 1, WEATHERNEWS: 2 };
             const services = (Array.isArray(data?.services) ? data.services : [])
-                .filter(service => String(service.provider_code || '').toUpperCase() !== 'KMA');
+                .filter(service => String(service.provider_code || '').toUpperCase() !== 'KMA')
+                .sort((a, b) => {
+                    const aCode = String(a.provider_code || '').toUpperCase();
+                    const bCode = String(b.provider_code || '').toUpperCase();
+                    return (providerOrder[aCode] ?? 99) - (providerOrder[bCode] ?? 99);
+                });
 
             serviceForecastData = data;
             button.classList.remove('hidden');
