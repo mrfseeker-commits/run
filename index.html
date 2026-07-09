@@ -478,12 +478,13 @@
         }
 
         .forecast-source-badge {
-            width: fit-content;
-            display: inline-flex;
+            grid-column: 1 / -1;
+            display: flex;
             align-items: center;
             gap: 6px;
-            margin-top: 8px;
-            padding: 5px 9px;
+            align-self: flex-start;
+            margin: 0 0 3px;
+            padding: 4px 7px;
             border: 1px solid var(--timeline-border);
             border-radius: 999px;
             background: var(--bg-color);
@@ -562,8 +563,8 @@
         /* Timeline Grid */
         .timeline-container {
             width: 100%;
-            display: flex;
-            justify-content: space-between;
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
             margin-bottom: 20px;
             gap: 6px;
             background: var(--card-bg);
@@ -711,11 +712,10 @@
 
         .service-provider-icon.kma {
             border-radius: 50%;
-            background:
-                radial-gradient(circle at 50% 36%, #e43939 0 22%, transparent 23%),
-                radial-gradient(circle at 50% 64%, #1654c8 0 22%, transparent 23%),
-                linear-gradient(135deg, #fff 0 48%, #f7f7f7 49% 100%);
-            border: 1px solid rgba(0, 0, 0, 0.08);
+            background: linear-gradient(145deg, #0f54d8, #063a9f);
+            border: 2px solid #fff;
+            font-size: 6px;
+            letter-spacing: -0.06em;
         }
 
         .service-provider-icon.accuweather {
@@ -1167,14 +1167,13 @@
             <h2 id="timeline-date" class="timeline-date hidden">
                 <span id="date-text"></span>
                 <span id="sunrise-info" class="sunrise-info"></span>
-                <span class="forecast-source-badge">
-                    <span class="service-provider-icon kma" aria-hidden="true"></span>
-                    기상청 단기예보
-                </span>
             </h2>
             <!-- 04~08 Timeline -->
             <div id="timeline" class="timeline-container hidden">
-                <!-- JS will populate this -->
+                <span class="forecast-source-badge">
+                    <span class="service-provider-icon kma" aria-hidden="true">KMA</span>
+                    기상청
+                </span>
             </div>
 
             <button id="service-forecast-toggle" class="service-forecast-toggle hidden" type="button"
@@ -1726,7 +1725,12 @@
 
         function render(data) {
             const container = document.getElementById('timeline');
-            container.innerHTML = "";
+            container.innerHTML = `
+                <span class="forecast-source-badge">
+                    <span class="service-provider-icon kma" aria-hidden="true">KMA</span>
+                    기상청
+                </span>
+            `;
 
             let minTemp = 100;
             let maxTemp = -100;
