@@ -4,9 +4,11 @@ from tkinter import ttk, messagebox
 import math
 import requests
 import os
+import json
 import xml.etree.ElementTree as ET
 import threading
 import webbrowser
+from datetime import datetime
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -256,6 +258,116 @@ class WeatherFetcher:
         
         return results
 
+class NaverCompareFetcher:
+    BASE_URL = "https://weather.naver.com/compare/{region_code}"
+    DEFAULT_REGION_CODE = "07200124"
+    PROVIDER_NAMES = {
+        "KMA": "기상청",
+        "TWC": "웨더채널",
+        "WEATHERNEWS": "웨더뉴스",
+        "ACCUWEATHER": "아큐웨더",
+    }
+
+    _session = None
+
+    @classmethod
+    def get_session(cls):
+        if cls._session is None:
+            cls._session = requests.Session()
+            adapter = requests.adapters.HTTPAdapter(pool_connections=3, pool_maxsize=3, max_retries=3)
+            cls._session.mount('https://', adapter)
+            cls._session.mount('http://', adapter)
+        return cls._session
+
+    @classmethod
+    def fetch_hourly_services(cls, region_code=None, start_hour=4, end_hour=8):
+        region_code = region_code or cls.DEFAULT_REGION_CODE
+        url = cls.BASE_URL.format(region_code=region_code)
+        headers = {"User-Agent": "Mozilla/5.0"}
+        resp = cls.get_session().get(url, headers=headers, timeout=20)
+        resp.raise_for_status()
+        resp.encoding = "utf-8"
+        return cls.parse_hourly_services(resp.text, start_hour=start_hour, end_hour=end_hour)
+
+    @classmethod
+    def parse_hourly_services(cls, html, start_hour=4, end_hour=8):
+        block_api_result = cls.extract_block_api_result(html)
+        choice_result = block_api_result.get("results", {}).get("choiceResult", {})
+        hourly_block = choice_result.get("compareHourlyFcast~~1", {})
+        hourly_map = hourly_block.get("domesticHourlyListMap", {})
+
+        services = []
+        for provider_code, rows in hourly_map.items():
+            normalized_rows = []
+            updated_at = ""
+            target_date = ""
+            for row in rows:
+                try:
+                    hour = int(str(row.get("aplTm", "")).zfill(2))
+                except ValueError:
+                    continue
+                if hour < start_hour or hour > end_hour:
+                    continue
+                row_date = str(row.get("aplYmd", ""))
+                if not target_date:
+                    target_date = row_date
+                if row_date != target_date:
+                    continue
+                normalized = cls.normalize_hourly_row(row)
+                normalized_rows.append(normalized)
+                if not updated_at:
+                    updated_at = normalized.get("updated_at", "")
+
+            if normalized_rows:
+                services.append({
+                    "provider": cls.PROVIDER_NAMES.get(provider_code, provider_code),
+                    "provider_code": provider_code,
+                    "updated_at": updated_at,
+                    "rows": normalized_rows,
+                })
+
+        return services
+
+    @staticmethod
+    def extract_block_api_result(html):
+        marker = "var blockApiResult = "
+        start = html.find(marker)
+        if start < 0:
+            raise ValueError("Naver compare payload not found")
+        json_start = start + len(marker)
+        decoder = json.JSONDecoder()
+        payload, _ = decoder.raw_decode(html[json_start:])
+        return payload
+
+    @staticmethod
+    def normalize_hourly_row(row):
+        apl_ymd = str(row.get("aplYmd", ""))
+        apl_tm = str(row.get("aplTm", "")).zfill(2)
+        time_text = f"{apl_ymd[4:6]}/{apl_ymd[6:8]} {apl_tm}:00" if len(apl_ymd) == 8 else f"{apl_tm}:00"
+        fcast_ymdt = str(row.get("fcastYmdt", ""))
+        updated_at = ""
+        if len(fcast_ymdt) >= 12:
+            try:
+                updated_at = datetime.strptime(fcast_ymdt[:12], "%Y%m%d%H%M").strftime("%Y-%m-%d %H:%M")
+            except ValueError:
+                updated_at = fcast_ymdt
+        return {
+            "time": time_text,
+            "weather": row.get("wetrTxt", "-") or "-",
+            "temperature": NaverCompareFetcher.format_value(row.get("tmpr"), "℃"),
+            "rain_probability": NaverCompareFetcher.format_value(row.get("rainProb"), "%"),
+            "rain_amount": row.get("rainAmt", "-") or "-",
+            "snow_amount": row.get("snowAmt", "-") or "-",
+            "wind": row.get("windDrctnName", "-") or "-",
+            "updated_at": updated_at,
+        }
+
+    @staticmethod
+    def format_value(value, suffix):
+        if value is None or value == "":
+            return "-"
+        return f"{value}{suffix}"
+
 # --- 4. GUI Application ---
 class WeatherApp:
     def __init__(self, root):
@@ -348,14 +460,22 @@ class WeatherApp:
         self.listbox_frame.pack_forget() 
 
         # 3. Result Area
-        result_frame = tk.LabelFrame(self.root, text="상세 날씨 (시계열)", padx=10, pady=10)
+        result_frame = tk.LabelFrame(self.root, text="상세 날씨", padx=10, pady=10)
         result_frame.pack(fill='both', expand=True, padx=10, pady=10)
         
         self.location_label = tk.Label(result_frame, text="주소: -", font=("Malgun Gothic", 11, "bold"))
         self.location_label.pack(anchor='w', pady=(0, 10))
 
+        self.notebook = ttk.Notebook(result_frame)
+        self.notebook.pack(fill='both', expand=True)
+
+        kma_tab = tk.Frame(self.notebook)
+        service_tab = tk.Frame(self.notebook)
+        self.notebook.add(kma_tab, text="기상청 시계열")
+        self.notebook.add(service_tab, text="서비스별 예보")
+
         # Progress Bar Frame (Normally hidden or 0)
-        self.prog_frame = tk.Frame(result_frame)
+        self.prog_frame = tk.Frame(kma_tab)
         self.prog_frame.pack(fill='x', padx=5, pady=5)
         self.progress = ttk.Progressbar(self.prog_frame, orient="horizontal", length=100, mode="determinate")
         self.progress.pack(fill='x')
@@ -365,18 +485,41 @@ class WeatherApp:
 
         # Treeview
         cols = ("시간", "기온", "하늘", "강수형태", "강수확률", "습도", "풍속", "강수량", "적설")
-        self.tree = ttk.Treeview(result_frame, columns=cols, show='headings', height=38)
+        self.tree = ttk.Treeview(kma_tab, columns=cols, show='headings', height=38)
         
         widths = [120, 60, 80, 80, 70, 60, 120, 100, 80]
         for col, w in zip(cols, widths):
             self.tree.heading(col, text=col)
             self.tree.column(col, width=w, anchor='center')
         
-        scrollbar = ttk.Scrollbar(result_frame, orient="vertical", command=self.tree.yview)
+        scrollbar = ttk.Scrollbar(kma_tab, orient="vertical", command=self.tree.yview)
         self.tree.configure(yscrollcommand=scrollbar.set)
         
         self.tree.pack(side='left', fill='both', expand=True)
         scrollbar.pack(side='right', fill='y')
+
+        service_top = tk.Frame(service_tab, pady=5)
+        service_top.pack(fill='x')
+        self.service_label = tk.Label(
+            service_top,
+            text="Naver 비교예보: 07200124 / 04:00-08:00",
+            font=("Malgun Gothic", 10, "bold")
+        )
+        self.service_label.pack(side='left')
+        self.service_refresh_btn = tk.Button(service_top, text="서비스 예보 새로고침", command=self.fetch_service_forecast_btn)
+        self.service_refresh_btn.pack(side='right')
+
+        service_cols = ("서비스", "시간", "날씨", "기온", "강수확률", "강수량", "적설", "풍향", "발표")
+        self.service_tree = ttk.Treeview(service_tab, columns=service_cols, show='headings', height=38)
+        service_widths = [80, 90, 80, 60, 70, 65, 60, 75, 115]
+        for col, w in zip(service_cols, service_widths):
+            self.service_tree.heading(col, text=col)
+            self.service_tree.column(col, width=w, anchor='center')
+
+        service_scrollbar = ttk.Scrollbar(service_tab, orient="vertical", command=self.service_tree.yview)
+        self.service_tree.configure(yscrollcommand=service_scrollbar.set)
+        self.service_tree.pack(side='left', fill='both', expand=True)
+        service_scrollbar.pack(side='right', fill='y')
         
         # 4. Status Bar
         self.status_var = tk.StringVar()
@@ -511,12 +654,14 @@ class WeatherApp:
         # Clear tree
         for item in self.tree.get_children():
             self.tree.delete(item)
+        self.clear_service_tree()
         
         # Show progress
         self.prog_frame.pack(fill='x', padx=5, pady=5, before=self.tree)
         self.progress['value'] = 0
             
-        threading.Thread(target=self.do_fetch, args=(gx, gy)).start()
+        threading.Thread(target=self.do_fetch, args=(gx, gy), daemon=True).start()
+        self.fetch_service_forecast_btn()
 
     def do_fetch(self, gx, gy):
         # Fetch 36 hours with callback
@@ -602,6 +747,49 @@ class WeatherApp:
             cnt += 1
             
         self.output_log(f"조회 완료 ({cnt}개 시간대)")
+
+    def fetch_service_forecast_btn(self):
+        self.output_log("서비스별 예보 조회 시작...")
+        self.service_label.config(text="Naver 비교예보: 07200124 / 04:00-08:00 (조회 중)")
+        self.clear_service_tree()
+        threading.Thread(target=self.do_service_fetch, daemon=True).start()
+
+    def do_service_fetch(self):
+        try:
+            services = NaverCompareFetcher.fetch_hourly_services()
+            self.root.after(0, lambda: self.fill_service_tree(services))
+        except Exception as e:
+            message = str(e)
+            self.root.after(0, lambda: self.service_fetch_failed(message))
+
+    def clear_service_tree(self):
+        for item in self.service_tree.get_children():
+            self.service_tree.delete(item)
+
+    def service_fetch_failed(self, message):
+        self.service_label.config(text="Naver 비교예보: 07200124 / 04:00-08:00")
+        self.output_log(f"서비스별 예보 조회 실패: {message}")
+
+    def fill_service_tree(self, services):
+        self.service_label.config(text="Naver 비교예보: 07200124 / 04:00-08:00")
+        self.clear_service_tree()
+        cnt = 0
+        for service in services:
+            provider = service.get("provider", "-")
+            for row in service.get("rows", []):
+                self.service_tree.insert("", "end", values=(
+                    provider,
+                    row.get("time", "-"),
+                    row.get("weather", "-"),
+                    row.get("temperature", "-"),
+                    row.get("rain_probability", "-"),
+                    row.get("rain_amount", "-"),
+                    row.get("snow_amount", "-"),
+                    row.get("wind", "-"),
+                    row.get("updated_at") or service.get("updated_at", "-"),
+                ))
+                cnt += 1
+        self.output_log(f"서비스별 예보 조회 완료 ({cnt}개)")
 
 if __name__ == "__main__":
     root = tk.Tk()

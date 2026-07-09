@@ -558,6 +558,249 @@
             border: 1px solid var(--timeline-border);
         }
 
+        .service-forecast-toggle {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            min-height: 48px;
+            margin: -8px 0 14px;
+            padding: 0 16px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 16px;
+            background: var(--card-bg);
+            color: var(--text-main);
+            box-shadow: 0 5px 16px rgba(0, 0, 0, 0.06);
+            font: inherit;
+            font-size: 13px;
+            font-weight: 900;
+            cursor: pointer;
+        }
+
+        .service-forecast-toggle:hover {
+            border-color: var(--accent);
+        }
+
+        .service-forecast-toggle span:first-child {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .service-toggle-icon {
+            color: var(--accent);
+            font-size: 16px;
+            transition: transform 0.18s ease;
+        }
+
+        .service-forecast-toggle[aria-expanded="true"] .service-toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .service-forecast-panel {
+            width: 100%;
+            margin: -4px 0 20px;
+            padding: 16px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 20px;
+            background: var(--card-bg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .service-forecast-head {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .service-forecast-title {
+            margin: 0;
+            color: var(--text-main);
+            font-size: 15px;
+            font-weight: 950;
+            line-height: 1.3;
+        }
+
+        .service-forecast-meta {
+            margin-top: 4px;
+            color: var(--text-sub);
+            font-size: 10px;
+            font-weight: 700;
+            line-height: 1.35;
+        }
+
+        .service-forecast-link {
+            flex: 0 0 auto;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 900;
+            text-decoration: none;
+        }
+
+        .service-list {
+            display: grid;
+            gap: 10px;
+        }
+
+        .service-card {
+            overflow: hidden;
+            border: 1px solid var(--timeline-border);
+            border-radius: 15px;
+            background: var(--bg-color);
+        }
+
+        .service-card-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            padding: 11px 12px 9px;
+            color: var(--text-main);
+            font-size: 13px;
+            font-weight: 950;
+        }
+
+        .service-provider-heading {
+            min-width: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .service-provider-name {
+            min-width: 0;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .service-provider-icon {
+            width: 24px;
+            height: 24px;
+            flex: 0 0 24px;
+            display: grid;
+            place-items: center;
+            border-radius: 8px;
+            color: #fff;
+            font-size: 8px;
+            font-weight: 950;
+            line-height: 1;
+            letter-spacing: -0.03em;
+            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.14);
+        }
+
+        .service-provider-icon.kma {
+            border-radius: 50%;
+            background:
+                radial-gradient(circle at 50% 36%, #e43939 0 22%, transparent 23%),
+                radial-gradient(circle at 50% 64%, #1654c8 0 22%, transparent 23%),
+                linear-gradient(135deg, #fff 0 48%, #f7f7f7 49% 100%);
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+
+        .service-provider-icon.accuweather {
+            border-radius: 50%;
+            background: #ff6a2a;
+            font-size: 15px;
+            letter-spacing: 0;
+        }
+
+        .service-provider-icon.twc {
+            background: #075bd8;
+            font-size: 7px;
+        }
+
+        .service-provider-icon.weathernews {
+            background: #0f57c7;
+            font-size: 8px;
+        }
+
+        .service-card-updated {
+            color: var(--text-sub);
+            font-size: 9px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .service-hour-grid {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 6px;
+            padding: 0 10px 10px;
+        }
+
+        .service-hour-card {
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 112px;
+            padding: 8px 3px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 12px;
+            background: var(--card-bg);
+            color: var(--text-main);
+        }
+
+        .service-card .service-hour-card:nth-child(3) {
+            border-color: rgba(0, 136, 68, 0.28);
+            background: rgba(0, 150, 80, 0.08);
+        }
+
+        [data-theme="dark"] .service-card .service-hour-card:nth-child(3) {
+            border-color: rgba(0, 255, 136, 0.28);
+            background: rgba(0, 255, 136, 0.08);
+        }
+
+        .service-hour {
+            margin-bottom: 4px;
+            color: var(--text-sub);
+            font-size: 10px;
+            font-weight: 900;
+        }
+
+        .service-icon {
+            margin-bottom: 4px;
+            font-size: 18px;
+            line-height: 1;
+        }
+
+        .service-temp {
+            font-size: 13px;
+            font-weight: 950;
+            line-height: 1.2;
+        }
+
+        .service-weather {
+            width: 100%;
+            margin-top: 3px;
+            color: var(--text-sub);
+            font-size: 9px;
+            font-weight: 800;
+            line-height: 1.2;
+            text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .service-rain {
+            margin-top: 3px;
+            color: #3b82f6;
+            font-size: 10px;
+            font-weight: 900;
+            line-height: 1.1;
+        }
+
+        [data-theme="dark"] .service-rain {
+            color: #60a5fa;
+        }
+
         .forecast-training-card {
             width: 100%;
             display: grid;
@@ -623,6 +866,15 @@
             padding: 5px 0;
             border-radius: 12px;
             transition: all 0.2s;
+        }
+
+        .ts-source {
+            margin-top: 1px;
+            color: var(--text-sub);
+            font-size: 9px;
+            font-weight: 800;
+            opacity: 0.72;
+            line-height: 1;
         }
 
         .time-slot.active {
@@ -835,6 +1087,20 @@
                 font-size: 11px;
             }
 
+            .service-forecast-panel {
+                padding: 14px;
+            }
+
+            .service-hour-grid {
+                gap: 5px;
+                padding: 0 8px 9px;
+            }
+
+            .service-hour-card {
+                min-height: 108px;
+                padding: 7px 2px;
+            }
+
             .marathon-item {
                 grid-template-columns: 66px minmax(0, 1fr);
                 gap: 10px;
@@ -899,6 +1165,24 @@
             <div id="timeline" class="timeline-container hidden">
                 <!-- JS will populate this -->
             </div>
+
+            <button id="service-forecast-toggle" class="service-forecast-toggle hidden" type="button"
+                aria-expanded="false" aria-controls="service-forecast-panel">
+                <span>기상예보 서비스별 정보 보기</span>
+                <span class="service-toggle-icon" aria-hidden="true">⌄</span>
+            </button>
+
+            <section id="service-forecast-panel" class="service-forecast-panel hidden" aria-labelledby="service-forecast-title">
+                <div class="service-forecast-head">
+                    <div>
+                        <h2 id="service-forecast-title" class="service-forecast-title">서비스별 04:00-08:00 예보</h2>
+                        <div id="service-forecast-meta" class="service-forecast-meta">Naver 비교예보를 불러오는 중입니다.</div>
+                    </div>
+                    <a id="service-forecast-link" class="service-forecast-link" href="https://weather.naver.com/compare/07200124"
+                        target="_blank" rel="noopener">원문</a>
+                </div>
+                <div id="service-forecast-list" class="service-list"></div>
+            </section>
 
             <div class="weather-links" aria-label="실시간 기상 확인 링크">
                 <a class="weather-link" href="https://www.weather.go.kr/w/weather/radar/rain.do" target="_blank" rel="noopener">
@@ -991,6 +1275,7 @@
         let sunriseMinutes = null;
         let latestWeatherData = null;
         let trainingScheduleData = null;
+        let serviceForecastData = null;
         let forecastDateKey = null;
 
         function toLocalDateKey(date) {
@@ -1041,6 +1326,87 @@
                     });
                 });
             });
+        }
+
+        function initServiceForecastToggle() {
+            const button = document.getElementById('service-forecast-toggle');
+            const panel = document.getElementById('service-forecast-panel');
+
+            button.addEventListener('click', () => {
+                const expanded = button.getAttribute('aria-expanded') === 'true';
+                button.setAttribute('aria-expanded', String(!expanded));
+                panel.classList.toggle('hidden', expanded);
+            });
+        }
+
+        function renderServiceForecast(data) {
+            const button = document.getElementById('service-forecast-toggle');
+            const panel = document.getElementById('service-forecast-panel');
+            const meta = document.getElementById('service-forecast-meta');
+            const list = document.getElementById('service-forecast-list');
+            const link = document.getElementById('service-forecast-link');
+            const services = Array.isArray(data?.services) ? data.services : [];
+
+            serviceForecastData = data;
+            button.classList.remove('hidden');
+            link.href = data?.source_url || 'https://weather.naver.com/compare/07200124';
+            meta.textContent = services.length
+                ? `${data.target_hours || '04:00-08:00'} · ${services.length}개 서비스 · ${data.updated_at || ''}`
+                : '서비스별 예보 데이터가 없습니다.';
+
+            list.innerHTML = '';
+            if (!services.length) {
+                list.innerHTML = '<div class="schedule-empty">서비스별 예보 데이터가 없습니다.</div>';
+                return;
+            }
+
+            services.forEach(service => {
+                const rows = Array.isArray(service.rows) ? service.rows : [];
+                const providerIcon = getProviderIcon(service.provider_code);
+                const rowHtml = rows.map(row => `
+                    <div class="service-hour-card">
+                        <div class="service-hour">${String(row.time || '').slice(-5)}</div>
+                        <div class="service-icon" role="img" aria-label="${row.weather || '날씨'}">${getWeatherIconFromText(row.weather)}</div>
+                        <div class="service-temp">${row.temperature || '-'}</div>
+                        <div class="service-weather">${row.weather || '-'}</div>
+                        <div class="service-rain">${row.rain_probability || '-'}</div>
+                    </div>
+                `).join('');
+
+                list.innerHTML += `
+                    <article class="service-card">
+                        <div class="service-card-title">
+                            <span class="service-provider-heading">
+                                <span class="service-provider-icon ${providerIcon.className}" aria-hidden="true">${providerIcon.label}</span>
+                                <span class="service-provider-name">${service.provider || service.provider_code || '-'}</span>
+                            </span>
+                            <span class="service-card-updated">${service.updated_at || ''}</span>
+                        </div>
+                        ${rowHtml ? `<div class="service-hour-grid">${rowHtml}</div>` : '<div class="schedule-empty">표시할 시간대가 없습니다.</div>'}
+                    </article>
+                `;
+            });
+
+            if (panel.classList.contains('hidden')) {
+                button.setAttribute('aria-expanded', 'false');
+            }
+        }
+
+        async function loadServiceForecast() {
+            try {
+                const response = await fetch('service_weather_data.json?v=' + new Date().getTime());
+                if (!response.ok) throw new Error('Service forecast not found');
+                const data = await response.json();
+                renderServiceForecast(data);
+            } catch (error) {
+                renderServiceForecast({
+                    target_hours: '04:00-08:00',
+                    source_url: 'https://weather.naver.com/compare/07200124',
+                    updated_at: '',
+                    services: []
+                });
+                console.log('Service forecast load failed:', error);
+            }
         }
 
         function getDdayText(dateKey) {
@@ -1216,6 +1582,25 @@
             return "맑음";
         }
 
+        function getWeatherIconFromText(text) {
+            const value = String(text || '');
+            if (value.includes('눈')) return '🌨️';
+            if (value.includes('비') || value.includes('소나기') || value.includes('강수')) return '🌧️';
+            if (value.includes('맑')) return '☀️';
+            if (value.includes('구름')) return '☁️';
+            if (value.includes('흐')) return '🌥️';
+            return '☀️';
+        }
+
+        function getProviderIcon(providerCode) {
+            const code = String(providerCode || '').toUpperCase();
+            if (code === 'KMA') return { className: 'kma', label: '' };
+            if (code === 'ACCUWEATHER') return { className: 'accuweather', label: '☀' };
+            if (code === 'TWC') return { className: 'twc', label: 'TWC' };
+            if (code === 'WEATHERNEWS') return { className: 'weathernews', label: 'WN' };
+            return { className: 'default', label: 'W' };
+        }
+
         const GEAR_IMAGE_FILES = {
             "초경량 메시 싱글렛": "초경량 메시 싱글렛.webp",
             "타이트 핏 테크니컬 반팔": "타이트 핏 테크니컬 반팔.webp",
@@ -1348,6 +1733,7 @@
 
                 el.innerHTML = `
                     <div class="ts-hour">${d.time}</div>
+                    <div class="ts-source">기상청</div>
                     <div class="ts-icon" role="img" aria-label="${getIconLabel(d.sky, d.pty)}">${getIcon(d.sky, d.pty)}</div>
                     <div class="ts-temp">${d.temp}°</div>
                     <div class="ts-wind">${d.wind}m/s</div>
@@ -1572,6 +1958,8 @@
 
         loadData();
         initViewTabs();
+        initServiceForecastToggle();
+        loadServiceForecast();
         loadTrainingSchedule();
         loadMarathonSchedule();
     </script>

@@ -12,6 +12,8 @@ load_dotenv()
 GRID_X = 67
 GRID_Y = 101
 OUTPUT_FILE = "weather_data.json"
+SERVICE_OUTPUT_FILE = "service_weather_data.json"
+NAVER_COMPARE_REGION_CODE = "07200124"
 
 def get_kst_now():
     """Returns current datetime in KST (UTC+9)."""
@@ -90,6 +92,110 @@ class WeatherFetcher:
             return None
 
 
+class NaverCompareFetcher:
+    BASE_URL = "https://weather.naver.com/compare/{region_code}"
+    PROVIDER_NAMES = {
+        "KMA": "기상청",
+        "TWC": "웨더채널",
+        "WEATHERNEWS": "웨더뉴스",
+        "ACCUWEATHER": "아큐웨더",
+    }
+
+    @classmethod
+    def fetch_hourly_services(cls, region_code=NAVER_COMPARE_REGION_CODE, start_hour=4, end_hour=8):
+        url = cls.BASE_URL.format(region_code=region_code)
+        headers = {"User-Agent": "Mozilla/5.0"}
+        resp = requests.get(url, headers=headers, timeout=30)
+        resp.raise_for_status()
+        resp.encoding = "utf-8"
+        return cls.parse_hourly_services(resp.text, start_hour=start_hour, end_hour=end_hour)
+
+    @classmethod
+    def parse_hourly_services(cls, html, start_hour=4, end_hour=8):
+        block_api_result = cls.extract_block_api_result(html)
+        choice_result = block_api_result.get("results", {}).get("choiceResult", {})
+        hourly_map = choice_result.get("compareHourlyFcast~~1", {}).get("domesticHourlyListMap", {})
+        services = []
+
+        for provider_code, rows in hourly_map.items():
+            target_date = ""
+            normalized_rows = []
+            updated_at = ""
+
+            for row in rows:
+                try:
+                    hour = int(str(row.get("aplTm", "")).zfill(2))
+                except ValueError:
+                    continue
+                if hour < start_hour or hour > end_hour:
+                    continue
+                row_date = str(row.get("aplYmd", ""))
+                if not target_date:
+                    target_date = row_date
+                if row_date != target_date:
+                    continue
+
+                normalized = cls.normalize_hourly_row(row)
+                normalized_rows.append(normalized)
+                if not updated_at:
+                    updated_at = normalized.get("updated_at", "")
+
+            if normalized_rows:
+                services.append({
+                    "provider": cls.PROVIDER_NAMES.get(provider_code, provider_code),
+                    "provider_code": provider_code,
+                    "updated_at": updated_at,
+                    "rows": normalized_rows,
+                })
+
+        return {
+            "region_code": NAVER_COMPARE_REGION_CODE,
+            "source_url": cls.BASE_URL.format(region_code=NAVER_COMPARE_REGION_CODE),
+            "target_hours": "04:00-08:00",
+            "updated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
+            "services": services,
+        }
+
+    @staticmethod
+    def extract_block_api_result(html):
+        marker = "var blockApiResult = "
+        start = html.find(marker)
+        if start < 0:
+            raise ValueError("Naver compare payload not found")
+        decoder = json.JSONDecoder()
+        payload, _ = decoder.raw_decode(html[start + len(marker):])
+        return payload
+
+    @staticmethod
+    def normalize_hourly_row(row):
+        apl_ymd = str(row.get("aplYmd", ""))
+        apl_tm = str(row.get("aplTm", "")).zfill(2)
+        time_text = f"{apl_ymd[4:6]}/{apl_ymd[6:8]} {apl_tm}:00" if len(apl_ymd) == 8 else f"{apl_tm}:00"
+        fcast_ymdt = str(row.get("fcastYmdt", ""))
+        updated_at = ""
+        if len(fcast_ymdt) >= 12:
+            try:
+                updated_at = datetime.strptime(fcast_ymdt[:12], "%Y%m%d%H%M").strftime("%Y-%m-%d %H:%M")
+            except ValueError:
+                updated_at = fcast_ymdt
+        return {
+            "time": time_text,
+            "weather": row.get("wetrTxt", "-") or "-",
+            "temperature": NaverCompareFetcher.format_value(row.get("tmpr"), "℃"),
+            "rain_probability": NaverCompareFetcher.format_value(row.get("rainProb"), "%"),
+            "rain_amount": row.get("rainAmt", "-") or "-",
+            "snow_amount": row.get("snowAmt", "-") or "-",
+            "wind": row.get("windDrctnName", "-") or "-",
+            "updated_at": updated_at,
+        }
+
+    @staticmethod
+    def format_value(value, suffix):
+        if value is None or value == "":
+            return "-"
+        return f"{value}{suffix}"
+
+
 def parse_forecast_items(items):
     """
     Parse API response items into structured forecast data.
@@ -137,6 +243,14 @@ def get_target_times():
 
 def main():
     print("Starting Weather Update (Public Data Portal API)...")
+    try:
+        service_data = NaverCompareFetcher.fetch_hourly_services()
+        with open(SERVICE_OUTPUT_FILE, "w", encoding='utf-8') as f:
+            json.dump(service_data, f, indent=2, ensure_ascii=False)
+        service_count = sum(len(service.get("rows", [])) for service in service_data.get("services", []))
+        print(f"Saved {service_count} service forecast rows to {SERVICE_OUTPUT_FILE}")
+    except Exception as e:
+        print(f"Naver service forecast fetch failed: {e}")
     
     # Fetch forecast
     items = WeatherFetcher.fetch_forecast(GRID_X, GRID_Y)
