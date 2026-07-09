@@ -102,16 +102,17 @@ class NaverCompareFetcher:
     }
 
     @classmethod
-    def fetch_hourly_services(cls, region_code=NAVER_COMPARE_REGION_CODE, start_hour=4, end_hour=8):
+    def fetch_hourly_services(cls, region_code=NAVER_COMPARE_REGION_CODE, start_hour=4, end_hour=8, target_date=None):
+        target_date = target_date or get_target_times()[0][:8]
         url = cls.BASE_URL.format(region_code=region_code)
         headers = {"User-Agent": "Mozilla/5.0"}
         resp = requests.get(url, headers=headers, timeout=30)
         resp.raise_for_status()
         resp.encoding = "utf-8"
-        return cls.parse_hourly_services(resp.text, start_hour=start_hour, end_hour=end_hour)
+        return cls.parse_hourly_services(resp.text, start_hour=start_hour, end_hour=end_hour, target_date=target_date)
 
     @classmethod
-    def parse_hourly_services(cls, html, start_hour=4, end_hour=8):
+    def parse_hourly_services(cls, html, start_hour=4, end_hour=8, target_date=None):
         block_api_result = cls.extract_block_api_result(html)
         choice_result = block_api_result.get("results", {}).get("choiceResult", {})
         hourly_map = choice_result.get("compareHourlyFcast~~1", {}).get("domesticHourlyListMap", {})
@@ -121,7 +122,7 @@ class NaverCompareFetcher:
             if provider_code == "KMA":
                 continue
 
-            target_date = ""
+            service_target_date = target_date or ""
             normalized_rows = []
             updated_at = ""
 
@@ -133,9 +134,9 @@ class NaverCompareFetcher:
                 if hour < start_hour or hour > end_hour:
                     continue
                 row_date = str(row.get("aplYmd", ""))
-                if not target_date:
-                    target_date = row_date
-                if row_date != target_date:
+                if not service_target_date:
+                    service_target_date = row_date
+                if row_date != service_target_date:
                     continue
 
                 normalized = cls.normalize_hourly_row(row)
@@ -155,6 +156,7 @@ class NaverCompareFetcher:
             "region_code": NAVER_COMPARE_REGION_CODE,
             "source_url": cls.BASE_URL.format(region_code=NAVER_COMPARE_REGION_CODE),
             "target_hours": "04:00-08:00",
+            "target_date": target_date or "",
             "updated_at": datetime.utcnow().strftime("%Y-%m-%d %H:%M UTC"),
             "services": services,
         }

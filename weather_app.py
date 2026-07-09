@@ -8,7 +8,7 @@ import json
 import xml.etree.ElementTree as ET
 import threading
 import webbrowser
-from datetime import datetime
+from datetime import datetime, timedelta
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
@@ -280,17 +280,25 @@ class NaverCompareFetcher:
         return cls._session
 
     @classmethod
-    def fetch_hourly_services(cls, region_code=None, start_hour=4, end_hour=8):
+    def fetch_hourly_services(cls, region_code=None, start_hour=4, end_hour=8, target_date=None):
         region_code = region_code or cls.DEFAULT_REGION_CODE
+        target_date = target_date or cls.get_target_date()
         url = cls.BASE_URL.format(region_code=region_code)
         headers = {"User-Agent": "Mozilla/5.0"}
         resp = cls.get_session().get(url, headers=headers, timeout=20)
         resp.raise_for_status()
         resp.encoding = "utf-8"
-        return cls.parse_hourly_services(resp.text, start_hour=start_hour, end_hour=end_hour)
+        return cls.parse_hourly_services(resp.text, start_hour=start_hour, end_hour=end_hour, target_date=target_date)
+
+    @staticmethod
+    def get_target_date():
+        now = datetime.now()
+        if now.hour >= 7:
+            now = now + timedelta(days=1)
+        return now.strftime("%Y%m%d")
 
     @classmethod
-    def parse_hourly_services(cls, html, start_hour=4, end_hour=8):
+    def parse_hourly_services(cls, html, start_hour=4, end_hour=8, target_date=None):
         block_api_result = cls.extract_block_api_result(html)
         choice_result = block_api_result.get("results", {}).get("choiceResult", {})
         hourly_block = choice_result.get("compareHourlyFcast~~1", {})
@@ -303,7 +311,7 @@ class NaverCompareFetcher:
 
             normalized_rows = []
             updated_at = ""
-            target_date = ""
+            service_target_date = target_date or ""
             for row in rows:
                 try:
                     hour = int(str(row.get("aplTm", "")).zfill(2))
@@ -312,9 +320,9 @@ class NaverCompareFetcher:
                 if hour < start_hour or hour > end_hour:
                     continue
                 row_date = str(row.get("aplYmd", ""))
-                if not target_date:
-                    target_date = row_date
-                if row_date != target_date:
+                if not service_target_date:
+                    service_target_date = row_date
+                if row_date != service_target_date:
                     continue
                 normalized = cls.normalize_hourly_row(row)
                 normalized_rows.append(normalized)
