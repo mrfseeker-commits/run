@@ -298,6 +298,9 @@ class NaverCompareFetcher:
 
         services = []
         for provider_code, rows in hourly_map.items():
+            if provider_code == "KMA":
+                continue
+
             normalized_rows = []
             updated_at = ""
             target_date = ""

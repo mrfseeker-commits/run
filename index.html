@@ -477,6 +477,22 @@
             margin-top: 4px;
         }
 
+        .forecast-source-badge {
+            width: fit-content;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            margin-top: 8px;
+            padding: 5px 9px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 999px;
+            background: var(--bg-color);
+            color: var(--text-sub);
+            font-size: 10px;
+            font-weight: 900;
+            line-height: 1;
+        }
+
         /* Toggle Switch */
         .theme-switch {
             display: inline-block;
@@ -868,15 +884,6 @@
             transition: all 0.2s;
         }
 
-        .ts-source {
-            margin-top: 1px;
-            color: var(--text-sub);
-            font-size: 9px;
-            font-weight: 800;
-            opacity: 0.72;
-            line-height: 1;
-        }
-
         .time-slot.active {
             background: rgba(0, 150, 80, 0.1);
             color: var(--accent);
@@ -1160,6 +1167,10 @@
             <h2 id="timeline-date" class="timeline-date hidden">
                 <span id="date-text"></span>
                 <span id="sunrise-info" class="sunrise-info"></span>
+                <span class="forecast-source-badge">
+                    <span class="service-provider-icon kma" aria-hidden="true"></span>
+                    기상청 단기예보
+                </span>
             </h2>
             <!-- 04~08 Timeline -->
             <div id="timeline" class="timeline-container hidden">
@@ -1345,7 +1356,8 @@
             const meta = document.getElementById('service-forecast-meta');
             const list = document.getElementById('service-forecast-list');
             const link = document.getElementById('service-forecast-link');
-            const services = Array.isArray(data?.services) ? data.services : [];
+            const services = (Array.isArray(data?.services) ? data.services : [])
+                .filter(service => String(service.provider_code || '').toUpperCase() !== 'KMA');
 
             serviceForecastData = data;
             button.classList.remove('hidden');
@@ -1733,7 +1745,6 @@
 
                 el.innerHTML = `
                     <div class="ts-hour">${d.time}</div>
-                    <div class="ts-source">기상청</div>
                     <div class="ts-icon" role="img" aria-label="${getIconLabel(d.sky, d.pty)}">${getIcon(d.sky, d.pty)}</div>
                     <div class="ts-temp">${d.temp}°</div>
                     <div class="ts-wind">${d.wind}m/s</div>
