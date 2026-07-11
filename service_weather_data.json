@@ -3,12 +3,12 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20260712",
-  "updated_at": "2026-07-11 17:53 UTC",
+  "updated_at": "2026-07-11 18:58 UTC",
   "services": [
     {
       "provider": "아큐웨더",
       "provider_code": "ACCUWEATHER",
-      "updated_at": "2026-07-12 02:18",
+      "updated_at": "2026-07-12 03:18",
       "rows": [
         {
           "time": "07/12 04:00",
@@ -18,7 +18,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-07-12 02:18"
+          "updated_at": "2026-07-12 03:18"
         },
         {
           "time": "07/12 05:00",
@@ -28,7 +28,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-07-12 02:18"
+          "updated_at": "2026-07-12 03:18"
         },
         {
           "time": "07/12 06:00",
@@ -38,7 +38,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-07-12 02:18"
+          "updated_at": "2026-07-12 03:18"
         },
         {
           "time": "07/12 07:00",
@@ -48,7 +48,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-07-12 02:18"
+          "updated_at": "2026-07-12 03:18"
         },
         {
           "time": "07/12 08:00",
@@ -58,7 +58,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-07-12 02:18"
+          "updated_at": "2026-07-12 03:18"
         }
       ]
     },
@@ -122,7 +122,7 @@
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-07-12 02:02",
+      "updated_at": "2026-07-12 03:02",
       "rows": [
         {
           "time": "07/12 04:00",
@@ -132,7 +132,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-07-12 02:02"
+          "updated_at": "2026-07-12 03:02"
         },
         {
           "time": "07/12 05:00",
@@ -142,7 +142,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-07-12 02:02"
+          "updated_at": "2026-07-12 03:02"
         },
         {
           "time": "07/12 06:00",
@@ -152,7 +152,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-07-12 02:02"
+          "updated_at": "2026-07-12 03:02"
         },
         {
           "time": "07/12 07:00",
@@ -162,7 +162,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-07-12 02:02"
+          "updated_at": "2026-07-12 03:02"
         },
         {
           "time": "07/12 08:00",
@@ -172,7 +172,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-07-12 02:02"
+          "updated_at": "2026-07-12 03:02"
         }
       ]
     }
