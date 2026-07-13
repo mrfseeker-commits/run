@@ -1,6 +1,13 @@
 name: Weekly Training Schedule
 
 on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'update_training_schedule.py'
+      - 'test_update_training_schedule.py'
+      - '.github/workflows/training-schedule.yml'
   schedule:
     # Sunday 12:00-23:00 KST, once an hour (UTC 03:00-14:00).
     - cron: '0 3-14 * * 0'
@@ -33,6 +40,9 @@ jobs:
           playwright install --with-deps chromium
 
       - name: Check latest Naver Cafe schedule
+        run: python -m unittest test_update_training_schedule.py
+
+      - name: Update latest Naver Cafe schedule
         run: python update_training_schedule.py
 
       - name: Commit schedule when changed
