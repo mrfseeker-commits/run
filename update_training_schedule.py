@@ -62,6 +62,16 @@ def normalize_training_text(text: str) -> str:
     text = re.sub(rf"\b{DISTANCE_PATTERN}m\s*x\s*([0-9]+(?:\.[0-9]+)?)\s*(?:5et|set|sct|sel)?\b", r"\1m x \2set", text, flags=re.IGNORECASE)
     text = re.sub(r"\s*x\s*", " × ", text)
     text = re.sub(r"\s+", " ", text).strip()
+    interval = re.search(
+        rf"\b{DISTANCE_PATTERN}[^×]{{0,12}}×\s*([0-9]+(?:\.[0-9]+)?)",
+        text,
+    )
+    if "카이스트" in text and interval:
+        distance = interval.group(1)
+        repetitions = interval.group(2)
+        if "." not in repetitions and len(repetitions) > 2 and repetitions.endswith("56"):
+            repetitions = repetitions[:-2]
+        text = f"카이스트 {distance}m × {repetitions}set"
     return text
 
 
@@ -290,7 +300,7 @@ def validate_schedule(schedule: list[dict]) -> None:
         if date.weekday() != WEEKDAY_NUMBER[expected_weekday]:
             raise RuntimeError(f"날짜와 요일이 일치하지 않습니다: {item}")
         training = item["training"]
-        if len(training) < 4 or has_suspicious_training_text(training):
+        if not is_supported_training_text(training):
             raise RuntimeError(f"OCR 신뢰도가 낮은 훈련 내용입니다: {training}")
 
 
@@ -299,6 +309,15 @@ def has_suspicious_training_text(training: str) -> bool:
         re.search(r"\b[125]0000\b|\b156\b|\b4000[7T]?\b", training)
         or any(error in training for error in ("회선", "외전"))
     )
+
+
+def is_supported_training_text(training: str) -> bool:
+    patterns = (
+        r"카이스트 빌드업런",
+        rf"카이스트 {DISTANCE_PATTERN}m × \d+(?:\.\d+)?set",
+        r"계족산 \d+회전",
+    )
+    return any(re.fullmatch(pattern, training) for pattern in patterns)
 
 
 def build_schedule_from_table(article: dict, image_url: str, image: Image.Image) -> dict:
