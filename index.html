@@ -329,12 +329,34 @@
             gap: 10px;
         }
 
+        .schedule-original {
+            margin: 14px 0 16px;
+            padding: 8px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 15px;
+            background: var(--bg-color);
+        }
+
+        .schedule-original img,
+        .schedule-row-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 9px;
+            background: #fff;
+        }
+
+        .schedule-original figcaption {
+            margin-top: 7px;
+            color: var(--text-sub);
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+        }
+
         .schedule-item {
-            display: grid;
-            grid-template-columns: 54px minmax(0, 1fr);
-            align-items: center;
-            gap: 12px;
-            padding: 14px;
+            display: block;
+            padding: 8px;
             border: 1px solid var(--timeline-border);
             border-radius: 15px;
             background: var(--bg-color);
@@ -819,10 +841,7 @@
 
         .forecast-training-card {
             width: 100%;
-            display: grid;
-            grid-template-columns: 48px minmax(0, 1fr);
-            align-items: center;
-            gap: 13px;
+            display: block;
             padding: 15px;
             margin: -8px 0 20px;
             border: 1px solid rgba(0, 136, 68, 0.24);
@@ -846,6 +865,23 @@
             background: var(--card-bg);
             font-size: 24px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .forecast-training-head {
+            display: grid;
+            grid-template-columns: 48px minmax(0, 1fr);
+            align-items: center;
+            gap: 13px;
+        }
+
+        .forecast-training-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin-top: 12px;
+            border: 1px solid var(--timeline-border);
+            border-radius: 10px;
+            background: #fff;
         }
 
         .forecast-training-label {
@@ -1212,12 +1248,15 @@
             </div>
 
             <article id="forecast-training" class="forecast-training-card hidden">
-                <div class="forecast-training-icon" aria-hidden="true">🏃</div>
-                <div>
-                    <div class="forecast-training-label">Tomorrow Training</div>
-                    <div id="forecast-training-title" class="forecast-training-title"></div>
-                    <div id="forecast-training-date" class="forecast-training-date"></div>
+                <div class="forecast-training-head">
+                    <div class="forecast-training-icon" aria-hidden="true">🏃</div>
+                    <div>
+                        <div class="forecast-training-label">Tomorrow Training</div>
+                        <div id="forecast-training-title" class="forecast-training-title"></div>
+                        <div id="forecast-training-date" class="forecast-training-date"></div>
+                    </div>
                 </div>
+                <img id="forecast-training-image" class="forecast-training-image hidden" alt="내일 새벽 훈련 일정 원본 행">
             </article>
 
             <!-- Recommendation -->
@@ -1235,6 +1274,10 @@
         <section id="schedule-panel" class="view-panel schedule-panel hidden" aria-labelledby="schedule-heading">
             <h2 id="schedule-heading" class="schedule-heading">주간 훈련 일정</h2>
             <p id="schedule-meta" class="schedule-meta">일정을 불러오는 중입니다.</p>
+            <figure id="schedule-original" class="schedule-original hidden">
+                <img id="schedule-original-image" alt="네이버 카페 주간 훈련 일정 원본 이미지">
+                <figcaption>네이버 카페에 게시된 원본 일정</figcaption>
+            </figure>
             <div id="schedule-list" class="schedule-list">
                 <div class="schedule-empty">훈련 일정을 불러오는 중입니다.</div>
             </div>
@@ -1299,6 +1342,7 @@
             const card = document.getElementById('forecast-training');
             const title = document.getElementById('forecast-training-title');
             const dateText = document.getElementById('forecast-training-date');
+            const image = document.getElementById('forecast-training-image');
             const schedules = trainingScheduleData?.schedule || [];
             const training = schedules.find(item => item.date === forecastDateKey);
 
@@ -1306,12 +1350,22 @@
                 card.classList.add('hidden');
                 title.textContent = '';
                 dateText.textContent = '';
+                image.removeAttribute('src');
+                image.classList.add('hidden');
                 return;
             }
 
             const date = new Date(`${training.date}T00:00:00`);
-            title.textContent = training.training;
+            title.textContent = training.image_path ? '이미지 원본 일정' : training.training;
             dateText.textContent = `${date.getMonth() + 1}월 ${date.getDate()}일 ${training.day}요일 새벽`;
+            if (training.image_path) {
+                image.src = training.image_path;
+                image.alt = `${date.getMonth() + 1}월 ${date.getDate()}일 ${training.day}요일 훈련 일정 원본 행`;
+                image.classList.remove('hidden');
+            } else {
+                image.removeAttribute('src');
+                image.classList.add('hidden');
+            }
             card.classList.remove('hidden');
         }
 
@@ -1487,6 +1541,8 @@
             const meta = document.getElementById('schedule-meta');
             const list = document.getElementById('schedule-list');
             const sourceLink = document.getElementById('schedule-source');
+            const original = document.getElementById('schedule-original');
+            const originalImage = document.getElementById('schedule-original-image');
 
             try {
                 const response = await fetch('training_schedule.json?v=' + Date.now());
@@ -1499,6 +1555,14 @@
                 meta.textContent = `${data.week_label || '주간 훈련'} · 화/목/토/일`;
                 list.innerHTML = '';
 
+                if (data.source_image_path) {
+                    originalImage.src = data.source_image_path;
+                    original.classList.remove('hidden');
+                } else {
+                    originalImage.removeAttribute('src');
+                    original.classList.add('hidden');
+                }
+
                 if (!schedules.length) {
                     list.innerHTML = '<div class="schedule-empty">등록된 주간 훈련 일정이 없습니다.</div>';
                     return;
@@ -1507,15 +1571,15 @@
                 schedules.forEach(item => {
                     const date = new Date(`${item.date}T00:00:00`);
                     const monthDay = `${date.getMonth() + 1}/${date.getDate()}`;
-                    list.innerHTML += `
-                        <article class="schedule-item">
-                            <div class="schedule-date">
-                                ${monthDay}
-                                <small>${item.day}요일</small>
-                            </div>
+                    list.innerHTML += item.image_path
+                        ? `<article class="schedule-item">
+                            <img class="schedule-row-image" src="${item.image_path}" loading="lazy"
+                                alt="${monthDay} ${item.day}요일 훈련 일정 원본 행">
+                        </article>`
+                        : `<article class="schedule-item">
+                            <div class="schedule-date">${monthDay}<small>${item.day}요일</small></div>
                             <div class="schedule-training">${item.training}</div>
-                        </article>
-                    `;
+                        </article>`;
                 });
 
                 if (data.source_url) {
@@ -1524,6 +1588,7 @@
                 }
             } catch (error) {
                 meta.textContent = '주간 훈련';
+                original.classList.add('hidden');
                 list.innerHTML = '<div class="schedule-empty">일정을 불러오지 못했습니다.</div>';
                 console.log('Training schedule load failed:', error);
             }

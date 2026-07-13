@@ -10,22 +10,27 @@
     {
       "date": "2026-07-14",
       "day": "화",
-      "training": "카이스트 빌드업런"
+      "training": "카이스트 빌드업런",
+      "image_path": "assets/training/current/tuesday.webp"
     },
     {
       "date": "2026-07-16",
       "day": "목",
-      "training": "카이스트 400m × 10set"
+      "training": "카이스트 400m × 10set",
+      "image_path": "assets/training/current/thursday.webp"
     },
     {
       "date": "2026-07-18",
       "day": "토",
-      "training": "카이스트 2000m × 3set"
+      "training": "카이스트 2000m × 3set",
+      "image_path": "assets/training/current/saturday.webp"
     },
     {
       "date": "2026-07-19",
       "day": "일",
-      "training": "계족산 2회전"
+      "training": "계족산 2회전",
+      "image_path": "assets/training/current/sunday.webp"
     }
-  ]
+  ],
+  "source_image_path": "assets/training/current/original.webp"
 }

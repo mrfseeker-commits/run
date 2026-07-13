@@ -47,12 +47,12 @@ jobs:
 
       - name: Commit schedule when changed
         run: |
-          if git diff --quiet -- training_schedule.json; then
+          if git diff --quiet -- training_schedule.json assets/training; then
             echo "No new weekly schedule yet."
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add training_schedule.json
+          git add training_schedule.json assets/training
           git commit -m "Update weekly training schedule"
           git push

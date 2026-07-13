@@ -36,6 +36,17 @@ class TrainingScheduleOcrTests(unittest.TestCase):
         self.assertEqual(7, len(cells))
         self.assertTrue(all(cell.size == (407, 33) for cell in cells))
 
+    def test_fixed_table_is_split_into_seven_full_rows(self):
+        image = Image.new("RGB", (532, 337), "white")
+        draw = ImageDraw.Draw(image)
+        for y in (0, 111, 148, 185, 222, 259, 296, 333):
+            draw.line((0, y, 531, y), fill=(212, 212, 212), width=1)
+
+        rows = schedule.split_schedule_rows(image)
+
+        self.assertEqual(7, len(rows))
+        self.assertTrue(all(row.size == (530, 36) for row in rows))
+
     def test_table_schedule_uses_title_and_row_positions_for_dates(self):
         image = Image.new("RGB", (532, 337), "white")
         draw = ImageDraw.Draw(image)

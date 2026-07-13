@@ -24,8 +24,10 @@ CAFE_ID = "30488045"
 MENU_ID = "13"
 MENU_URL = f"https://cafe.naver.com/f-e/cafes/{CAFE_ID}/menus/{MENU_ID}"
 OUTPUT_PATH = Path(__file__).with_name("training_schedule.json")
+IMAGE_DIR = Path(__file__).with_name("assets") / "training" / "current"
 TARGET_DAYS = {"화", "목", "토", "일"}
 TARGET_ROW_INDEXES = {1: "화", 3: "목", 5: "토", 6: "일"}
+DAY_IMAGE_NAMES = {"화": "tuesday.webp", "목": "thursday.webp", "토": "saturday.webp", "일": "sunday.webp"}
 WEEKDAY_NUMBER = {"월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6}
 KST = ZoneInfo("Asia/Seoul")
 PREVIOUS_MONTH_THRESHOLD = 20
@@ -196,7 +198,7 @@ def find_training_column_start(image: Image.Image, top: int, bottom: int) -> int
     return round(sum(interior) / len(interior))
 
 
-def split_training_cells(image: Image.Image) -> list[Image.Image]:
+def schedule_row_boundaries(image: Image.Image) -> list[int]:
     lines = find_horizontal_grid_lines(image)
     if len(lines) < 7:
         raise RuntimeError(f"훈련 일정 표의 가로선을 충분히 찾지 못했습니다: {lines}")
@@ -205,7 +207,21 @@ def split_training_cells(image: Image.Image) -> list[Image.Image]:
     row_height = round(statistics.median(
         later - earlier for earlier, later in zip(row_ends, row_ends[1:])
     ))
-    row_boundaries = [row_ends[0] - row_height, *row_ends]
+    return [row_ends[0] - row_height, *row_ends]
+
+
+def split_schedule_rows(image: Image.Image) -> list[Image.Image]:
+    row_boundaries = schedule_row_boundaries(image)
+    rows = []
+    for top, bottom in zip(row_boundaries, row_boundaries[1:]):
+        rows.append(image.crop((1, top + 1, image.width - 1, bottom)))
+    if len(rows) != 7:
+        raise RuntimeError(f"훈련 일정 7개 행을 분리하지 못했습니다: {len(rows)}")
+    return rows
+
+
+def split_training_cells(image: Image.Image) -> list[Image.Image]:
+    row_boundaries = schedule_row_boundaries(image)
     column_start = find_training_column_start(image, row_boundaries[0], row_boundaries[-1])
     cells = []
     for top, bottom in zip(row_boundaries, row_boundaries[1:]):
@@ -213,6 +229,20 @@ def split_training_cells(image: Image.Image) -> list[Image.Image]:
     if len(cells) != 7:
         raise RuntimeError(f"훈련 일정 7개 행을 분리하지 못했습니다: {len(cells)}")
     return cells
+
+
+def write_schedule_images(image: Image.Image, data: dict) -> None:
+    IMAGE_DIR.mkdir(parents=True, exist_ok=True)
+    original_path = IMAGE_DIR / "original.webp"
+    image.save(original_path, format="WEBP", lossless=True, method=6)
+    data["source_image_path"] = original_path.relative_to(OUTPUT_PATH.parent).as_posix()
+
+    rows = split_schedule_rows(image)
+    schedule_by_day = {item["day"]: item for item in data["schedule"]}
+    for row_index, weekday in TARGET_ROW_INDEXES.items():
+        row_path = IMAGE_DIR / DAY_IMAGE_NAMES[weekday]
+        rows[row_index].save(row_path, format="WEBP", lossless=True, method=6)
+        schedule_by_day[weekday]["image_path"] = row_path.relative_to(OUTPUT_PATH.parent).as_posix()
 
 
 def training_candidate_score(text: str) -> int:
@@ -459,6 +489,7 @@ def update_from_cafe(force: bool = False) -> bool:
         raise RuntimeError("게시물에서 일정 이미지를 찾지 못했습니다.")
 
     best = None
+    best_image = None
     errors = []
     for image_url in image_urls:
         image = download_image(image_url)
@@ -466,12 +497,14 @@ def update_from_cafe(force: bool = False) -> bool:
             candidate = build_schedule_from_table(article, image_url, image)
             if best is None:
                 best = candidate
+                best_image = image
         except Exception as error:
             errors.append(str(error))
 
     if best is None:
         raise RuntimeError("OCR 일정 분석에 실패했습니다: " + " | ".join(errors[-5:]))
 
+    write_schedule_images(best_image, best)
     OUTPUT_PATH.write_text(
         json.dumps(best, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
