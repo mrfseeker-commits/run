@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import calendar
 import json
 import re
+import statistics
 import sys
 from datetime import datetime
 from io import BytesIO
@@ -23,6 +25,8 @@ MENU_ID = "13"
 MENU_URL = f"https://cafe.naver.com/f-e/cafes/{CAFE_ID}/menus/{MENU_ID}"
 OUTPUT_PATH = Path(__file__).with_name("training_schedule.json")
 TARGET_DAYS = {"화", "목", "토", "일"}
+TARGET_ROW_INDEXES = {1: "화", 3: "목", 5: "토", 6: "일"}
+WEEKDAY_NUMBER = {"월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6}
 KST = ZoneInfo("Asia/Seoul")
 PREVIOUS_MONTH_THRESHOLD = 20
 WEEKDAY_ALIASES = {
@@ -141,6 +145,106 @@ def preprocess(image: Image.Image) -> Image.Image:
     return image.filter(ImageFilter.SHARPEN)
 
 
+def find_horizontal_grid_lines(image: Image.Image) -> list[int]:
+    pixels = image.convert("RGB").load()
+    minimum_dark_pixels = int(image.width * 0.72)
+    candidates = []
+    for y in range(image.height):
+        dark_pixels = sum(
+            1
+            for x in range(image.width)
+            if max(pixels[x, y]) < 230 and max(pixels[x, y]) - min(pixels[x, y]) < 12
+        )
+        if dark_pixels >= minimum_dark_pixels:
+            candidates.append(y)
+
+    groups = []
+    for y in candidates:
+        if not groups or y > groups[-1][-1] + 1:
+            groups.append([y])
+        else:
+            groups[-1].append(y)
+    return [round(sum(group) / len(group)) for group in groups]
+
+
+def find_training_column_start(image: Image.Image, top: int, bottom: int) -> int:
+    pixels = image.convert("RGB").load()
+    minimum_dark_pixels = int((bottom - top) * 0.72)
+    candidates = []
+    for x in range(1, image.width - 1):
+        dark_pixels = sum(
+            1
+            for y in range(top, bottom + 1)
+            if max(pixels[x, y]) < 230 and max(pixels[x, y]) - min(pixels[x, y]) < 12
+        )
+        if dark_pixels >= minimum_dark_pixels:
+            candidates.append(x)
+
+    interior = [x for x in candidates if image.width * 0.12 < x < image.width * 0.42]
+    if not interior:
+        raise RuntimeError("훈련 일정 표의 날짜/내용 구분선을 찾지 못했습니다.")
+    return round(sum(interior) / len(interior))
+
+
+def split_training_cells(image: Image.Image) -> list[Image.Image]:
+    lines = find_horizontal_grid_lines(image)
+    if len(lines) < 7:
+        raise RuntimeError(f"훈련 일정 표의 가로선을 충분히 찾지 못했습니다: {lines}")
+
+    row_ends = lines[-7:]
+    row_height = round(statistics.median(
+        later - earlier for earlier, later in zip(row_ends, row_ends[1:])
+    ))
+    row_boundaries = [row_ends[0] - row_height, *row_ends]
+    column_start = find_training_column_start(image, row_boundaries[0], row_boundaries[-1])
+    cells = []
+    for top, bottom in zip(row_boundaries, row_boundaries[1:]):
+        cells.append(image.crop((column_start + 2, top + 2, image.width - 2, bottom - 2)))
+    if len(cells) != 7:
+        raise RuntimeError(f"훈련 일정 7개 행을 분리하지 못했습니다: {len(cells)}")
+    return cells
+
+
+def training_candidate_score(text: str) -> int:
+    text = normalize_training_text(text)
+    score = len(text)
+    if "카이스트" in text:
+        score += 30
+    if "계족산" in text:
+        score += 30
+    if "빌드업런" in text:
+        score += 25
+    if re.search(rf"{DISTANCE_PATTERN}m × \d+(?:\.\d+)?set", text):
+        score += 35
+    if re.search(r"\d+회전", text):
+        score += 25
+    if re.search(r"4000[7T]?|\b156\b|회선|외전", text):
+        score -= 100
+    return score
+
+
+def ocr_training_cell(cell: Image.Image) -> str:
+    processed = preprocess(cell)
+    variants = [
+        processed,
+        processed.point(lambda value: 255 if value > 175 else 0),
+    ]
+    candidates = []
+    for variant in variants:
+        for language in ("kor+eng", "kor"):
+            text = pytesseract.image_to_string(
+                variant,
+                lang=language,
+                config="--oem 3 --psm 7",
+            )
+            normalized = normalize_training_text(text)
+            if normalized:
+                candidates.append(normalized)
+    if not candidates:
+        raise RuntimeError("훈련 내용 셀을 인식하지 못했습니다.")
+    return max(candidates, key=training_candidate_score)
+
+
 def run_ocr(image: Image.Image) -> list[str]:
     processed = preprocess(image)
     outputs = []
@@ -167,6 +271,68 @@ def infer_year(month: int, day: int, now: datetime) -> int:
     elif now.month == 1 and month == 12:
         year -= 1
     return year
+
+
+def week_dates(year: int, month: int, week_number: int) -> list:
+    weeks = calendar.Calendar(firstweekday=calendar.MONDAY).monthdatescalendar(year, month)
+    if week_number < 1 or week_number > len(weeks):
+        raise RuntimeError(f"{month}월 {week_number}주 날짜를 계산하지 못했습니다.")
+    return weeks[week_number - 1]
+
+
+def validate_schedule(schedule: list[dict]) -> None:
+    if len(schedule) != len(TARGET_ROW_INDEXES):
+        raise RuntimeError(f"화/목/토/일 4개 일정을 모두 인식하지 못했습니다: {schedule}")
+
+    for item in schedule:
+        date = datetime.fromisoformat(item["date"]).date()
+        expected_weekday = item["day"]
+        if date.weekday() != WEEKDAY_NUMBER[expected_weekday]:
+            raise RuntimeError(f"날짜와 요일이 일치하지 않습니다: {item}")
+        training = item["training"]
+        if len(training) < 4 or has_suspicious_training_text(training):
+            raise RuntimeError(f"OCR 신뢰도가 낮은 훈련 내용입니다: {training}")
+
+
+def has_suspicious_training_text(training: str) -> bool:
+    return bool(
+        re.search(r"\b[125]0000\b|\b156\b|\b4000[7T]?\b", training)
+        or any(error in training for error in ("회선", "외전"))
+    )
+
+
+def build_schedule_from_table(article: dict, image_url: str, image: Image.Image) -> dict:
+    now = datetime.now(KST)
+    week_label = parse_week_label(article["title"], "")
+    match = re.fullmatch(r"(\d{1,2})월 (\d)주", week_label)
+    if not match:
+        raise RuntimeError("게시물 제목에서 일정 주차를 인식하지 못했습니다.")
+
+    month = int(match.group(1))
+    week_number = int(match.group(2))
+    year = infer_year(month, 1, now)
+    dates = week_dates(year, month, week_number)
+    cells = split_training_cells(image)
+    schedule = []
+    for row_index, weekday in TARGET_ROW_INDEXES.items():
+        schedule.append(
+            {
+                "date": dates[row_index].isoformat(),
+                "day": weekday,
+                "training": ocr_training_cell(cells[row_index]),
+            }
+        )
+    validate_schedule(schedule)
+    return {
+        "article_id": article["article_id"],
+        "article_title": article["title"],
+        "week_label": week_label,
+        "source_url": article["url"],
+        "source_image_url": image_url,
+        "published_at": None,
+        "updated_at": now.isoformat(timespec="seconds"),
+        "schedule": schedule,
+    }
 
 
 def parse_rows(text: str, now: datetime, default_month: int | None = None) -> list[dict]:
@@ -238,6 +404,7 @@ def build_schedule(article: dict, image_url: str, ocr_text: str) -> dict:
             }
         )
     schedule.sort(key=lambda item: item["date"])
+    validate_schedule(schedule)
 
     return {
         "article_id": article["article_id"],
@@ -272,13 +439,12 @@ def update_from_cafe() -> bool:
     errors = []
     for image_url in image_urls:
         image = download_image(image_url)
-        for ocr_text in run_ocr(image):
-            try:
-                candidate = build_schedule(article, image_url, ocr_text)
-                if best is None or len(candidate["schedule"]) > len(best["schedule"]):
-                    best = candidate
-            except Exception as error:  # try the next image/configuration
-                errors.append(str(error))
+        try:
+            candidate = build_schedule_from_table(article, image_url, image)
+            if best is None:
+                best = candidate
+        except Exception as error:
+            errors.append(str(error))
 
     if best is None:
         raise RuntimeError("OCR 일정 분석에 실패했습니다: " + " | ".join(errors[-5:]))
@@ -295,15 +461,7 @@ def has_likely_ocr_errors(data: dict) -> bool:
     for item in data.get("schedule", []):
         training = item.get("training", "")
         date = item.get("date", "")
-        if re.search(r"\b[125]0000\b", training):
-            return True
-        if re.search(r"\b156\b", training):
-            return True
-        if "회선" in training:
-            return True
-        if "외전" in training:
-            return True
-        if re.search(r"\b4000[7T]?\b", training):
+        if has_suspicious_training_text(training):
             return True
         if data.get("week_label", "").startswith("7월") and date.startswith("2026-07-30"):
             return True
@@ -313,22 +471,19 @@ def has_likely_ocr_errors(data: dict) -> bool:
 def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=Path, help="로컬 이미지 OCR 테스트")
+    parser.add_argument("--week-label", help="로컬 이미지의 주차, 예: 7월 3주")
     args = parser.parse_args()
 
     if args.image:
         image = Image.open(args.image).convert("RGB")
-        now = datetime.now(KST)
-        default_month = None
-        for text in run_ocr(image):
-            week = parse_week_label("", text)
-            match = re.search(r"(\d{1,2})월", week)
-            if match:
-                default_month = int(match.group(1))
-            rows = parse_rows(text, now, default_month)
-            if rows:
-                print(json.dumps(rows, ensure_ascii=False, indent=2))
-                return 0
-        return 1
+        article = {
+            "article_id": 0,
+            "title": args.week_label or args.image.stem,
+            "url": args.image.resolve().as_uri(),
+        }
+        result = build_schedule_from_table(article, article["url"], image)
+        print(json.dumps(result["schedule"], ensure_ascii=False, indent=2))
+        return 0
 
     try:
         update_from_cafe()
