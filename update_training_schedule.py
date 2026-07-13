@@ -424,10 +424,14 @@ def load_existing() -> dict:
     return json.loads(OUTPUT_PATH.read_text(encoding="utf-8"))
 
 
-def update_from_cafe() -> bool:
+def update_from_cafe(force: bool = False) -> bool:
     article = find_latest_article()
     existing = load_existing()
-    if existing.get("article_id") == article["article_id"] and not has_likely_ocr_errors(existing):
+    if (
+        not force
+        and existing.get("article_id") == article["article_id"]
+        and not has_likely_ocr_errors(existing)
+    ):
         print(f"이미 반영된 게시물입니다: {article['title']}")
         return False
 
@@ -472,6 +476,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--image", type=Path, help="로컬 이미지 OCR 테스트")
     parser.add_argument("--week-label", help="로컬 이미지의 주차, 예: 7월 3주")
+    parser.add_argument("--force", action="store_true", help="같은 게시물도 다시 OCR")
     args = parser.parse_args()
 
     if args.image:
@@ -486,7 +491,7 @@ def main() -> int:
         return 0
 
     try:
-        update_from_cafe()
+        update_from_cafe(force=args.force)
         return 0
     except Exception as error:
         print(f"일정 업데이트 실패: {error}", file=sys.stderr)

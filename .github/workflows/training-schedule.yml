@@ -43,7 +43,7 @@ jobs:
         run: python -m unittest test_update_training_schedule.py
 
       - name: Update latest Naver Cafe schedule
-        run: python update_training_schedule.py
+        run: python update_training_schedule.py ${{ github.event_name == 'push' && '--force' || '' }}
 
       - name: Commit schedule when changed
         run: |
