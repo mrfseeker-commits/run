@@ -895,7 +895,7 @@
         .forecast-training-title {
             margin-top: 3px;
             color: var(--text-main);
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 900;
             line-height: 1.4;
             word-break: keep-all;
@@ -1272,11 +1272,11 @@
         </div>
 
         <section id="schedule-panel" class="view-panel schedule-panel hidden" aria-labelledby="schedule-heading">
-            <h2 id="schedule-heading" class="schedule-heading">주간 훈련 일정</h2>
+            <h2 id="schedule-heading" class="schedule-heading">네이버 ‘여명’ 카페 주간 훈련 일정</h2>
             <p id="schedule-meta" class="schedule-meta">일정을 불러오는 중입니다.</p>
             <figure id="schedule-original" class="schedule-original hidden">
                 <img id="schedule-original-image" alt="네이버 카페 주간 훈련 일정 원본 이미지">
-                <figcaption>네이버 카페에 게시된 원본 일정</figcaption>
+                <figcaption>네이버 ‘여명’ 카페에 게시된 원본 일정</figcaption>
             </figure>
             <div id="schedule-list" class="schedule-list">
                 <div class="schedule-empty">훈련 일정을 불러오는 중입니다.</div>
@@ -1356,8 +1356,9 @@
             }
 
             const date = new Date(`${training.date}T00:00:00`);
-            title.textContent = training.image_path ? '이미지 원본 일정' : training.training;
-            dateText.textContent = `${date.getMonth() + 1}월 ${date.getDate()}일 ${training.day}요일 새벽`;
+            const trainingDateText = `${date.getMonth() + 1}월 ${date.getDate()}일 ${training.day}요일 새벽`;
+            title.textContent = training.image_path ? trainingDateText : training.training;
+            dateText.textContent = training.image_path ? '' : trainingDateText;
             if (training.image_path) {
                 image.src = training.image_path;
                 image.alt = `${date.getMonth() + 1}월 ${date.getDate()}일 ${training.day}요일 훈련 일정 원본 행`;
