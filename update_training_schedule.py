@@ -25,6 +25,16 @@ OUTPUT_PATH = Path(__file__).with_name("training_schedule.json")
 TARGET_DAYS = {"화", "목", "토", "일"}
 KST = ZoneInfo("Asia/Seoul")
 PREVIOUS_MONTH_THRESHOLD = 20
+WEEKDAY_ALIASES = {
+    "화": "화",
+    "와": "화",
+    "하": "화",
+    "목": "목",
+    "묵": "목",
+    "토": "토",
+    "일": "일",
+}
+DISTANCE_PATTERN = r"(400|1000|2000|5000)"
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
@@ -39,12 +49,13 @@ def normalize_text(text: str) -> str:
 
 def normalize_training_text(text: str) -> str:
     text = normalize_text(text)
-    text = text.replace("회선", "회전")
+    text = text.replace("회선", "회전").replace("외전", "회전")
+    text = re.sub(r"\b4000[7T]?\s*x\s*", "400m x ", text, flags=re.IGNORECASE)
     text = re.sub(r"\b([125])0000\s*x\s*", r"\g<1>000m x ", text)
-    text = re.sub(r"\b(1000|2000|5000)\s*m?\s*x\s*", r"\1m x ", text)
-    text = re.sub(r"\b(1000|2000|5000)m\s*x\s*156\b", r"\1m x 1set", text)
-    text = re.sub(r"\b(1000|2000|5000)m\s*x\s*1\s*56\b", r"\1m x 1set", text)
-    text = re.sub(r"\b(1000|2000|5000)m\s*x\s*([0-9]+(?:\.[0-9]+)?)\s*(?:5et|set|sct|sel)?\b", r"\1m x \2set", text, flags=re.IGNORECASE)
+    text = re.sub(rf"\b{DISTANCE_PATTERN}\s*m?\s*x\s*", r"\1m x ", text)
+    text = re.sub(rf"\b{DISTANCE_PATTERN}m\s*x\s*156\b", r"\1m x 1set", text)
+    text = re.sub(rf"\b{DISTANCE_PATTERN}m\s*x\s*1\s*56\b", r"\1m x 1set", text)
+    text = re.sub(rf"\b{DISTANCE_PATTERN}m\s*x\s*([0-9]+(?:\.[0-9]+)?)\s*(?:5et|set|sct|sel)?\b", r"\1m x \2set", text, flags=re.IGNORECASE)
     text = re.sub(r"\s*x\s*", " × ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
@@ -166,7 +177,7 @@ def parse_rows(text: str, now: datetime, default_month: int | None = None) -> li
 
     for index, line in enumerate(lines):
         match = re.search(
-            r"(?<!\d)(?:(\d{1,2})\s*/\s*)?(\d{1,2})\s*[\(\[\{]?\s*([월화수목금토일])\s*[\)\]\}]?",
+            r"(?<!\d)(?:(\d{1,2})\s*/\s*)?(\d{1,2})\s*[\(\[\{]?\s*([월화수목금토일와하묵])\s*[\)\]\}]?",
             line,
         )
         if not match:
@@ -174,7 +185,7 @@ def parse_rows(text: str, now: datetime, default_month: int | None = None) -> li
 
         row_month = int(match.group(1)) if match.group(1) else None
         day_number = int(match.group(2))
-        weekday = match.group(3)
+        weekday = WEEKDAY_ALIASES.get(match.group(3), match.group(3))
         if weekday not in TARGET_DAYS:
             continue
         if row_month is None and default_month and day_number > PREVIOUS_MONTH_THRESHOLD:
@@ -289,6 +300,10 @@ def has_likely_ocr_errors(data: dict) -> bool:
         if re.search(r"\b156\b", training):
             return True
         if "회선" in training:
+            return True
+        if "외전" in training:
+            return True
+        if re.search(r"\b4000[7T]?\b", training):
             return True
         if data.get("week_label", "").startswith("7월") and date.startswith("2026-07-30"):
             return True
