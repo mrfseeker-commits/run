@@ -1214,7 +1214,7 @@
 
             <button id="service-forecast-toggle" class="service-forecast-toggle hidden" type="button"
                 aria-expanded="false" aria-controls="service-forecast-panel">
-                <span>다른 기상예보 서비스별 정보 보기</span>
+                <span>다른 기상 예보서비스와 비교해 보기</span>
                 <span class="service-toggle-icon" aria-hidden="true">⌄</span>
             </button>
 
@@ -1229,6 +1229,18 @@
                 </div>
                 <div id="service-forecast-list" class="service-list"></div>
             </section>
+
+            <article id="forecast-training" class="forecast-training-card hidden">
+                <div class="forecast-training-head">
+                    <div class="forecast-training-icon" aria-hidden="true">🏃</div>
+                    <div>
+                        <div class="forecast-training-label">Tomorrow Training</div>
+                        <div id="forecast-training-title" class="forecast-training-title"></div>
+                        <div id="forecast-training-date" class="forecast-training-date"></div>
+                    </div>
+                </div>
+                <img id="forecast-training-image" class="forecast-training-image hidden" alt="내일 새벽 훈련 일정 원본 행">
+            </article>
 
             <div class="weather-links" aria-label="실시간 기상 확인 링크">
                 <a class="weather-link" href="https://www.weather.go.kr/w/weather/radar/rain.do" target="_blank" rel="noopener">
@@ -1246,18 +1258,6 @@
                     </span>
                 </a>
             </div>
-
-            <article id="forecast-training" class="forecast-training-card hidden">
-                <div class="forecast-training-head">
-                    <div class="forecast-training-icon" aria-hidden="true">🏃</div>
-                    <div>
-                        <div class="forecast-training-label">Tomorrow Training</div>
-                        <div id="forecast-training-title" class="forecast-training-title"></div>
-                        <div id="forecast-training-date" class="forecast-training-date"></div>
-                    </div>
-                </div>
-                <img id="forecast-training-image" class="forecast-training-image hidden" alt="내일 새벽 훈련 일정 원본 행">
-            </article>
 
             <!-- Recommendation -->
             <div id="attire" class="attire-card hidden">
