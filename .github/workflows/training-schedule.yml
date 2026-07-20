@@ -11,6 +11,8 @@ on:
   schedule:
     # Sunday 12:00-23:00 KST, once an hour (UTC 03:00-14:00).
     - cron: '0 3-14 * * 0'
+    # Monday 09:00-12:00 KST, once an hour (UTC 00:00-03:00).
+    - cron: '0 0-3 * * 1'
   workflow_dispatch:
 
 concurrency:

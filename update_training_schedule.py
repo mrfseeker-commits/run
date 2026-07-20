@@ -254,6 +254,8 @@ def training_candidate_score(text: str) -> int:
         score += 30
     if "빌드업런" in text:
         score += 25
+    if "지속주" in text:
+        score += 25
     if re.search(rf"{DISTANCE_PATTERN}m × \d+(?:\.\d+)?set", text):
         score += 35
     if re.search(r"\d+회전", text):
@@ -346,6 +348,7 @@ def is_supported_training_text(training: str) -> bool:
         r"카이스트 빌드업런",
         rf"카이스트 {DISTANCE_PATTERN}m × \d+(?:\.\d+)?set",
         r"계족산 \d+회전",
+        r"카이스트 \d+만미\s*지속주",
     )
     return any(re.fullmatch(pattern, training) for pattern in patterns)
 
