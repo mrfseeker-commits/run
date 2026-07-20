@@ -1360,7 +1360,7 @@
             title.textContent = training.image_path ? trainingDateText : training.training;
             dateText.textContent = training.image_path ? '' : trainingDateText;
             if (training.image_path) {
-                image.src = training.image_path;
+                image.src = training.image_path + '?v=' + Date.now();
                 image.alt = `${date.getMonth() + 1}월 ${date.getDate()}일 ${training.day}요일 훈련 일정 원본 행`;
                 image.classList.remove('hidden');
             } else {
@@ -1557,7 +1557,7 @@
                 list.innerHTML = '';
 
                 if (data.source_image_path) {
-                    originalImage.src = data.source_image_path;
+                    originalImage.src = data.source_image_path + '?v=' + Date.now();
                     original.classList.remove('hidden');
                 } else {
                     originalImage.removeAttribute('src');
@@ -1574,7 +1574,7 @@
                     const monthDay = `${date.getMonth() + 1}/${date.getDate()}`;
                     list.innerHTML += item.image_path
                         ? `<article class="schedule-item">
-                            <img class="schedule-row-image" src="${item.image_path}"
+                            <img class="schedule-row-image" src="${item.image_path}?v=${Date.now()}"
                                 alt="${monthDay} ${item.day}요일 훈련 일정 원본 행">
                         </article>`
                         : `<article class="schedule-item">
