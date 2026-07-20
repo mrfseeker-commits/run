@@ -280,11 +280,14 @@ def ocr_training_cell(cell: Image.Image) -> str:
                 config="--oem 3 --psm 7",
             )
             normalized = normalize_training_text(text)
+            print(f"[DEBUG OCR RAW] lang={language}: raw='{text.strip()}' -> normalized='{normalized}'")
             if normalized:
                 candidates.append(normalized)
     if not candidates:
         raise RuntimeError("훈련 내용 셀을 인식하지 못했습니다.")
-    return max(candidates, key=training_candidate_score)
+    selected = max(candidates, key=training_candidate_score)
+    print(f"[DEBUG OCR SELECTED] {selected}")
+    return selected
 
 
 def run_ocr(image: Image.Image) -> list[str]:
@@ -333,6 +336,7 @@ def validate_schedule(schedule: list[dict]) -> None:
             raise RuntimeError(f"날짜와 요일이 일치하지 않습니다: {item}")
         training = item["training"]
         if not is_supported_training_text(training):
+            print(f"[DEBUG VALIDATE FAILED] Unsupported training: '{training}' (cleaned: '{training.replace(' ', '')}')")
             raise RuntimeError(f"OCR 신뢰도가 낮은 훈련 내용입니다: {training}")
 
 
