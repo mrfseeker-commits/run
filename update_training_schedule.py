@@ -7,6 +7,7 @@ import calendar
 import json
 import re
 import statistics
+import os
 import sys
 from datetime import datetime
 from io import BytesIO
@@ -18,6 +19,12 @@ import requests
 from bs4 import BeautifulSoup
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
 from playwright.sync_api import sync_playwright
+
+if sys.platform == "win32":
+    tesseract_win_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+    if os.path.exists(tesseract_win_path):
+        pytesseract.pytesseract.tesseract_cmd = tesseract_win_path
+
 
 
 CAFE_ID = "30488045"
