@@ -344,13 +344,14 @@ def has_suspicious_training_text(training: str) -> bool:
 
 
 def is_supported_training_text(training: str) -> bool:
+    cleaned = training.replace(" ", "")
     patterns = (
-        r"카이스트 빌드업런",
-        rf"카이스트 {DISTANCE_PATTERN}m × \d+(?:\.\d+)?set",
-        r"계족산 \d+회전",
-        r"카이스트 \d+만미\s*지속주",
+        r"카이스트빌드업런",
+        rf"카이스트{DISTANCE_PATTERN}m×\d+(?:\.\d+)?set",
+        r"계족산\d+회전",
+        r"카이스트\d+만미지속주",
     )
-    return any(re.fullmatch(pattern, training) for pattern in patterns)
+    return any(re.fullmatch(pattern, cleaned) for pattern in patterns)
 
 
 def build_schedule_from_table(article: dict, image_url: str, image: Image.Image) -> dict:
