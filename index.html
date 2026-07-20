@@ -630,8 +630,10 @@
 
         .service-toggle-icon {
             color: var(--accent);
-            font-size: 16px;
-            transition: transform 0.18s ease;
+            font-size: 20px;
+            font-weight: 900;
+            line-height: 1;
+            transition: transform 0.22s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .service-forecast-toggle[aria-expanded="true"] .service-toggle-icon {
@@ -1215,7 +1217,7 @@
             <button id="service-forecast-toggle" class="service-forecast-toggle hidden" type="button"
                 aria-expanded="false" aria-controls="service-forecast-panel">
                 <span>다른 기상 예보서비스와 비교해 보기</span>
-                <span class="service-toggle-icon" aria-hidden="true">⌄</span>
+                <span class="service-toggle-icon" aria-hidden="true">▼</span>
             </button>
 
             <section id="service-forecast-panel" class="service-forecast-panel hidden" aria-labelledby="service-forecast-title">
