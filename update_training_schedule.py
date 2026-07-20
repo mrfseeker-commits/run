@@ -204,6 +204,12 @@ def schedule_row_boundaries(image: Image.Image) -> list[int]:
     if len(lines) < 7:
         raise RuntimeError(f"훈련 일정 표의 가로선을 충분히 찾지 못했습니다: {lines}")
 
+    if len(lines) >= 8:
+        # If we found 8 or more lines, use the last 8 lines directly as row boundaries.
+        # This naturally supports non-uniform row heights (varying vertical spacing).
+        return lines[-8:]
+
+    # Fallback: if only 7 lines are found, estimate the first row boundary using median height.
     row_ends = lines[-7:]
     row_height = round(statistics.median(
         later - earlier for earlier, later in zip(row_ends, row_ends[1:])
