@@ -1,34 +1,34 @@
 {
-  "article_id": 3528,
-  "article_title": "7월4주 주간 일정/정산",
-  "week_label": "7월 4주",
-  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3528?menuid=13&referrerAllArticles=false",
-  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA3MTlfMTQ4/MDAxNzg0NDcwNTg5NDc3.hT6sUhL9Qaugm5wqi0A_dXunJWpn-FZ3qn4gqZVVZcIg.69F75yAeyH3WK1uaL_XbsDsHRpurzi9VNV-OXSRUnuIg.PNG/image.png?type=w1600",
+  "article_id": 3542,
+  "article_title": "7월5주 주간 일정/정산",
+  "week_label": "7월 5주",
+  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3542?menuid=13&referrerAllArticles=false",
+  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA3MjZfMTA5/MDAxNzg1MDczNjUyNjQ5.ponlbi-dhCJWk71IDksDqW-KuZNxpr8ZteakZIzDi2wg.DhtKo-K9su1_Eu6nS3oXcL6XNoyGaFecdmDUgwvS9TYg.PNG/image.png?type=w1600",
   "published_at": null,
-  "updated_at": "2026-07-20T12:30:18+09:00",
+  "updated_at": "2026-07-26T23:22:19+09:00",
   "schedule": [
     {
-      "date": "2026-07-21",
+      "date": "2026-07-28",
       "day": "화",
       "training": "카이스트 빌드업런",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
-      "date": "2026-07-23",
+      "date": "2026-07-30",
       "day": "목",
-      "training": "카이스트 1000m × 5set",
+      "training": "(1000 + v0 00 ) × 3set",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
-      "date": "2026-07-25",
+      "date": "2026-08-01",
       "day": "토",
-      "training": "카이스트 5000m × 1set",
+      "training": "카이스트 30000 × 2set",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
-      "date": "2026-07-26",
+      "date": "2026-08-02",
       "day": "일",
-      "training": "카이스트 2만미 지속주",
+      "training": "계족산 2회전",
       "image_path": "assets/training/current/sunday.webp"
     }
   ],
