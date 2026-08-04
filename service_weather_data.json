@@ -3,12 +3,12 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20260805",
-  "updated_at": "2026-08-04 00:06 UTC",
+  "updated_at": "2026-08-04 04:10 UTC",
   "services": [
     {
       "provider": "아큐웨더",
       "provider_code": "ACCUWEATHER",
-      "updated_at": "2026-08-04 08:17",
+      "updated_at": "2026-08-04 12:18",
       "rows": [
         {
           "time": "08/05 04:00",
@@ -18,7 +18,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-04 08:17"
+          "updated_at": "2026-08-04 12:18"
         },
         {
           "time": "08/05 05:00",
@@ -28,7 +28,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-04 08:17"
+          "updated_at": "2026-08-04 12:18"
         },
         {
           "time": "08/05 06:00",
@@ -38,7 +38,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-04 08:17"
+          "updated_at": "2026-08-04 12:18"
         },
         {
           "time": "08/05 07:00",
@@ -48,7 +48,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-08-04 08:17"
+          "updated_at": "2026-08-04 12:18"
         },
         {
           "time": "08/05 08:00",
@@ -58,14 +58,14 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-08-04 08:17"
+          "updated_at": "2026-08-04 12:18"
         }
       ]
     },
     {
       "provider": "웨더채널",
       "provider_code": "TWC",
-      "updated_at": "2026-08-04 08:13",
+      "updated_at": "2026-08-04 12:12",
       "rows": [
         {
           "time": "08/05 04:00",
@@ -75,7 +75,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-08-04 08:13"
+          "updated_at": "2026-08-04 12:12"
         },
         {
           "time": "08/05 05:00",
@@ -85,17 +85,17 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-08-04 08:13"
+          "updated_at": "2026-08-04 12:12"
         },
         {
           "time": "08/05 06:00",
           "weather": "맑음",
-          "temperature": "26.0℃",
+          "temperature": "27.0℃",
           "rain_probability": "7%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-08-04 08:13"
+          "updated_at": "2026-08-04 12:12"
         },
         {
           "time": "08/05 07:00",
@@ -105,7 +105,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-08-04 08:13"
+          "updated_at": "2026-08-04 12:12"
         },
         {
           "time": "08/05 08:00",
@@ -115,24 +115,24 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-08-04 08:13"
+          "updated_at": "2026-08-04 12:12"
         }
       ]
     },
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-08-04 08:33",
+      "updated_at": "2026-08-04 12:33",
       "rows": [
         {
           "time": "08/05 04:00",
           "weather": "흐림",
           "temperature": "27.0℃",
-          "rain_probability": "30%",
+          "rain_probability": "40%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-04 08:33"
+          "updated_at": "2026-08-04 12:33"
         },
         {
           "time": "08/05 05:00",
@@ -142,7 +142,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-04 08:33"
+          "updated_at": "2026-08-04 12:33"
         },
         {
           "time": "08/05 06:00",
@@ -152,7 +152,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-04 08:33"
+          "updated_at": "2026-08-04 12:33"
         },
         {
           "time": "08/05 07:00",
@@ -162,17 +162,17 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-04 08:33"
+          "updated_at": "2026-08-04 12:33"
         },
         {
           "time": "08/05 08:00",
-          "weather": "맑음",
+          "weather": "구름 많음",
           "temperature": "29.0℃",
           "rain_probability": "10%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-04 08:33"
+          "updated_at": "2026-08-04 12:33"
         }
       ]
     }
