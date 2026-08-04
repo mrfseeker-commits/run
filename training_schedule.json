@@ -5,28 +5,46 @@
   "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3558?menuid=13&referrerAllArticles=false",
   "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA4MDJfMjI1/MDAxNzg1NjYwMjUwMzQy.Ii9t5BSSjQVi3q4Wt6i9Qn532GqlBW2EA6ULiMn_QDMg.g4tPHF4N3cuQkGUVqvw7wxUA5O8-tUKtd-u7Ldia9Ukg.PNG/image.png?type=w1600",
   "published_at": null,
-  "updated_at": "2026-08-02T20:09:31+09:00",
+  "updated_at": "2026-08-04T14:45:56+09:00",
   "schedule": [
     {
-      "date": "2026-07-28",
+      "date": "2026-08-03",
+      "day": "월",
+      "training": "",
+      "image_path": "assets/training/current/monday.webp"
+    },
+    {
+      "date": "2026-08-04",
       "day": "화",
       "training": "카이스트 2000m × 2.5561set",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
-      "date": "2026-07-30",
+      "date": "2026-08-05",
+      "day": "수",
+      "training": "",
+      "image_path": "assets/training/current/wednesday.webp"
+    },
+    {
+      "date": "2026-08-06",
       "day": "목",
       "training": "카이스트 1000m × 5set",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
-      "date": "2026-08-01",
+      "date": "2026-08-07",
+      "day": "금",
+      "training": "",
+      "image_path": "assets/training/current/friday.webp"
+    },
+    {
+      "date": "2026-08-08",
       "day": "토",
       "training": "카이스트 5000m × 1set",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
-      "date": "2026-08-02",
+      "date": "2026-08-09",
       "day": "일",
       "training": "계족산 2회전",
       "image_path": "assets/training/current/sunday.webp"

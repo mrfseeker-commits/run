@@ -3,13 +3,12 @@
 from __future__ import annotations
 
 import argparse
-import calendar
 import json
 import re
 import statistics
 import os
 import sys
-from datetime import datetime
+from datetime import datetime, timedelta
 from io import BytesIO
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -32,9 +31,26 @@ MENU_ID = "13"
 MENU_URL = f"https://cafe.naver.com/f-e/cafes/{CAFE_ID}/menus/{MENU_ID}"
 OUTPUT_PATH = Path(__file__).with_name("training_schedule.json")
 IMAGE_DIR = Path(__file__).with_name("assets") / "training" / "current"
-TARGET_DAYS = {"화", "목", "토", "일"}
-TARGET_ROW_INDEXES = {1: "화", 3: "목", 5: "토", 6: "일"}
-DAY_IMAGE_NAMES = {"화": "tuesday.webp", "목": "thursday.webp", "토": "saturday.webp", "일": "sunday.webp"}
+TARGET_ROW_INDEXES = {
+    0: "월",
+    1: "화",
+    2: "수",
+    3: "목",
+    4: "금",
+    5: "토",
+    6: "일",
+}
+TARGET_DAYS = set(TARGET_ROW_INDEXES.values())
+TRAINING_OCR_DAYS = {"화", "목", "토", "일"}
+DAY_IMAGE_NAMES = {
+    "월": "monday.webp",
+    "화": "tuesday.webp",
+    "수": "wednesday.webp",
+    "목": "thursday.webp",
+    "금": "friday.webp",
+    "토": "saturday.webp",
+    "일": "sunday.webp",
+}
 WEEKDAY_NUMBER = {"월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6}
 KST = ZoneInfo("Asia/Seoul")
 PREVIOUS_MONTH_THRESHOLD = 20
@@ -48,6 +64,7 @@ WEEKDAY_ALIASES = {
     "일": "일",
 }
 DISTANCE_PATTERN = r"(400|1000|2000|5000)"
+SCHEDULE_KEYWORDS = ("카이스트", "자율훈련", "갑천", "계족산", "조깅", "빌드업런")
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
@@ -279,6 +296,22 @@ def training_candidate_score(text: str) -> int:
     return score
 
 
+def schedule_candidate_score(data: dict) -> int:
+    trainings = [item.get("training", "") for item in data.get("schedule", [])]
+    keyword_hits = sum(
+        1 for training in trainings if any(keyword in training for keyword in SCHEDULE_KEYWORDS)
+    )
+    return keyword_hits * 100 + sum(training_candidate_score(text) for text in trainings)
+
+
+def schedule_keyword_hits(data: dict) -> int:
+    return sum(
+        1
+        for item in data.get("schedule", [])
+        if any(keyword in item.get("training", "") for keyword in SCHEDULE_KEYWORDS)
+    )
+
+
 def ocr_training_cell(cell: Image.Image) -> str:
     processed = preprocess(cell)
     variants = [
@@ -332,16 +365,17 @@ def infer_year(month: int, day: int, now: datetime) -> int:
     return year
 
 
-def week_dates(year: int, month: int, week_number: int) -> list:
-    weeks = calendar.Calendar(firstweekday=calendar.MONDAY).monthdatescalendar(year, month)
-    if week_number < 1 or week_number > len(weeks):
-        raise RuntimeError(f"{month}월 {week_number}주 날짜를 계산하지 못했습니다.")
-    return weeks[week_number - 1]
+def schedule_dates_for_run(now: datetime) -> list:
+    """Return this week's dates; a Sunday update prepares the next week."""
+    today = now.date()
+    monday_offset = 1 if today.weekday() == 6 else -today.weekday()
+    monday = today + timedelta(days=monday_offset)
+    return [monday + timedelta(days=offset) for offset in range(7)]
 
 
 def validate_schedule(schedule: list[dict]) -> None:
     if len(schedule) != len(TARGET_ROW_INDEXES):
-        raise RuntimeError(f"화/목/토/일 4개 일정을 모두 인식하지 못했습니다: {schedule}")
+        raise RuntimeError(f"월~일 7개 일정을 모두 인식하지 못했습니다: {schedule}")
 
     for item in schedule:
         date = datetime.fromisoformat(item["date"]).date()
@@ -349,7 +383,7 @@ def validate_schedule(schedule: list[dict]) -> None:
         if date.weekday() != WEEKDAY_NUMBER[expected_weekday]:
             raise RuntimeError(f"날짜와 요일이 일치하지 않습니다: {item}")
         training = item["training"]
-        if not is_supported_training_text(training):
+        if training and not is_supported_training_text(training):
             print(f"[DEBUG VALIDATE FAILED] Unsupported training: '{training}' (cleaned: '{training.replace(' ', '')}')")
             raise RuntimeError(f"OCR 신뢰도가 낮은 훈련 내용입니다: {training}")
 
@@ -373,9 +407,11 @@ def build_schedule_from_table(article: dict, image_url: str, image: Image.Image)
         raise RuntimeError("게시물 제목에서 일정 주차를 인식하지 못했습니다.")
 
     month = int(match.group(1))
-    week_number = int(match.group(2))
-    year = infer_year(month, 1, now)
-    dates = week_dates(year, month, week_number)
+    dates = schedule_dates_for_run(now)
+    if month not in {date.month for date in dates}:
+        raise RuntimeError(
+            f"게시물 주차({week_label})가 현재 일정 주간과 일치하지 않습니다."
+        )
     cells = split_training_cells(image)
     schedule = []
     for row_index, weekday in TARGET_ROW_INDEXES.items():
@@ -383,7 +419,11 @@ def build_schedule_from_table(article: dict, image_url: str, image: Image.Image)
             {
                 "date": dates[row_index].isoformat(),
                 "day": weekday,
-                "training": ocr_training_cell(cells[row_index]),
+                "training": (
+                    ocr_training_cell(cells[row_index])
+                    if weekday in TRAINING_OCR_DAYS
+                    else ""
+                ),
             }
         )
     validate_schedule(schedule)
@@ -505,18 +545,24 @@ def update_from_cafe(force: bool = False) -> bool:
 
     best = None
     best_image = None
+    best_rank = (-1, -1)
     errors = []
     for image_url in image_urls:
         image = download_image(image_url)
         try:
             candidate = build_schedule_from_table(article, image_url, image)
-            if best is None:
+            candidate_rank = (
+                schedule_keyword_hits(candidate),
+                schedule_candidate_score(candidate),
+            )
+            if candidate_rank > best_rank:
                 best = candidate
                 best_image = image
+                best_rank = candidate_rank
         except Exception as error:
             errors.append(str(error))
 
-    if best is None:
+    if best is None or best_rank[0] < 2:
         raise RuntimeError("OCR 일정 분석에 실패했습니다: " + " | ".join(errors[-5:]))
 
     write_schedule_images(best_image, best)
