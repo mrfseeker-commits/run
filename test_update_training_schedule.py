@@ -18,6 +18,41 @@ class TrainingScheduleOcrTests(unittest.TestCase):
             "카이스트 2000m × 3set",
             schedule.normalize_training_text("카이스트 2000m x 356set"),
         )
+        self.assertEqual(
+            "카이스트 2000m × 2.5set",
+            schedule.normalize_training_text("카이스트 2000m x 2.5656set"),
+        )
+
+    def test_candidate_selection_prefers_plausible_repetition(self):
+        self.assertEqual(
+            "카이스트 2000m × 2.5set",
+            schedule.select_training_candidate(
+                [
+                    "카이스트 2000m × 2.5set",
+                    "카이스트 2000m × 2.556set",
+                    "카이스트 2000m × 2.5656set",
+                ]
+            ),
+        )
+        self.assertEqual(
+            "카이스트 1000m × 5set",
+            schedule.select_training_candidate(
+                [
+                    "카이스트 1000m × 5set",
+                    "카이스트 1000m × 5set",
+                    "카이스트 1000m × 552set",
+                ]
+            ),
+        )
+
+    def test_candidate_selection_rejects_only_implausible_repetitions(self):
+        with self.assertRaisesRegex(RuntimeError, "신뢰할 수 있는"):
+            schedule.select_training_candidate(
+                [
+                    "카이스트 2000m × 2.46set",
+                    "카이스트 1000m × 552set",
+                ]
+            )
 
     def test_sunday_update_targets_the_following_week(self):
         now = datetime(2026, 8, 2, 20, tzinfo=ZoneInfo("Asia/Seoul"))
@@ -92,7 +127,7 @@ class TrainingScheduleOcrTests(unittest.TestCase):
 
     def test_validation_rejects_unknown_ocr_text(self):
         self.assertTrue(
-            schedule.has_suspicious_training_text("카이스트 40007 × 1056")
+            schedule.has_suspicious_training_text("카이스트 1000m × 552set")
         )
 
     def test_training_table_scores_higher_than_attendance_table(self):

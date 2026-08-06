@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+from collections import Counter
 import json
 import re
 import statistics
@@ -64,6 +65,9 @@ WEEKDAY_ALIASES = {
     "일": "일",
 }
 DISTANCE_PATTERN = r"(400|1000|2000|5000)"
+INTERVAL_TRAINING_PATTERN = re.compile(
+    rf"카이스트 {DISTANCE_PATTERN}m × (\d+(?:\.\d+)?)set"
+)
 SCHEDULE_KEYWORDS = ("카이스트", "자율훈련", "갑천", "계족산", "조깅", "빌드업런")
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
@@ -96,6 +100,9 @@ def normalize_training_text(text: str) -> str:
     if "카이스트" in text and interval:
         distance = interval.group(1)
         repetitions = interval.group(2)
+        decimal_noise = re.fullmatch(r"(\d{1,2}\.5)\d+", repetitions)
+        if decimal_noise:
+            repetitions = decimal_noise.group(1)
         if "." not in repetitions and len(repetitions) > 2 and repetitions.endswith("56"):
             repetitions = repetitions[:-2]
         text = f"카이스트 {distance}m × {repetitions}set"
@@ -278,7 +285,7 @@ def write_schedule_images(image: Image.Image, data: dict) -> None:
 
 def training_candidate_score(text: str) -> int:
     text = normalize_training_text(text)
-    score = len(text)
+    score = 0
     if "카이스트" in text:
         score += 30
     if "계족산" in text:
@@ -287,13 +294,36 @@ def training_candidate_score(text: str) -> int:
         score += 25
     if "지속주" in text:
         score += 25
-    if re.search(rf"{DISTANCE_PATTERN}m × \d+(?:\.\d+)?set", text):
-        score += 35
+    interval = re.fullmatch(INTERVAL_TRAINING_PATTERN, text)
+    if interval:
+        score += 100 if is_plausible_repetition(interval.group(2)) else -200
     if re.search(r"\d+회전", text):
         score += 25
     if re.search(r"4000[7T]?|\b156\b|회선|외전", text):
         score -= 100
     return score
+
+
+def is_plausible_repetition(value: str) -> bool:
+    if not re.fullmatch(r"\d{1,2}(?:\.5)?", value):
+        return False
+    repetitions = float(value)
+    return 0 < repetitions <= 50
+
+
+def select_training_candidate(candidates: list[str]) -> str:
+    counts = Counter(normalize_training_text(candidate) for candidate in candidates)
+    supported = [candidate for candidate in counts if is_supported_training_text(candidate)]
+    if not supported:
+        raise RuntimeError(f"신뢰할 수 있는 훈련 내용 후보가 없습니다: {list(counts)}")
+    return max(
+        supported,
+        key=lambda candidate: (
+            training_candidate_score(candidate),
+            counts[candidate],
+            -len(candidate),
+        ),
+    )
 
 
 def schedule_candidate_score(data: dict) -> int:
@@ -332,7 +362,7 @@ def ocr_training_cell(cell: Image.Image) -> str:
                 candidates.append(normalized)
     if not candidates:
         raise RuntimeError("훈련 내용 셀을 인식하지 못했습니다.")
-    selected = max(candidates, key=training_candidate_score)
+    selected = select_training_candidate(candidates)
     print(f"[DEBUG OCR SELECTED] {selected}")
     return selected
 
@@ -389,14 +419,28 @@ def validate_schedule(schedule: list[dict]) -> None:
 
 
 def has_suspicious_training_text(training: str) -> bool:
+    training = normalize_training_text(training)
+    interval = re.fullmatch(INTERVAL_TRAINING_PATTERN, training)
+    invalid_interval = "카이스트" in training and "×" in training and (
+        interval is None or not is_plausible_repetition(interval.group(2))
+    )
     return bool(
-        re.search(r"\b[125]0000\b|\b156\b|\b4000[7T]?\b", training)
-        or any(error in training for error in ("회선", "외전"))
+        invalid_interval
+        or (
+            re.search(r"\b[125]0000\b|\b156\b|\b4000[7T]?\b", training)
+            or any(error in training for error in ("회선", "외전"))
+        )
     )
 
 
 def is_supported_training_text(training: str) -> bool:
-    return True
+    training = normalize_training_text(training)
+    interval = re.fullmatch(INTERVAL_TRAINING_PATTERN, training)
+    if interval:
+        return is_plausible_repetition(interval.group(2))
+    if training.startswith("카이스트 ") and "×" not in training:
+        return len(training) > len("카이스트 ")
+    return bool(re.fullmatch(r"계족산 \d+회전", training))
 
 
 def build_schedule_from_table(article: dict, image_url: str, image: Image.Image) -> dict:
