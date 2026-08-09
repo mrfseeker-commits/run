@@ -6,7 +6,6 @@ import argparse
 from collections import Counter
 import json
 import re
-import statistics
 import os
 import sys
 from datetime import datetime, timedelta
@@ -211,6 +210,39 @@ def find_horizontal_grid_lines(image: Image.Image) -> list[int]:
     return [round(sum(group) / len(group)) for group in groups]
 
 
+def find_schedule_header_bottom(image: Image.Image) -> int:
+    """Find the bottom edge of the fixed green schedule-table header."""
+    pixels = image.convert("RGB").load()
+    minimum_green_pixels = int(image.width * 0.55)
+    green_rows = []
+    for y in range(image.height):
+        green_pixels = sum(
+            1
+            for x in range(image.width)
+            if (
+                pixels[x, y][1] >= 145
+                and pixels[x, y][1] >= pixels[x, y][0] + 25
+                and pixels[x, y][1] >= pixels[x, y][2] + 45
+            )
+        )
+        if green_pixels >= minimum_green_pixels:
+            green_rows.append(y)
+
+    if not green_rows:
+        raise RuntimeError("훈련 일정 표의 초록색 머리글을 찾지 못했습니다.")
+
+    groups = []
+    for y in green_rows:
+        if not groups or y > groups[-1][-1] + 1:
+            groups.append([y])
+        else:
+            groups[-1].append(y)
+    header = max(groups, key=len)
+    if len(header) < max(4, int(image.height * 0.025)):
+        raise RuntimeError("훈련 일정 표의 초록색 머리글 영역이 너무 작습니다.")
+    return header[-1] + 1
+
+
 def find_training_column_start(image: Image.Image, top: int, bottom: int) -> int:
     pixels = image.convert("RGB").load()
     minimum_dark_pixels = int((bottom - top) * 0.72)
@@ -231,21 +263,14 @@ def find_training_column_start(image: Image.Image, top: int, bottom: int) -> int
 
 
 def schedule_row_boundaries(image: Image.Image) -> list[int]:
+    header_bottom = find_schedule_header_bottom(image)
     lines = find_horizontal_grid_lines(image)
-    if len(lines) < 7:
-        raise RuntimeError(f"훈련 일정 표의 가로선을 충분히 찾지 못했습니다: {lines}")
-
-    if len(lines) >= 8:
-        # If we found 8 or more lines, use the last 8 lines directly as row boundaries.
-        # This naturally supports non-uniform row heights (varying vertical spacing).
-        return lines[-8:]
-
-    # Fallback: if only 7 lines are found, estimate the first row boundary using median height.
-    row_ends = lines[-7:]
-    row_height = round(statistics.median(
-        later - earlier for earlier, later in zip(row_ends, row_ends[1:])
-    ))
-    return [row_ends[0] - row_height, *row_ends]
+    row_ends = [line for line in lines if line > header_bottom + 2][:7]
+    if len(row_ends) < 7:
+        raise RuntimeError(
+            f"훈련 일정 표의 월~일 구분선을 충분히 찾지 못했습니다: {lines}"
+        )
+    return [header_bottom, *row_ends]
 
 
 def split_schedule_rows(image: Image.Image) -> list[Image.Image]:
@@ -459,15 +484,20 @@ def build_schedule_from_table(article: dict, image_url: str, image: Image.Image)
     cells = split_training_cells(image)
     schedule = []
     for row_index, weekday in TARGET_ROW_INDEXES.items():
+        training = ""
+        if weekday in TRAINING_OCR_DAYS:
+            try:
+                training = ocr_training_cell(cells[row_index])
+            except Exception as error:
+                print(
+                    f"[WARN OCR FALLBACK] {weekday}요일 훈련명은 원본 행 이미지로 대신합니다 "
+                    f"({type(error).__name__})."
+                )
         schedule.append(
             {
                 "date": dates[row_index].isoformat(),
                 "day": weekday,
-                "training": (
-                    ocr_training_cell(cells[row_index])
-                    if weekday in TRAINING_OCR_DAYS
-                    else ""
-                ),
+                "training": training,
             }
         )
     validate_schedule(schedule)
@@ -606,8 +636,8 @@ def update_from_cafe(force: bool = False) -> bool:
         except Exception as error:
             errors.append(str(error))
 
-    if best is None or best_rank[0] < 2:
-        raise RuntimeError("OCR 일정 분석에 실패했습니다: " + " | ".join(errors[-5:]))
+    if best is None:
+        raise RuntimeError("훈련 일정 표 분석에 실패했습니다: " + " | ".join(errors[-5:]))
 
     write_schedule_images(best_image, best)
     OUTPUT_PATH.write_text(

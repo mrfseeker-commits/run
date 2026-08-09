@@ -1,52 +1,52 @@
 {
-  "article_id": 3558,
-  "article_title": "8월1주 주간 일정/정산",
-  "week_label": "8월 1주",
-  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3558?menuid=13&referrerAllArticles=false",
-  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA4MDVfMTA5/MDAxNzg1OTM1NDc4NDE1.kIZcsn8m69-XiWNoEQhwJoXXaN9j2cjfFjAwETYVmDEg.4fKbH4QdEixImjt6Mms19LVTrM12Bf9P9-JPM180HCkg.PNG/image.png?type=w1600",
+  "article_id": 3573,
+  "article_title": "8월2주 주간 일정/정산",
+  "week_label": "8월 2주",
+  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3573?menuid=13&referrerAllArticles=false",
+  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA4MDlfMzUg/MDAxNzg2MjcyNzM5OTk1.Yn2SsZuoz9Vkzf_Xa6dvb2tfzEf89brV1S08GJsjY_Eg.IBN2fc5znaesHxYzBH6FYqBGmpnui5hSTOcUy3LmhK4g.PNG/image.png?type=w1600",
   "published_at": null,
-  "updated_at": "2026-08-06T15:59:28+09:00",
+  "updated_at": "2026-08-10T08:44:36+09:00",
   "schedule": [
     {
-      "date": "2026-08-03",
+      "date": "2026-08-10",
       "day": "월",
       "training": "",
       "image_path": "assets/training/current/monday.webp"
     },
     {
-      "date": "2026-08-04",
+      "date": "2026-08-11",
       "day": "화",
       "training": "카이스트 2000m × 2.5set",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
-      "date": "2026-08-05",
+      "date": "2026-08-12",
       "day": "수",
       "training": "",
       "image_path": "assets/training/current/wednesday.webp"
     },
     {
-      "date": "2026-08-06",
+      "date": "2026-08-13",
       "day": "목",
-      "training": "카이스트 1000m × 5set",
+      "training": "카이스트 400m × 10set",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
-      "date": "2026-08-07",
+      "date": "2026-08-14",
       "day": "금",
       "training": "",
       "image_path": "assets/training/current/friday.webp"
     },
     {
-      "date": "2026-08-08",
+      "date": "2026-08-15",
       "day": "토",
-      "training": "카이스트 5000m × 1set",
+      "training": "",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
-      "date": "2026-08-09",
+      "date": "2026-08-16",
       "day": "일",
-      "training": "계족산 2회전",
+      "training": "카이스트 빌드업/조깅",
       "image_path": "assets/training/current/sunday.webp"
     }
   ],

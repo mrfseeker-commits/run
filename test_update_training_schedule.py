@@ -82,6 +82,14 @@ class TrainingScheduleOcrTests(unittest.TestCase):
         self.assertEqual(7, len(rows))
         self.assertTrue(all(row.width == 530 and row.height > 0 for row in rows))
 
+    def test_fixed_table_supports_a_double_height_event_row(self):
+        image = self.make_table_image(row_ends=(111, 148, 185, 222, 259, 333, 370), height=374)
+
+        rows = schedule.split_schedule_rows(image)
+
+        self.assertEqual(7, len(rows))
+        self.assertGreater(rows[5].height, rows[4].height * 1.8)
+
     def test_table_schedule_uses_title_and_row_positions_for_dates(self):
         article = {
             "article_id": 1,
@@ -116,6 +124,29 @@ class TrainingScheduleOcrTests(unittest.TestCase):
         )
         self.assertEqual("", result["schedule"][2]["training"])
 
+    def test_ocr_failure_does_not_block_source_image_schedule(self):
+        article = {
+            "article_id": 2,
+            "title": "8월2주 주간 일정",
+            "url": "https://example.com",
+        }
+        dates = [date(2026, 8, 10 + offset) for offset in range(7)]
+
+        with (
+            patch.object(
+                schedule,
+                "ocr_training_cell",
+                side_effect=RuntimeError("새 훈련명 OCR 실패"),
+            ),
+            patch.object(schedule, "schedule_dates_for_run", return_value=dates),
+        ):
+            result = schedule.build_schedule_from_table(
+                article, "image.png", self.make_table_image()
+            )
+
+        self.assertEqual(7, len(result["schedule"]))
+        self.assertTrue(all(not item["training"] for item in result["schedule"]))
+
     def test_validation_rejects_wrong_weekday(self):
         invalid = [
             {"date": "2026-08-04", "day": weekday, "training": "훈련"}
@@ -147,13 +178,13 @@ class TrainingScheduleOcrTests(unittest.TestCase):
         )
 
     @staticmethod
-    def make_table_image():
-        image = Image.new("RGB", (532, 337), "white")
+    def make_table_image(row_ends=(111, 148, 185, 222, 259, 296, 333), height=337):
+        image = Image.new("RGB", (532, height), "white")
         draw = ImageDraw.Draw(image)
         draw.rectangle((0, 37, 531, 74), fill=(146, 208, 80))
-        for y in (0, 111, 148, 185, 222, 259, 296, 333):
+        for y in (0, *row_ends):
             draw.line((0, y, 531, y), fill=(212, 212, 212), width=1)
-        draw.line((121, 74, 121, 333), fill=(212, 212, 212), width=1)
+        draw.line((121, 74, 121, row_ends[-1]), fill=(212, 212, 212), width=1)
         return image
 
 
