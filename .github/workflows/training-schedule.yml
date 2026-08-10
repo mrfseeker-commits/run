@@ -34,18 +34,16 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install OCR and browser dependencies
+      - name: Install image and browser dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y tesseract-ocr tesseract-ocr-kor
-          pip install beautifulsoup4 pillow playwright pytesseract requests
+          pip install pillow playwright requests
           playwright install --with-deps chromium
 
       - name: Check latest Naver Cafe schedule
         run: python -m unittest test_update_training_schedule.py
 
       - name: Update latest Naver Cafe schedule
-        run: python update_training_schedule.py ${{ github.event_name == 'push' && '--force' || '' }}
+        run: python update_training_schedule.py ${{ github.event_name == 'workflow_dispatch' && '--force' || '' }}
 
       - name: Commit schedule when changed
         run: |

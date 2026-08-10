@@ -1,29 +1,19 @@
-"""Fetch the latest weekly training image from Naver Cafe and OCR it."""
+"""Fetch and publish the latest weekly Naver Cafe training table without OCR."""
 
 from __future__ import annotations
 
 import argparse
-from collections import Counter
 import json
 import re
-import os
 import sys
 from datetime import datetime, timedelta
 from io import BytesIO
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-import pytesseract
 import requests
-from bs4 import BeautifulSoup
-from PIL import Image, ImageEnhance, ImageFilter, ImageOps
+from PIL import Image
 from playwright.sync_api import sync_playwright
-
-if sys.platform == "win32":
-    tesseract_win_path = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
-    if os.path.exists(tesseract_win_path):
-        pytesseract.pytesseract.tesseract_cmd = tesseract_win_path
-
 
 
 CAFE_ID = "30488045"
@@ -40,8 +30,6 @@ TARGET_ROW_INDEXES = {
     5: "토",
     6: "일",
 }
-TARGET_DAYS = set(TARGET_ROW_INDEXES.values())
-TRAINING_OCR_DAYS = {"화", "목", "토", "일"}
 DAY_IMAGE_NAMES = {
     "월": "monday.webp",
     "화": "tuesday.webp",
@@ -53,21 +41,6 @@ DAY_IMAGE_NAMES = {
 }
 WEEKDAY_NUMBER = {"월": 0, "화": 1, "수": 2, "목": 3, "금": 4, "토": 5, "일": 6}
 KST = ZoneInfo("Asia/Seoul")
-PREVIOUS_MONTH_THRESHOLD = 20
-WEEKDAY_ALIASES = {
-    "화": "화",
-    "와": "화",
-    "하": "화",
-    "목": "목",
-    "묵": "목",
-    "토": "토",
-    "일": "일",
-}
-DISTANCE_PATTERN = r"(400|1000|2000|5000)"
-INTERVAL_TRAINING_PATTERN = re.compile(
-    rf"카이스트 {DISTANCE_PATTERN}m × (\d+(?:\.\d+)?)set"
-)
-SCHEDULE_KEYWORDS = ("카이스트", "자율훈련", "갑천", "계족산", "조깅", "빌드업런")
 USER_AGENT = (
     "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 "
     "(KHTML, like Gecko) Chrome/126.0 Safari/537.36"
@@ -75,37 +48,7 @@ USER_AGENT = (
 
 
 def normalize_text(text: str) -> str:
-    text = text.replace("×", "x").replace("X", "x")
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
-
-
-def normalize_training_text(text: str) -> str:
-    text = text.replace("|", "").replace(";", "")
-    text = normalize_text(text)
-    text = text.replace("회선", "회전").replace("외전", "회전")
-    text = re.sub(r"\b4000[7T]?\s*x\s*", "400m x ", text, flags=re.IGNORECASE)
-    text = re.sub(r"\b([125])0000\s*x\s*", r"\g<1>000m x ", text)
-    text = re.sub(rf"\b{DISTANCE_PATTERN}\s*m?\s*x\s*", r"\1m x ", text)
-    text = re.sub(rf"\b{DISTANCE_PATTERN}m\s*x\s*156\b", r"\1m x 1set", text)
-    text = re.sub(rf"\b{DISTANCE_PATTERN}m\s*x\s*1\s*56\b", r"\1m x 1set", text)
-    text = re.sub(rf"\b{DISTANCE_PATTERN}m\s*x\s*([0-9]+(?:\.[0-9]+)?)\s*(?:5et|set|sct|sel)?\b", r"\1m x \2set", text, flags=re.IGNORECASE)
-    text = re.sub(r"\s*x\s*", " × ", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    interval = re.search(
-        rf"\b{DISTANCE_PATTERN}[^×]{{0,12}}×\s*([0-9]+(?:\.[0-9]+)?)",
-        text,
-    )
-    if "카이스트" in text and interval:
-        distance = interval.group(1)
-        repetitions = interval.group(2)
-        decimal_noise = re.fullmatch(r"(\d{1,2}\.5)\d+", repetitions)
-        if decimal_noise:
-            repetitions = decimal_noise.group(1)
-        if "." not in repetitions and len(repetitions) > 2 and repetitions.endswith("56"):
-            repetitions = repetitions[:-2]
-        text = f"카이스트 {distance}m × {repetitions}set"
-    return text
+    return re.sub(r"\s+", " ", text).strip()
 
 
 def find_latest_article() -> dict:
@@ -118,7 +61,6 @@ def find_latest_article() -> dict:
         )
         page.goto(MENU_URL, wait_until="domcontentloaded", timeout=60_000)
         page.wait_for_selector('a[href*="/articles/"]', timeout=30_000)
-
         links = page.locator('a[href*="/articles/"]').evaluate_all(
             """elements => elements.map(a => ({
                 title: (a.innerText || '').trim(),
@@ -178,16 +120,6 @@ def download_image(url: str) -> Image.Image:
     return Image.open(BytesIO(response.content)).convert("RGB")
 
 
-def preprocess(image: Image.Image) -> Image.Image:
-    scale = max(2, 1800 // max(image.width, 1))
-    image = image.resize(
-        (image.width * scale, image.height * scale), Image.Resampling.LANCZOS
-    )
-    image = ImageOps.grayscale(image)
-    image = ImageEnhance.Contrast(image).enhance(1.8)
-    return image.filter(ImageFilter.SHARPEN)
-
-
 def find_horizontal_grid_lines(image: Image.Image) -> list[int]:
     pixels = image.convert("RGB").load()
     minimum_dark_pixels = int(image.width * 0.72)
@@ -211,7 +143,6 @@ def find_horizontal_grid_lines(image: Image.Image) -> list[int]:
 
 
 def find_schedule_header_bottom(image: Image.Image) -> int:
-    """Find the bottom edge of the fixed green schedule-table header."""
     pixels = image.convert("RGB").load()
     minimum_green_pixels = int(image.width * 0.55)
     green_rows = []
@@ -273,25 +204,21 @@ def schedule_row_boundaries(image: Image.Image) -> list[int]:
     return [header_bottom, *row_ends]
 
 
+def validate_schedule_table(image: Image.Image) -> list[int]:
+    boundaries = schedule_row_boundaries(image)
+    find_training_column_start(image, boundaries[0], boundaries[-1])
+    return boundaries
+
+
 def split_schedule_rows(image: Image.Image) -> list[Image.Image]:
-    row_boundaries = schedule_row_boundaries(image)
-    rows = []
-    for top, bottom in zip(row_boundaries, row_boundaries[1:]):
-        rows.append(image.crop((1, top + 1, image.width - 1, bottom)))
+    boundaries = validate_schedule_table(image)
+    rows = [
+        image.crop((1, top + 1, image.width - 1, bottom))
+        for top, bottom in zip(boundaries, boundaries[1:])
+    ]
     if len(rows) != 7:
         raise RuntimeError(f"훈련 일정 7개 행을 분리하지 못했습니다: {len(rows)}")
     return rows
-
-
-def split_training_cells(image: Image.Image) -> list[Image.Image]:
-    row_boundaries = schedule_row_boundaries(image)
-    column_start = find_training_column_start(image, row_boundaries[0], row_boundaries[-1])
-    cells = []
-    for top, bottom in zip(row_boundaries, row_boundaries[1:]):
-        cells.append(image.crop((column_start + 2, top + 2, image.width - 2, bottom - 2)))
-    if len(cells) != 7:
-        raise RuntimeError(f"훈련 일정 7개 행을 분리하지 못했습니다: {len(cells)}")
-    return cells
 
 
 def write_schedule_images(image: Image.Image, data: dict) -> None:
@@ -305,119 +232,14 @@ def write_schedule_images(image: Image.Image, data: dict) -> None:
     for row_index, weekday in TARGET_ROW_INDEXES.items():
         row_path = IMAGE_DIR / DAY_IMAGE_NAMES[weekday]
         rows[row_index].save(row_path, format="WEBP", lossless=True, method=6)
-        schedule_by_day[weekday]["image_path"] = row_path.relative_to(OUTPUT_PATH.parent).as_posix()
+        schedule_by_day[weekday]["image_path"] = row_path.relative_to(
+            OUTPUT_PATH.parent
+        ).as_posix()
 
 
-def training_candidate_score(text: str) -> int:
-    text = normalize_training_text(text)
-    score = 0
-    if "카이스트" in text:
-        score += 30
-    if "계족산" in text:
-        score += 30
-    if "빌드업런" in text:
-        score += 25
-    if "지속주" in text:
-        score += 25
-    interval = re.fullmatch(INTERVAL_TRAINING_PATTERN, text)
-    if interval:
-        score += 100 if is_plausible_repetition(interval.group(2)) else -200
-    if re.search(r"\d+회전", text):
-        score += 25
-    if re.search(r"4000[7T]?|\b156\b|회선|외전", text):
-        score -= 100
-    return score
-
-
-def is_plausible_repetition(value: str) -> bool:
-    if not re.fullmatch(r"\d{1,2}(?:\.5)?", value):
-        return False
-    repetitions = float(value)
-    return 0 < repetitions <= 50
-
-
-def select_training_candidate(candidates: list[str]) -> str:
-    counts = Counter(normalize_training_text(candidate) for candidate in candidates)
-    supported = [candidate for candidate in counts if is_supported_training_text(candidate)]
-    if not supported:
-        raise RuntimeError(f"신뢰할 수 있는 훈련 내용 후보가 없습니다: {list(counts)}")
-    return max(
-        supported,
-        key=lambda candidate: (
-            training_candidate_score(candidate),
-            counts[candidate],
-            -len(candidate),
-        ),
-    )
-
-
-def schedule_candidate_score(data: dict) -> int:
-    trainings = [item.get("training", "") for item in data.get("schedule", [])]
-    keyword_hits = sum(
-        1 for training in trainings if any(keyword in training for keyword in SCHEDULE_KEYWORDS)
-    )
-    return keyword_hits * 100 + sum(training_candidate_score(text) for text in trainings)
-
-
-def schedule_keyword_hits(data: dict) -> int:
-    return sum(
-        1
-        for item in data.get("schedule", [])
-        if any(keyword in item.get("training", "") for keyword in SCHEDULE_KEYWORDS)
-    )
-
-
-def ocr_training_cell(cell: Image.Image) -> str:
-    processed = preprocess(cell)
-    variants = [
-        processed,
-        processed.point(lambda value: 255 if value > 175 else 0),
-    ]
-    candidates = []
-    for variant in variants:
-        for language in ("kor+eng", "kor"):
-            text = pytesseract.image_to_string(
-                variant,
-                lang=language,
-                config="--oem 3 --psm 7",
-            )
-            normalized = normalize_training_text(text)
-            print(f"[DEBUG OCR RAW] lang={language}: raw='{text.strip()}' -> normalized='{normalized}'")
-            if normalized:
-                candidates.append(normalized)
-    if not candidates:
-        raise RuntimeError("훈련 내용 셀을 인식하지 못했습니다.")
-    selected = select_training_candidate(candidates)
-    print(f"[DEBUG OCR SELECTED] {selected}")
-    return selected
-
-
-def run_ocr(image: Image.Image) -> list[str]:
-    processed = preprocess(image)
-    outputs = []
-    for psm in (6, 4, 11):
-        outputs.append(
-            pytesseract.image_to_string(
-                processed,
-                lang="kor+eng",
-                config=f"--oem 3 --psm {psm}",
-            )
-        )
-    return outputs
-
-
-def parse_week_label(title: str, ocr_text: str) -> str:
-    match = re.search(r"(\d{1,2})월\s*(\d)주", f"{title}\n{ocr_text}")
+def parse_week_label(title: str) -> str:
+    match = re.search(r"(\d{1,2})월\s*(\d)주", title)
     return f"{match.group(1)}월 {match.group(2)}주" if match else "주간 훈련"
-
-
-def infer_year(month: int, day: int, now: datetime) -> int:
-    year = now.year
-    if now.month == 12 and month == 1:
-        year += 1
-    elif now.month == 1 and month == 12:
-        year -= 1
-    return year
 
 
 def schedule_dates_for_run(now: datetime) -> list:
@@ -430,160 +252,37 @@ def schedule_dates_for_run(now: datetime) -> list:
 
 def validate_schedule(schedule: list[dict]) -> None:
     if len(schedule) != len(TARGET_ROW_INDEXES):
-        raise RuntimeError(f"월~일 7개 일정을 모두 인식하지 못했습니다: {schedule}")
-
+        raise RuntimeError(f"월~일 7개 일정을 만들지 못했습니다: {schedule}")
     for item in schedule:
         date = datetime.fromisoformat(item["date"]).date()
-        expected_weekday = item["day"]
-        if date.weekday() != WEEKDAY_NUMBER[expected_weekday]:
+        if date.weekday() != WEEKDAY_NUMBER[item["day"]]:
             raise RuntimeError(f"날짜와 요일이 일치하지 않습니다: {item}")
-        training = item["training"]
-        if training and not is_supported_training_text(training):
-            print(f"[DEBUG VALIDATE FAILED] Unsupported training: '{training}' (cleaned: '{training.replace(' ', '')}')")
-            raise RuntimeError(f"OCR 신뢰도가 낮은 훈련 내용입니다: {training}")
-
-
-def has_suspicious_training_text(training: str) -> bool:
-    training = normalize_training_text(training)
-    interval = re.fullmatch(INTERVAL_TRAINING_PATTERN, training)
-    invalid_interval = "카이스트" in training and "×" in training and (
-        interval is None or not is_plausible_repetition(interval.group(2))
-    )
-    return bool(
-        invalid_interval
-        or (
-            re.search(r"\b[125]0000\b|\b156\b|\b4000[7T]?\b", training)
-            or any(error in training for error in ("회선", "외전"))
-        )
-    )
-
-
-def is_supported_training_text(training: str) -> bool:
-    training = normalize_training_text(training)
-    interval = re.fullmatch(INTERVAL_TRAINING_PATTERN, training)
-    if interval:
-        return is_plausible_repetition(interval.group(2))
-    if training.startswith("카이스트 ") and "×" not in training:
-        return len(training) > len("카이스트 ")
-    return bool(re.fullmatch(r"계족산 \d+회전", training))
 
 
 def build_schedule_from_table(article: dict, image_url: str, image: Image.Image) -> dict:
     now = datetime.now(KST)
-    week_label = parse_week_label(article["title"], "")
+    week_label = parse_week_label(article["title"])
     match = re.fullmatch(r"(\d{1,2})월 (\d)주", week_label)
     if not match:
         raise RuntimeError("게시물 제목에서 일정 주차를 인식하지 못했습니다.")
 
-    month = int(match.group(1))
     dates = schedule_dates_for_run(now)
+    month = int(match.group(1))
     if month not in {date.month for date in dates}:
         raise RuntimeError(
             f"게시물 주차({week_label})가 현재 일정 주간과 일치하지 않습니다."
         )
-    cells = split_training_cells(image)
-    schedule = []
-    for row_index, weekday in TARGET_ROW_INDEXES.items():
-        training = ""
-        if weekday in TRAINING_OCR_DAYS:
-            try:
-                training = ocr_training_cell(cells[row_index])
-            except Exception as error:
-                print(
-                    f"[WARN OCR FALLBACK] {weekday}요일 훈련명은 원본 행 이미지로 대신합니다 "
-                    f"({type(error).__name__})."
-                )
-        schedule.append(
-            {
-                "date": dates[row_index].isoformat(),
-                "day": weekday,
-                "training": training,
-            }
-        )
+
+    validate_schedule_table(image)
+    schedule = [
+        {
+            "date": dates[row_index].isoformat(),
+            "day": weekday,
+            "training": "",
+        }
+        for row_index, weekday in TARGET_ROW_INDEXES.items()
+    ]
     validate_schedule(schedule)
-    return {
-        "article_id": article["article_id"],
-        "article_title": article["title"],
-        "week_label": week_label,
-        "source_url": article["url"],
-        "source_image_url": image_url,
-        "published_at": None,
-        "updated_at": now.isoformat(timespec="seconds"),
-        "schedule": schedule,
-    }
-
-
-def parse_rows(text: str, now: datetime, default_month: int | None = None) -> list[dict]:
-    cleaned = text.replace("|", " ").replace("（", "(").replace("）", ")")
-    cleaned = re.sub(r"(?<=\d)[Il](?=\d)", "1", cleaned)
-    lines = [normalize_text(line) for line in cleaned.splitlines() if line.strip()]
-    rows = []
-
-    for index, line in enumerate(lines):
-        match = re.search(
-            r"(?<!\d)(?:(\d{1,2})\s*/\s*)?(\d{1,2})\s*[\(\[\{]?\s*([월화수목금토일와하묵])\s*[\)\]\}]?",
-            line,
-        )
-        if not match:
-            continue
-
-        row_month = int(match.group(1)) if match.group(1) else None
-        day_number = int(match.group(2))
-        weekday = WEEKDAY_ALIASES.get(match.group(3), match.group(3))
-        if weekday not in TARGET_DAYS:
-            continue
-        if row_month is None and default_month and day_number > PREVIOUS_MONTH_THRESHOLD:
-            row_month = default_month - 1 if default_month > 1 else 12
-
-        training = line[match.end() :].strip(" :-")
-        if len(training) < 2 and index + 1 < len(lines):
-            training = lines[index + 1].strip(" :-")
-        training = normalize_training_text(training)
-        if not training or training in {"일", "훈련내용"}:
-            continue
-
-        rows.append(
-            {
-                "month": row_month,
-                "day_number": day_number,
-                "day": weekday,
-                "training": training,
-            }
-        )
-
-    unique = {}
-    for row in rows:
-        unique[(row["month"], row["day_number"], row["day"])] = row
-    return list(unique.values())
-
-
-def build_schedule(article: dict, image_url: str, ocr_text: str) -> dict:
-    now = datetime.now(KST)
-    week_label = parse_week_label(article["title"], ocr_text)
-    month_match = re.search(r"(\d{1,2})월", week_label)
-    if not month_match:
-        raise RuntimeError("일정의 월을 인식하지 못했습니다.")
-    month = int(month_match.group(1))
-
-    rows = parse_rows(ocr_text, now, month)
-    if len(rows) < 3:
-        raise RuntimeError(f"필요한 일정 행을 충분히 인식하지 못했습니다: {rows}")
-
-    schedule = []
-    for row in rows:
-        row_month = row.get("month") or month
-        year = infer_year(row_month, row["day_number"], now)
-        date = datetime(year, row_month, row["day_number"]).date()
-        schedule.append(
-            {
-                "date": date.isoformat(),
-                "day": row["day"],
-                "training": row["training"],
-            }
-        )
-    schedule.sort(key=lambda item: item["date"])
-    validate_schedule(schedule)
-
     return {
         "article_id": article["article_id"],
         "article_title": article["title"],
@@ -605,11 +304,7 @@ def load_existing() -> dict:
 def update_from_cafe(force: bool = False) -> bool:
     article = find_latest_article()
     existing = load_existing()
-    if (
-        not force
-        and existing.get("article_id") == article["article_id"]
-        and not has_likely_ocr_errors(existing)
-    ):
+    if not force and existing.get("article_id") == article["article_id"]:
         print(f"이미 반영된 게시물입니다: {article['title']}")
         return False
 
@@ -617,53 +312,34 @@ def update_from_cafe(force: bool = False) -> bool:
     if not image_urls:
         raise RuntimeError("게시물에서 일정 이미지를 찾지 못했습니다.")
 
-    best = None
-    best_image = None
-    best_rank = (-1, -1)
+    candidates = []
     errors = []
     for image_url in image_urls:
         image = download_image(image_url)
         try:
-            candidate = build_schedule_from_table(article, image_url, image)
-            candidate_rank = (
-                schedule_keyword_hits(candidate),
-                schedule_candidate_score(candidate),
-            )
-            if candidate_rank > best_rank:
-                best = candidate
-                best_image = image
-                best_rank = candidate_rank
+            data = build_schedule_from_table(article, image_url, image)
+            candidates.append((image.width * image.height, image, data))
         except Exception as error:
             errors.append(str(error))
 
-    if best is None:
+    if not candidates:
         raise RuntimeError("훈련 일정 표 분석에 실패했습니다: " + " | ".join(errors[-5:]))
 
+    _, best_image, best = max(candidates, key=lambda item: item[0])
     write_schedule_images(best_image, best)
     OUTPUT_PATH.write_text(
         json.dumps(best, ensure_ascii=False, indent=2) + "\n",
         encoding="utf-8",
     )
-    print(f"{best['week_label']} 일정 {len(best['schedule'])}건을 저장했습니다.")
+    print(f"{best['week_label']} 원본 일정 이미지 7개 행을 저장했습니다.")
     return True
-
-
-def has_likely_ocr_errors(data: dict) -> bool:
-    for item in data.get("schedule", []):
-        training = item.get("training", "")
-        date = item.get("date", "")
-        if has_suspicious_training_text(training):
-            return True
-        if data.get("week_label", "").startswith("7월") and date.startswith("2026-07-30"):
-            return True
-    return False
 
 
 def main() -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--image", type=Path, help="로컬 이미지 OCR 테스트")
-    parser.add_argument("--week-label", help="로컬 이미지의 주차, 예: 7월 3주")
-    parser.add_argument("--force", action="store_true", help="같은 게시물도 다시 OCR")
+    parser.add_argument("--image", type=Path, help="로컬 일정표 이미지 구조 테스트")
+    parser.add_argument("--week-label", help="로컬 이미지의 주차, 예: 8월 2주")
+    parser.add_argument("--force", action="store_true", help="같은 게시물도 다시 저장")
     args = parser.parse_args()
 
     if args.image:
