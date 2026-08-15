@@ -3,7 +3,7 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20260816",
-  "updated_at": "2026-08-15 03:35 UTC",
+  "updated_at": "2026-08-15 04:26 UTC",
   "services": [
     {
       "provider": "아큐웨더",
@@ -122,47 +122,47 @@
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-08-15 12:03",
+      "updated_at": "2026-08-15 12:33",
       "rows": [
         {
           "time": "08/16 04:00",
           "weather": "강한 비",
-          "temperature": "23.0℃",
-          "rain_probability": "90%",
+          "temperature": "24.0℃",
+          "rain_probability": "80%",
           "rain_amount": "10.50",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 12:03"
+          "updated_at": "2026-08-15 12:33"
         },
         {
           "time": "08/16 05:00",
           "weather": "비",
           "temperature": "23.0℃",
-          "rain_probability": "90%",
-          "rain_amount": "8.80",
+          "rain_probability": "80%",
+          "rain_amount": "8.60",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 12:03"
+          "updated_at": "2026-08-15 12:33"
         },
         {
           "time": "08/16 06:00",
           "weather": "비",
           "temperature": "23.0℃",
           "rain_probability": "90%",
-          "rain_amount": "8.20",
+          "rain_amount": "7.40",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 12:03"
+          "updated_at": "2026-08-15 12:33"
         },
         {
           "time": "08/16 07:00",
           "weather": "강한 비",
           "temperature": "23.0℃",
           "rain_probability": "90%",
-          "rain_amount": "9.20",
+          "rain_amount": "8.70",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 12:03"
+          "updated_at": "2026-08-15 12:33"
         },
         {
           "time": "08/16 08:00",
@@ -172,7 +172,7 @@
           "rain_amount": "13.70",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 12:03"
+          "updated_at": "2026-08-15 12:33"
         }
       ]
     }
