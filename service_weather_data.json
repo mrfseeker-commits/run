@@ -3,42 +3,42 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20260816",
-  "updated_at": "2026-08-15 06:32 UTC",
+  "updated_at": "2026-08-15 07:27 UTC",
   "services": [
     {
       "provider": "아큐웨더",
       "provider_code": "ACCUWEATHER",
-      "updated_at": "2026-08-15 15:18",
+      "updated_at": "2026-08-15 16:18",
       "rows": [
         {
           "time": "08/16 04:00",
           "weather": "소나기",
           "temperature": "24.0℃",
-          "rain_probability": "54%",
-          "rain_amount": "5.50",
+          "rain_probability": "79%",
+          "rain_amount": "15.40",
           "snow_amount": "0.00",
           "wind": "북동풍",
-          "updated_at": "2026-08-15 15:18"
+          "updated_at": "2026-08-15 16:18"
         },
         {
           "time": "08/16 05:00",
-          "weather": "흐림",
+          "weather": "소나기",
           "temperature": "24.0℃",
-          "rain_probability": "49%",
-          "rain_amount": "0.00",
+          "rain_probability": "72%",
+          "rain_amount": "5.80",
           "snow_amount": "0.00",
-          "wind": "북북동풍",
-          "updated_at": "2026-08-15 15:18"
+          "wind": "북동풍",
+          "updated_at": "2026-08-15 16:18"
         },
         {
           "time": "08/16 06:00",
           "weather": "흐림",
-          "temperature": "24.0℃",
-          "rain_probability": "37%",
+          "temperature": "23.0℃",
+          "rain_probability": "49%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "북북동풍",
-          "updated_at": "2026-08-15 15:18"
+          "wind": "북동풍",
+          "updated_at": "2026-08-15 16:18"
         },
         {
           "time": "08/16 07:00",
@@ -48,81 +48,81 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "북동풍",
-          "updated_at": "2026-08-15 15:18"
+          "updated_at": "2026-08-15 16:18"
         },
         {
           "time": "08/16 08:00",
           "weather": "흐림",
-          "temperature": "25.0℃",
+          "temperature": "24.0℃",
           "rain_probability": "20%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-08-15 15:18"
+          "wind": "북동풍",
+          "updated_at": "2026-08-15 16:18"
         }
       ]
     },
     {
       "provider": "웨더채널",
       "provider_code": "TWC",
-      "updated_at": "2026-08-15 14:12",
+      "updated_at": "2026-08-15 16:12",
       "rows": [
         {
           "time": "08/16 04:00",
           "weather": "비",
-          "temperature": "24.0℃",
-          "rain_probability": "73%",
-          "rain_amount": "2.06",
+          "temperature": "23.0℃",
+          "rain_probability": "88%",
+          "rain_amount": "3.19",
           "snow_amount": "0.00",
-          "wind": "동북동풍",
-          "updated_at": "2026-08-15 14:12"
+          "wind": "북동풍",
+          "updated_at": "2026-08-15 16:12"
         },
         {
           "time": "08/16 05:00",
           "weather": "비",
-          "temperature": "24.0℃",
-          "rain_probability": "84%",
-          "rain_amount": "2.44",
+          "temperature": "23.0℃",
+          "rain_probability": "88%",
+          "rain_amount": "3.62",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-08-15 14:12"
+          "updated_at": "2026-08-15 16:12"
         },
         {
           "time": "08/16 06:00",
-          "weather": "번개뇌우",
-          "temperature": "24.0℃",
-          "rain_probability": "91%",
-          "rain_amount": "2.06",
+          "weather": "비",
+          "temperature": "23.0℃",
+          "rain_probability": "95%",
+          "rain_amount": "2.99",
           "snow_amount": "0.00",
-          "wind": "동북동풍",
-          "updated_at": "2026-08-15 14:12"
+          "wind": "북동풍",
+          "updated_at": "2026-08-15 16:12"
         },
         {
           "time": "08/16 07:00",
           "weather": "번개뇌우",
           "temperature": "23.0℃",
-          "rain_probability": "90%",
-          "rain_amount": "5.94",
+          "rain_probability": "92%",
+          "rain_amount": "6.40",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-08-15 14:12"
+          "updated_at": "2026-08-15 16:12"
         },
         {
           "time": "08/16 08:00",
           "weather": "번개뇌우",
           "temperature": "23.0℃",
-          "rain_probability": "78%",
-          "rain_amount": "8.15",
+          "rain_probability": "87%",
+          "rain_amount": "5.91",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-08-15 14:12"
+          "updated_at": "2026-08-15 16:12"
         }
       ]
     },
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-08-15 15:03",
+      "updated_at": "2026-08-15 15:33",
       "rows": [
         {
           "time": "08/16 04:00",
@@ -132,47 +132,47 @@
           "rain_amount": "7.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 15:03"
+          "updated_at": "2026-08-15 15:33"
         },
         {
           "time": "08/16 05:00",
           "weather": "비",
           "temperature": "23.0℃",
           "rain_probability": "80%",
-          "rain_amount": "5.00",
+          "rain_amount": "6.30",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 15:03"
+          "updated_at": "2026-08-15 15:33"
         },
         {
           "time": "08/16 06:00",
           "weather": "비",
           "temperature": "23.0℃",
           "rain_probability": "90%",
-          "rain_amount": "4.50",
+          "rain_amount": "5.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 15:03"
+          "updated_at": "2026-08-15 15:33"
         },
         {
           "time": "08/16 07:00",
           "weather": "비",
           "temperature": "23.0℃",
           "rain_probability": "90%",
-          "rain_amount": "4.70",
+          "rain_amount": "5.60",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 15:03"
+          "updated_at": "2026-08-15 15:33"
         },
         {
           "time": "08/16 08:00",
           "weather": "비",
           "temperature": "24.0℃",
           "rain_probability": "90%",
-          "rain_amount": "5.50",
+          "rain_amount": "6.80",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-08-15 15:03"
+          "updated_at": "2026-08-15 15:33"
         }
       ]
     }
