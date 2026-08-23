@@ -1,52 +1,52 @@
 {
-  "article_id": 3590,
-  "article_title": "8월3주 주간 일정/정산",
-  "week_label": "8월 3주",
-  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3590?menuid=13&referrerAllArticles=false",
-  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA4MTZfMTYz/MDAxNzg2ODg1MTc0MzMy.wT1MDutGmq3AYjBW1bSdlHPjJ-7LR-UEU8D04qqJBesg.CwYS6p0zszXHwC8-NV5LL9Lgg5JBStXNhHNzDutjxUIg.PNG/image.png?type=w1600",
+  "article_id": 3607,
+  "article_title": "8월4주 주간 일정/정산",
+  "week_label": "8월 4주",
+  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3607?menuid=13&referrerAllArticles=false",
+  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA4MjNfMjEz/MDAxNzg3NDc5MTQ0MzY0.kzDw9qvpRRdp2eQzUdXK3YP6skJX5ZEgwRb_KjQt_vEg.50Oa6ufpuB_nK2ZXwSZeUS9es4yGMr4aWs5Os_wc77Eg.PNG/image.png?type=w1600",
   "published_at": null,
-  "updated_at": "2026-08-16T22:22:21+09:00",
+  "updated_at": "2026-08-23T19:10:38+09:00",
   "schedule": [
     {
-      "date": "2026-08-17",
+      "date": "2026-08-24",
       "day": "월",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/monday.webp"
     },
     {
-      "date": "2026-08-18",
+      "date": "2026-08-25",
       "day": "화",
-      "training": "카이스트 2000m x 2.5set",
+      "training": "",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
-      "date": "2026-08-19",
+      "date": "2026-08-26",
       "day": "수",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/wednesday.webp"
     },
     {
-      "date": "2026-08-20",
+      "date": "2026-08-27",
       "day": "목",
-      "training": "카이스트\n(1000 + 400 + 200 ) x 3set",
+      "training": "",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
-      "date": "2026-08-21",
+      "date": "2026-08-28",
       "day": "금",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/friday.webp"
     },
     {
-      "date": "2026-08-22",
+      "date": "2026-08-29",
       "day": "토",
-      "training": "카이스트 5000m x 1set",
+      "training": "",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
-      "date": "2026-08-23",
+      "date": "2026-08-30",
       "day": "일",
-      "training": "계족산 2회전\n대구세계육상대회",
+      "training": "",
       "image_path": "assets/training/current/sunday.webp"
     }
   ],
