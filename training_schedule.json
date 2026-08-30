@@ -1,52 +1,52 @@
 {
-  "article_id": 3607,
-  "article_title": "8월4주 주간 일정/정산",
-  "week_label": "8월 4주",
-  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3607?menuid=13&referrerAllArticles=false",
-  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA4MjNfMjEz/MDAxNzg3NDc5MTQ0MzY0.kzDw9qvpRRdp2eQzUdXK3YP6skJX5ZEgwRb_KjQt_vEg.50Oa6ufpuB_nK2ZXwSZeUS9es4yGMr4aWs5Os_wc77Eg.PNG/image.png?type=w1600",
+  "article_id": 3622,
+  "article_title": "9월1주 주간 훈련/일정",
+  "week_label": "9월 1주",
+  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3622?menuid=13&referrerAllArticles=false",
+  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA4MzBfOTIg/MDAxNzg4MDg2NzEwODk0.dXbYyCPreRYBdbdGJirD3weY-a_Q3YtD-1Fa5GAOF9gg.6iA7-M3CmtcD1uF1tzurfOEXbWNJgJNsAzCHkV1nTJwg.PNG/image.png?type=w1600",
   "published_at": null,
-  "updated_at": "2026-08-23T19:10:38+09:00",
+  "updated_at": "2026-08-30T23:01:54+09:00",
   "schedule": [
     {
-      "date": "2026-08-24",
+      "date": "2026-08-31",
       "day": "월",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/monday.webp"
     },
     {
-      "date": "2026-08-25",
+      "date": "2026-09-01",
       "day": "화",
-      "training": "카이스트 2000m x 2.5set",
+      "training": "",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
-      "date": "2026-08-26",
+      "date": "2026-09-02",
       "day": "수",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/wednesday.webp"
     },
     {
-      "date": "2026-08-27",
+      "date": "2026-09-03",
       "day": "목",
-      "training": "카이스트 1000m x 5set",
+      "training": "",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
-      "date": "2026-08-28",
+      "date": "2026-09-04",
       "day": "금",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/friday.webp"
     },
     {
-      "date": "2026-08-29",
+      "date": "2026-09-05",
       "day": "토",
-      "training": "카이스트 5000m x 1set",
+      "training": "",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
-      "date": "2026-08-30",
+      "date": "2026-09-06",
       "day": "일",
-      "training": "계족산 3회전",
+      "training": "",
       "image_path": "assets/training/current/sunday.webp"
     }
   ],
