@@ -3,126 +3,126 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20260913",
-  "updated_at": "2026-09-12 05:23 UTC",
+  "updated_at": "2026-09-12 10:04 UTC",
   "services": [
     {
       "provider": "아큐웨더",
       "provider_code": "ACCUWEATHER",
-      "updated_at": "2026-09-12 13:16",
+      "updated_at": "2026-09-12 18:17",
       "rows": [
         {
           "time": "09/13 04:00",
           "weather": "맑음",
-          "temperature": "16.0℃",
+          "temperature": "17.0℃",
           "rain_probability": "0%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-09-12 13:16"
+          "updated_at": "2026-09-12 18:17"
         },
         {
           "time": "09/13 05:00",
-          "weather": "맑음",
+          "weather": "구름많음",
           "temperature": "16.0℃",
           "rain_probability": "0%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-09-12 13:16"
+          "updated_at": "2026-09-12 18:17"
         },
         {
           "time": "09/13 06:00",
-          "weather": "맑음",
-          "temperature": "15.0℃",
-          "rain_probability": "0%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "남동풍",
-          "updated_at": "2026-09-12 13:16"
-        },
-        {
-          "time": "09/13 07:00",
-          "weather": "맑음",
+          "weather": "구름많음",
           "temperature": "16.0℃",
           "rain_probability": "0%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-09-12 13:16"
+          "updated_at": "2026-09-12 18:17"
+        },
+        {
+          "time": "09/13 07:00",
+          "weather": "구름조금",
+          "temperature": "17.0℃",
+          "rain_probability": "0%",
+          "rain_amount": "0.00",
+          "snow_amount": "0.00",
+          "wind": "남동풍",
+          "updated_at": "2026-09-12 18:17"
         },
         {
           "time": "09/13 08:00",
-          "weather": "구름조금",
+          "weather": "맑음",
           "temperature": "19.0℃",
           "rain_probability": "0%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "남풍",
-          "updated_at": "2026-09-12 13:16"
+          "wind": "남남동풍",
+          "updated_at": "2026-09-12 18:17"
         }
       ]
     },
     {
       "provider": "웨더채널",
       "provider_code": "TWC",
-      "updated_at": "2026-09-12 13:13",
+      "updated_at": "2026-09-12 18:12",
       "rows": [
         {
           "time": "09/13 04:00",
           "weather": "맑음",
           "temperature": "17.0℃",
-          "rain_probability": "7%",
+          "rain_probability": "8%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남풍",
-          "updated_at": "2026-09-12 13:13"
+          "updated_at": "2026-09-12 18:12"
         },
         {
           "time": "09/13 05:00",
-          "weather": "구름조금",
-          "temperature": "16.0℃",
-          "rain_probability": "7%",
+          "weather": "맑음",
+          "temperature": "17.0℃",
+          "rain_probability": "8%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남풍",
-          "updated_at": "2026-09-12 13:13"
+          "updated_at": "2026-09-12 18:12"
         },
         {
           "time": "09/13 06:00",
-          "weather": "흐림",
+          "weather": "맑음",
           "temperature": "16.0℃",
-          "rain_probability": "7%",
+          "rain_probability": "8%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남풍",
-          "updated_at": "2026-09-12 13:13"
+          "updated_at": "2026-09-12 18:12"
         },
         {
           "time": "09/13 07:00",
           "weather": "흐림",
           "temperature": "17.0℃",
-          "rain_probability": "6%",
+          "rain_probability": "7%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남풍",
-          "updated_at": "2026-09-12 13:13"
+          "updated_at": "2026-09-12 18:12"
         },
         {
           "time": "09/13 08:00",
           "weather": "흐림",
-          "temperature": "19.0℃",
+          "temperature": "20.0℃",
           "rain_probability": "4%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남풍",
-          "updated_at": "2026-09-12 13:13"
+          "updated_at": "2026-09-12 18:12"
         }
       ]
     },
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-09-12 13:33",
+      "updated_at": "2026-09-12 18:32",
       "rows": [
         {
           "time": "09/13 04:00",
@@ -132,7 +132,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-09-12 13:33"
+          "updated_at": "2026-09-12 18:32"
         },
         {
           "time": "09/13 05:00",
@@ -142,7 +142,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-09-12 13:33"
+          "updated_at": "2026-09-12 18:32"
         },
         {
           "time": "09/13 06:00",
@@ -152,7 +152,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-09-12 13:33"
+          "updated_at": "2026-09-12 18:32"
         },
         {
           "time": "09/13 07:00",
@@ -162,7 +162,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "남동풍",
-          "updated_at": "2026-09-12 13:33"
+          "updated_at": "2026-09-12 18:32"
         },
         {
           "time": "09/13 08:00",
@@ -171,8 +171,8 @@
           "rain_probability": "10%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "남남동풍",
-          "updated_at": "2026-09-12 13:33"
+          "wind": "남풍",
+          "updated_at": "2026-09-12 18:32"
         }
       ]
     }
