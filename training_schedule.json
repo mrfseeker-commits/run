@@ -1,50 +1,50 @@
 {
-  "article_id": 3640,
-  "article_title": "9월 2주 주간 일정/정산",
-  "week_label": "9월 2주",
-  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3640?menuid=13&referrerAllArticles=false",
-  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA5MDZfODIg/MDAxNzg4NzAxODY4MDYz.onMOT7UgfS58UVF8fzWNQ7UBHbNYhnFdQq3xrp1gFasg.vH6ZEupx03luxnApBvSApxD44jUHlvuxyOpfXZ0GWD4g.PNG/image.png?type=w1600",
+  "article_id": 3659,
+  "article_title": "9월3주 주간 일정/정산",
+  "week_label": "9월 3주",
+  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3659?menuid=13&referrerAllArticles=false",
+  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjA5MTNfMjI5/MDAxNzg5Mjg5NTM3ODQx.gUCya0q9I0EBqTpdCCW_ObbkvvvUC9uVuWNYfuiUS38g.lB834-zZzwWMlskkISIjoxbcLOwEH8rF_QFgn2dm8agg.PNG/image.png?type=w1600",
   "published_at": null,
-  "updated_at": "2026-09-06T23:28:35+09:00",
+  "updated_at": "2026-09-13T21:52:54+09:00",
   "schedule": [
     {
-      "date": "2026-09-07",
+      "date": "2026-09-14",
       "day": "월",
       "training": "",
       "image_path": "assets/training/current/monday.webp"
     },
     {
-      "date": "2026-09-08",
+      "date": "2026-09-15",
       "day": "화",
       "training": "",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
-      "date": "2026-09-09",
+      "date": "2026-09-16",
       "day": "수",
       "training": "",
       "image_path": "assets/training/current/wednesday.webp"
     },
     {
-      "date": "2026-09-10",
+      "date": "2026-09-17",
       "day": "목",
       "training": "",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
-      "date": "2026-09-11",
+      "date": "2026-09-18",
       "day": "금",
       "training": "",
       "image_path": "assets/training/current/friday.webp"
     },
     {
-      "date": "2026-09-12",
+      "date": "2026-09-19",
       "day": "토",
       "training": "",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
-      "date": "2026-09-13",
+      "date": "2026-09-20",
       "day": "일",
       "training": "",
       "image_path": "assets/training/current/sunday.webp"
