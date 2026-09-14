@@ -10,43 +10,43 @@
     {
       "date": "2026-09-14",
       "day": "월",
-      "training": "",
+      "training": "자율훈련 / 갑천조깅(60분)",
       "image_path": "assets/training/current/monday.webp"
     },
     {
       "date": "2026-09-15",
       "day": "화",
-      "training": "",
+      "training": "카이스트 2000m x 2.5set",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
       "date": "2026-09-16",
       "day": "수",
-      "training": "",
+      "training": "자율훈련 / 갑천조깅(60분)",
       "image_path": "assets/training/current/wednesday.webp"
     },
     {
       "date": "2026-09-17",
       "day": "목",
-      "training": "",
+      "training": "카이스트 400m x 10set",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
       "date": "2026-09-18",
       "day": "금",
-      "training": "",
+      "training": "자율훈련 / 갑천조깅(60분)",
       "image_path": "assets/training/current/friday.webp"
     },
     {
       "date": "2026-09-19",
       "day": "토",
-      "training": "",
+      "training": "카이스트 5000m x 1set",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
       "date": "2026-09-20",
       "day": "일",
-      "training": "",
+      "training": "공주 동아 마라톤\n또는 계족산 2회전",
       "image_path": "assets/training/current/sunday.webp"
     }
   ],
