@@ -1,5 +1,5 @@
 {
-  "title": "2026 하반기 대회 일정",
+  "title": "2026~2027 대회 일정",
   "source_file": "2026_Marathon_Schedule_FactChecked.xlsx",
   "updated_at": "2026-09-19",
   "races": [
@@ -181,6 +181,85 @@
       "events": "풀, 하프, 10km, 5km",
       "note": "오전 09:30 출발",
       "source_url": "https://www.jinma.co.kr/"
+    },
+    {
+      "date": "2027-01-01",
+      "name": "2027 새해일출런",
+      "location": "서울 신정교 하부 육상트랙",
+      "events": "10km, 5km",
+      "note": "새해 첫날 해돋이 소규모 레이스",
+      "source_url": "https://www.kormarathon.com/ko/marathons/2027"
+    },
+    {
+      "date": "2027-01-17",
+      "name": "2027 철원 똥바람 알통구보대회",
+      "location": "강원 철원군 일원",
+      "events": "6.32km",
+      "note": "혹한기 맨몸 달리기 · 이색 지역 겨울 축제",
+      "source_url": "https://www.ahotu.com/ko/calendar/running/january/south-korea"
+    },
+    {
+      "date": "2027-02-14",
+      "name": "2027 해남땅끝 전국마라톤대회",
+      "location": "전남 해남 대흥사 쉼터 일원",
+      "events": "풀, 하프, 10km, 5km",
+      "note": "국토 최남단 땅끝마을 지역 풀코스 대회"
+    },
+    {
+      "date": "2027-02-21",
+      "name": "2027 희망드림 동계마라톤",
+      "location": "서울 (세부 장소 미정)",
+      "events": "종목 미정",
+      "tentative": true,
+      "note": "예상 일정 · 2월 셋째 주 주말 개최 패턴 기준"
+    },
+    {
+      "date": "2027-02-28",
+      "name": "2027 대구마라톤",
+      "location": "대구 국채보상공원 일원",
+      "events": "풀, 10km, 5km",
+      "note": "국제 엘리트·마스터즈 참가 · 상반기 메이저 대회"
+    },
+    {
+      "date": "2027-02-28",
+      "name": "2027 구미 박정희 마라톤",
+      "location": "경북 구미 (세부 장소 미정)",
+      "events": "종목 미정",
+      "tentative": true,
+      "note": "예상 일정 · 3.1절 직전 일요일 후보"
+    },
+    {
+      "date": "2027-02-28",
+      "alternative_dates": ["2027-03-07"],
+      "name": "2027 3.1절 머니투데이 마라톤",
+      "location": "장소 미정",
+      "events": "종목 미정",
+      "tentative": true,
+      "note": "예상 일정 · 두 날짜 중 미정, 공식 발표 전"
+    },
+    {
+      "date": "2027-03-14",
+      "name": "2027 정읍동학마라톤",
+      "location": "전북 정읍 (세부 장소 미정)",
+      "events": "종목 미정",
+      "tentative": true,
+      "note": "예상 일정 · 3월 둘째 일요일 후보"
+    },
+    {
+      "date": "2027-03-21",
+      "name": "2027 서울마라톤",
+      "location": "서울 광화문광장 ~ 잠실",
+      "events": "풀, 10km",
+      "note": "플래티넘 라벨 메이저 대회 · 사전 기록증 제출 필수",
+      "source_url": "https://marathongo.co.kr/raceDetail/domestic/2027-seoul-international-marathon"
+    },
+    {
+      "date": "2027-03-28",
+      "name": "2027 태화강 국제마라톤",
+      "location": "울산 (세부 장소 미정)",
+      "events": "종목 미정",
+      "tentative": true,
+      "note": "예상 일정 · 3월 28일 전후 개최 패턴 기준"
     }
   ]
 }
