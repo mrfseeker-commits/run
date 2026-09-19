@@ -1287,7 +1287,7 @@
         </section>
 
         <section id="marathon-panel" class="view-panel marathon-panel hidden" aria-labelledby="marathon-heading">
-            <h2 id="marathon-heading" class="marathon-heading">하반기 마라톤 D-Day</h2>
+            <h2 id="marathon-heading" class="marathon-heading">하반기 대회 D-Day</h2>
             <p id="marathon-meta" class="marathon-meta">대회 일정을 불러오는 중입니다.</p>
             <div id="marathon-list" class="marathon-list">
                 <div class="schedule-empty">대회 일정을 불러오는 중입니다.</div>
@@ -1505,9 +1505,10 @@
                 const today = new Date();
                 const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
                 const races = (Array.isArray(data.races) ? data.races : [])
-                    .filter(race => new Date(`${race.date}T00:00:00`) >= todayStart);
+                    .filter(race => new Date(`${race.end_date || race.date}T00:00:00`) >= todayStart)
+                    .sort((a, b) => a.date.localeCompare(b.date));
 
-                meta.textContent = `${data.title || '2026 하반기 마라톤 일정'} · 남은 ${races.length}개 대회`;
+                meta.textContent = `${data.title || '2026 하반기 대회 일정'} · 남은 ${races.length}개 대회`;
                 list.innerHTML = '';
 
                 if (!races.length) {
@@ -1517,12 +1518,19 @@
 
                 races.forEach(race => {
                     const date = new Date(`${race.date}T00:00:00`);
-                    const dateText = `${date.getMonth() + 1}/${date.getDate()} ${weekdays[date.getDay()]}요일`;
+                    let dateText = `${date.getMonth() + 1}/${date.getDate()} ${weekdays[date.getDay()]}요일`;
+                    if (race.end_date && race.end_date !== race.date) {
+                        const endDate = new Date(`${race.end_date}T00:00:00`);
+                        dateText = `${date.getMonth() + 1}/${date.getDate()}(${weekdays[date.getDay()]})`;
+                        dateText += `<br>~ ${endDate.getMonth() + 1}/${endDate.getDate()}(${weekdays[endDate.getDay()]})`;
+                    }
+                    const ddayText = race.end_date && date < todayStart
+                        ? '진행 중' : getDdayText(race.date);
                     const note = race.note ? `<span class="marathon-note">${race.note}</span>` : '';
                     list.innerHTML += `
                         <article class="marathon-item">
                             <div class="marathon-dday">
-                                ${getDdayText(race.date)}
+                                ${ddayText}
                                 <small>${dateText}</small>
                             </div>
                             <div class="marathon-info">
@@ -1534,7 +1542,7 @@
                     `;
                 });
             } catch (error) {
-                meta.textContent = '하반기 마라톤 일정';
+                meta.textContent = '하반기 대회 일정';
                 list.innerHTML = '<div class="schedule-empty">대회 일정을 불러오지 못했습니다.</div>';
                 console.log('Marathon schedule load failed:', error);
             }
