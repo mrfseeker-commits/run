@@ -60,6 +60,31 @@
             color-scheme: inherit;
         }
 
+        .calendar-direct-link {
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 4px 12px;
+            padding: 10px 16px;
+            background: var(--card-bg);
+            border-bottom: 1px solid var(--timeline-border);
+            font-size: 12px;
+            line-height: 1.5;
+        }
+
+        .calendar-direct-link span {
+            font-weight: 700;
+        }
+
+        .calendar-direct-link a {
+            min-width: 0;
+            color: var(--accent);
+            overflow-wrap: anywhere;
+            text-underline-offset: 3px;
+        }
+
         /* Header Area with Background Image */
         .header-container {
             width: 100%;
@@ -1084,7 +1109,10 @@
 </head>
 
 <body>
-
+    <div class="calendar-direct-link">
+        <span>대회 일정</span>
+        <a href="https://canlendar.hulkhogun.chatgpt.site/" target="_blank" rel="noopener noreferrer" title="대회 일정 사이트 새 탭에서 열기">https://canlendar.hulkhogun.chatgpt.site/</a>
+    </div>
     <header class="header-container">
         <div class="header-overlay"></div>
         <div class="header-content">
