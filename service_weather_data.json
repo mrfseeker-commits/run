@@ -3,136 +3,136 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20261012",
-  "updated_at": "2026-10-11 06:47 UTC",
+  "updated_at": "2026-10-11 13:45 UTC",
   "services": [
     {
       "provider": "아큐웨더",
       "provider_code": "ACCUWEATHER",
-      "updated_at": "2026-10-11 15:17",
+      "updated_at": "2026-10-11 22:18",
       "rows": [
         {
           "time": "10/12 04:00",
           "weather": "구름많음",
-          "temperature": "18.0℃",
-          "rain_probability": "0%",
+          "temperature": "17.0℃",
+          "rain_probability": "40%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-10-11 15:17"
+          "wind": "동남동풍",
+          "updated_at": "2026-10-11 22:18"
         },
         {
           "time": "10/12 05:00",
           "weather": "구름많음",
           "temperature": "17.0℃",
-          "rain_probability": "0%",
+          "rain_probability": "34%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-10-11 15:17"
+          "wind": "동남동풍",
+          "updated_at": "2026-10-11 22:18"
         },
         {
           "time": "10/12 06:00",
           "weather": "맑음",
-          "temperature": "18.0℃",
-          "rain_probability": "0%",
+          "temperature": "17.0℃",
+          "rain_probability": "23%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-10-11 15:17"
+          "wind": "동남동풍",
+          "updated_at": "2026-10-11 22:18"
         },
         {
           "time": "10/12 07:00",
           "weather": "맑음",
           "temperature": "18.0℃",
-          "rain_probability": "0%",
+          "rain_probability": "2%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-10-11 15:17"
+          "wind": "동남동풍",
+          "updated_at": "2026-10-11 22:18"
         },
         {
           "time": "10/12 08:00",
           "weather": "맑음",
           "temperature": "19.0℃",
-          "rain_probability": "0%",
+          "rain_probability": "2%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-10-11 15:17"
+          "wind": "동남동풍",
+          "updated_at": "2026-10-11 22:18"
         }
       ]
     },
     {
       "provider": "웨더채널",
       "provider_code": "TWC",
-      "updated_at": "2026-10-11 15:13",
+      "updated_at": "2026-10-11 22:12",
       "rows": [
         {
           "time": "10/12 04:00",
           "weather": "흐림",
           "temperature": "18.0℃",
-          "rain_probability": "20%",
+          "rain_probability": "11%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-10-11 15:13"
+          "updated_at": "2026-10-11 22:12"
         },
         {
           "time": "10/12 05:00",
           "weather": "흐림",
           "temperature": "18.0℃",
-          "rain_probability": "14%",
+          "rain_probability": "9%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-10-11 15:13"
+          "updated_at": "2026-10-11 22:12"
         },
         {
           "time": "10/12 06:00",
           "weather": "흐림",
-          "temperature": "17.0℃",
-          "rain_probability": "10%",
+          "temperature": "18.0℃",
+          "rain_probability": "11%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-10-11 15:13"
+          "updated_at": "2026-10-11 22:12"
         },
         {
           "time": "10/12 07:00",
           "weather": "흐림",
           "temperature": "18.0℃",
-          "rain_probability": "15%",
+          "rain_probability": "18%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-10-11 15:13"
+          "updated_at": "2026-10-11 22:12"
         },
         {
           "time": "10/12 08:00",
           "weather": "흐림",
           "temperature": "19.0℃",
-          "rain_probability": "14%",
+          "rain_probability": "10%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-10-11 15:13"
+          "updated_at": "2026-10-11 22:12"
         }
       ]
     },
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-10-11 15:03",
+      "updated_at": "2026-10-11 22:02",
       "rows": [
         {
           "time": "10/12 04:00",
           "weather": "흐림",
-          "temperature": "18.0℃",
+          "temperature": "19.0℃",
           "rain_probability": "40%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-11 15:03"
+          "updated_at": "2026-10-11 22:02"
         },
         {
           "time": "10/12 05:00",
@@ -142,7 +142,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-11 15:03"
+          "updated_at": "2026-10-11 22:02"
         },
         {
           "time": "10/12 06:00",
@@ -152,7 +152,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-11 15:03"
+          "updated_at": "2026-10-11 22:02"
         },
         {
           "time": "10/12 07:00",
@@ -162,7 +162,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-11 15:03"
+          "updated_at": "2026-10-11 22:02"
         },
         {
           "time": "10/12 08:00",
@@ -172,7 +172,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-11 15:03"
+          "updated_at": "2026-10-11 22:02"
         }
       ]
     }
