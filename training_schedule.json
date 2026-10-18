@@ -1,52 +1,52 @@
 {
-  "article_id": 3721,
-  "article_title": "10월2주 주간 일정/정산",
-  "week_label": "10월 2주",
-  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3721?menuid=13&referrerAllArticles=false",
-  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjEwMTFfMjM2/MDAxNzkxNzIzMDQ2OTgx.7J3SW5K-FjZKTfFosapEh7HyOjwftI4z6kGHhKdx8eUg.XPjJhG3_JS1gc8l1Mck3qGLV8UnLqVJWJRO_YcOJKGsg.PNG/image.png?type=w1600",
+  "article_id": 3735,
+  "article_title": "10월3주 주간 일정/정산",
+  "week_label": "10월 3주",
+  "source_url": "https://cafe.naver.com/f-e/cafes/30488045/articles/3735?menuid=13&referrerAllArticles=false",
+  "source_image_url": "https://cafeptthumb-phinf.pstatic.net/MjAyNjEwMThfMTY4/MDAxNzkyMzE5NTc4MDQ0.NGrIoBvA1-MszXm0bnaV49rnraBBOJy_-3SOHxGJqTYg.YMkM621mtpgRLgeRX-FO3DN9z_nGTMD7KfinJxco8zUg.PNG/image.png?type=w1600",
   "published_at": null,
-  "updated_at": "2026-10-12T00:59:45+09:00",
+  "updated_at": "2026-10-18T21:13:12+09:00",
   "schedule": [
     {
-      "date": "2026-10-12",
+      "date": "2026-10-19",
       "day": "월",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/monday.webp"
     },
     {
-      "date": "2026-10-13",
+      "date": "2026-10-20",
       "day": "화",
-      "training": "카이스트 1000m x 5set",
+      "training": "",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
-      "date": "2026-10-14",
+      "date": "2026-10-21",
       "day": "수",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/wednesday.webp"
     },
     {
-      "date": "2026-10-15",
+      "date": "2026-10-22",
       "day": "목",
-      "training": "카이스트 400m x 10set",
+      "training": "",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
-      "date": "2026-10-16",
+      "date": "2026-10-23",
       "day": "금",
-      "training": "자율훈련 / 갑천조깅(60분)",
+      "training": "",
       "image_path": "assets/training/current/friday.webp"
     },
     {
-      "date": "2026-10-17",
+      "date": "2026-10-24",
       "day": "토",
-      "training": "경주마라톤, 청원생명쌀 / 카이스트 2000m x 1set",
+      "training": "",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
-      "date": "2026-10-18",
+      "date": "2026-10-25",
       "day": "일",
-      "training": "대청호마라톤 / 카이스트 1만미 지속주",
+      "training": "",
       "image_path": "assets/training/current/sunday.webp"
     }
   ],
