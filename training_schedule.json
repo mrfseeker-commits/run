@@ -10,43 +10,43 @@
     {
       "date": "2026-10-19",
       "day": "월",
-      "training": "",
+      "training": "자율훈련 / 갑천조깅(60분)",
       "image_path": "assets/training/current/monday.webp"
     },
     {
       "date": "2026-10-20",
       "day": "화",
-      "training": "",
+      "training": "카이스트 1000m x 5set",
       "image_path": "assets/training/current/tuesday.webp"
     },
     {
       "date": "2026-10-21",
       "day": "수",
-      "training": "",
+      "training": "자율훈련 / 갑천조깅(60분)",
       "image_path": "assets/training/current/wednesday.webp"
     },
     {
       "date": "2026-10-22",
       "day": "목",
-      "training": "",
+      "training": "카이스트 400m x 10set",
       "image_path": "assets/training/current/thursday.webp"
     },
     {
       "date": "2026-10-23",
       "day": "금",
-      "training": "",
+      "training": "자율훈련 / 갑천조깅(60분)",
       "image_path": "assets/training/current/friday.webp"
     },
     {
       "date": "2026-10-24",
       "day": "토",
-      "training": "",
+      "training": "카이스트 1000m x 1set(대회) / 카이스트 5000m x 1set(대회 외 )",
       "image_path": "assets/training/current/saturday.webp"
     },
     {
       "date": "2026-10-25",
       "day": "일",
-      "training": "",
+      "training": "춘천마라톤 / 유성국화마라톤 / 카이스트 1만미 지속주",
       "image_path": "assets/training/current/sunday.webp"
     }
   ],
