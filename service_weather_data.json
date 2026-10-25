@@ -3,42 +3,22 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20261026",
-  "updated_at": "2026-10-25 18:06 UTC",
+  "updated_at": "2026-10-25 21:24 UTC",
   "services": [
     {
       "provider": "아큐웨더",
       "provider_code": "ACCUWEATHER",
-      "updated_at": "2026-10-26 02:17",
+      "updated_at": "2026-10-26 05:18",
       "rows": [
-        {
-          "time": "10/26 04:00",
-          "weather": "흐림",
-          "temperature": "15.0℃",
-          "rain_probability": "43%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-10-26 02:17"
-        },
-        {
-          "time": "10/26 05:00",
-          "weather": "구름많음",
-          "temperature": "14.0℃",
-          "rain_probability": "47%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-10-26 02:17"
-        },
         {
           "time": "10/26 06:00",
           "weather": "비",
           "temperature": "14.0℃",
           "rain_probability": "51%",
-          "rain_amount": "1.50",
+          "rain_amount": "0.50",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-26 02:17"
+          "updated_at": "2026-10-26 05:18"
         },
         {
           "time": "10/26 07:00",
@@ -48,7 +28,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-26 02:17"
+          "updated_at": "2026-10-26 05:18"
         },
         {
           "time": "10/26 08:00",
@@ -58,121 +38,81 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-26 02:17"
+          "updated_at": "2026-10-26 05:18"
         }
       ]
     },
     {
       "provider": "웨더채널",
       "provider_code": "TWC",
-      "updated_at": "2026-10-26 02:13",
+      "updated_at": "2026-10-26 05:13",
       "rows": [
         {
-          "time": "10/26 04:00",
+          "time": "10/26 06:00",
+          "weather": "소나기",
+          "temperature": "15.0℃",
+          "rain_probability": "31%",
+          "rain_amount": "0.00",
+          "snow_amount": "0.00",
+          "wind": "동북동풍",
+          "updated_at": "2026-10-26 05:13"
+        },
+        {
+          "time": "10/26 07:00",
+          "weather": "흐림",
+          "temperature": "15.0℃",
+          "rain_probability": "2%",
+          "rain_amount": "0.00",
+          "snow_amount": "0.00",
+          "wind": "동북동풍",
+          "updated_at": "2026-10-26 05:13"
+        },
+        {
+          "time": "10/26 08:00",
           "weather": "흐림",
           "temperature": "16.0℃",
           "rain_probability": "2%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "북동풍",
-          "updated_at": "2026-10-26 02:13"
-        },
-        {
-          "time": "10/26 05:00",
-          "weather": "흐림",
-          "temperature": "15.0℃",
-          "rain_probability": "2%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "북동풍",
-          "updated_at": "2026-10-26 02:13"
-        },
-        {
-          "time": "10/26 06:00",
-          "weather": "흐림",
-          "temperature": "14.0℃",
-          "rain_probability": "2%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-10-26 02:13"
-        },
-        {
-          "time": "10/26 07:00",
-          "weather": "흐림",
-          "temperature": "14.0℃",
-          "rain_probability": "2%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "동북동풍",
-          "updated_at": "2026-10-26 02:13"
-        },
-        {
-          "time": "10/26 08:00",
-          "weather": "흐림",
-          "temperature": "15.0℃",
-          "rain_probability": "2%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "동북동풍",
-          "updated_at": "2026-10-26 02:13"
+          "updated_at": "2026-10-26 05:13"
         }
       ]
     },
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-10-26 02:32",
+      "updated_at": "2026-10-26 05:33",
       "rows": [
-        {
-          "time": "10/26 04:00",
-          "weather": "흐림",
-          "temperature": "13.0℃",
-          "rain_probability": "40%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "동북동풍",
-          "updated_at": "2026-10-26 02:32"
-        },
-        {
-          "time": "10/26 05:00",
-          "weather": "흐림",
-          "temperature": "13.0℃",
-          "rain_probability": "40%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "동북동풍",
-          "updated_at": "2026-10-26 02:32"
-        },
         {
           "time": "10/26 06:00",
           "weather": "흐림",
           "temperature": "13.0℃",
-          "rain_probability": "40%",
+          "rain_probability": "30%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-26 02:32"
+          "updated_at": "2026-10-26 05:33"
         },
         {
           "time": "10/26 07:00",
           "weather": "흐림",
           "temperature": "13.0℃",
-          "rain_probability": "40%",
+          "rain_probability": "30%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-26 02:32"
+          "updated_at": "2026-10-26 05:33"
         },
         {
           "time": "10/26 08:00",
-          "weather": "구름 많음",
+          "weather": "맑음",
           "temperature": "14.0℃",
           "rain_probability": "10%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-10-26 02:32"
+          "updated_at": "2026-10-26 05:33"
         }
       ]
     }
