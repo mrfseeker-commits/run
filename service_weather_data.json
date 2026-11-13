@@ -3,12 +3,12 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20261114",
-  "updated_at": "2026-11-12 23:11 UTC",
+  "updated_at": "2026-11-13 05:00 UTC",
   "services": [
     {
       "provider": "아큐웨더",
       "provider_code": "ACCUWEATHER",
-      "updated_at": "2026-11-13 07:18",
+      "updated_at": "2026-11-13 13:20",
       "rows": [
         {
           "time": "11/14 04:00",
@@ -18,7 +18,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동북동풍",
-          "updated_at": "2026-11-13 07:18"
+          "updated_at": "2026-11-13 13:20"
         },
         {
           "time": "11/14 05:00",
@@ -28,7 +28,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-11-13 07:18"
+          "updated_at": "2026-11-13 13:20"
         },
         {
           "time": "11/14 06:00",
@@ -38,7 +38,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-11-13 07:18"
+          "updated_at": "2026-11-13 13:20"
         },
         {
           "time": "11/14 07:00",
@@ -48,7 +48,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-11-13 07:18"
+          "updated_at": "2026-11-13 13:20"
         },
         {
           "time": "11/14 08:00",
@@ -58,24 +58,24 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-11-13 07:18"
+          "updated_at": "2026-11-13 13:20"
         }
       ]
     },
     {
       "provider": "웨더채널",
       "provider_code": "TWC",
-      "updated_at": "2026-11-13 07:13",
+      "updated_at": "2026-11-13 13:15",
       "rows": [
         {
           "time": "11/14 04:00",
           "weather": "비",
-          "temperature": "10.0℃",
+          "temperature": "11.0℃",
           "rain_probability": "98%",
-          "rain_amount": "1.50",
+          "rain_amount": "1.40",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-11-13 07:13"
+          "updated_at": "2026-11-13 13:15"
         },
         {
           "time": "11/14 05:00",
@@ -84,95 +84,95 @@
           "rain_probability": "97%",
           "rain_amount": "1.10",
           "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-11-13 07:13"
+          "wind": "동남동풍",
+          "updated_at": "2026-11-13 13:15"
         },
         {
           "time": "11/14 06:00",
           "weather": "비",
           "temperature": "10.0℃",
-          "rain_probability": "93%",
-          "rain_amount": "1.20",
+          "rain_probability": "99%",
+          "rain_amount": "1.42",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-11-13 07:13"
+          "updated_at": "2026-11-13 13:15"
         },
         {
           "time": "11/14 07:00",
           "weather": "비",
           "temperature": "10.0℃",
-          "rain_probability": "92%",
-          "rain_amount": "0.90",
+          "rain_probability": "97%",
+          "rain_amount": "1.10",
           "snow_amount": "0.00",
           "wind": "동남동풍",
-          "updated_at": "2026-11-13 07:13"
+          "updated_at": "2026-11-13 13:15"
         },
         {
           "time": "11/14 08:00",
           "weather": "비",
           "temperature": "10.0℃",
-          "rain_probability": "84%",
-          "rain_amount": "0.70",
+          "rain_probability": "90%",
+          "rain_amount": "0.95",
           "snow_amount": "0.00",
-          "wind": "동남동풍",
-          "updated_at": "2026-11-13 07:13"
+          "wind": "남동풍",
+          "updated_at": "2026-11-13 13:15"
         }
       ]
     },
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-11-13 07:33",
+      "updated_at": "2026-11-13 13:04",
       "rows": [
         {
           "time": "11/14 04:00",
           "weather": "비",
           "temperature": "11.0℃",
           "rain_probability": "90%",
-          "rain_amount": "2.80",
+          "rain_amount": "2.60",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-11-13 07:33"
+          "updated_at": "2026-11-13 13:04"
         },
         {
           "time": "11/14 05:00",
           "weather": "비",
           "temperature": "11.0℃",
           "rain_probability": "90%",
-          "rain_amount": "2.80",
+          "rain_amount": "2.50",
           "snow_amount": "0.00",
-          "wind": "동북동풍",
-          "updated_at": "2026-11-13 07:33"
+          "wind": "동풍",
+          "updated_at": "2026-11-13 13:04"
         },
         {
           "time": "11/14 06:00",
           "weather": "비",
           "temperature": "11.0℃",
           "rain_probability": "90%",
-          "rain_amount": "2.70",
+          "rain_amount": "2.50",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-11-13 07:33"
+          "updated_at": "2026-11-13 13:04"
         },
         {
           "time": "11/14 07:00",
           "weather": "비",
-          "temperature": "11.0℃",
-          "rain_probability": "90%",
-          "rain_amount": "2.40",
-          "snow_amount": "0.00",
-          "wind": "동풍",
-          "updated_at": "2026-11-13 07:33"
-        },
-        {
-          "time": "11/14 08:00",
-          "weather": "비",
-          "temperature": "11.0℃",
+          "temperature": "10.0℃",
           "rain_probability": "90%",
           "rain_amount": "2.50",
           "snow_amount": "0.00",
           "wind": "동풍",
-          "updated_at": "2026-11-13 07:33"
+          "updated_at": "2026-11-13 13:04"
+        },
+        {
+          "time": "11/14 08:00",
+          "weather": "비",
+          "temperature": "10.0℃",
+          "rain_probability": "90%",
+          "rain_amount": "2.50",
+          "snow_amount": "0.00",
+          "wind": "동풍",
+          "updated_at": "2026-11-13 13:04"
         }
       ]
     }
