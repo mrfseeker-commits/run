@@ -3,99 +3,99 @@
   "source_url": "https://weather.naver.com/compare/07200124",
   "target_hours": "04:00-08:00",
   "target_date": "20261121",
-  "updated_at": "2026-11-20 08:19 UTC",
+  "updated_at": "2026-11-20 17:31 UTC",
   "services": [
     {
       "provider": "아큐웨더",
       "provider_code": "ACCUWEATHER",
-      "updated_at": "2026-11-20 16:19",
+      "updated_at": "2026-11-21 02:17",
       "rows": [
         {
           "time": "11/21 04:00",
-          "weather": "맑음",
-          "temperature": "-1.0℃",
-          "rain_probability": "0%",
+          "weather": "구름많음",
+          "temperature": "-3.0℃",
+          "rain_probability": "7%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "북북동풍",
-          "updated_at": "2026-11-20 16:19"
+          "updated_at": "2026-11-21 02:17"
         },
         {
           "time": "11/21 05:00",
-          "weather": "맑음",
-          "temperature": "-2.0℃",
-          "rain_probability": "0%",
+          "weather": "구름많음",
+          "temperature": "-3.0℃",
+          "rain_probability": "7%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "북북동풍",
-          "updated_at": "2026-11-20 16:19"
+          "wind": "북동풍",
+          "updated_at": "2026-11-21 02:17"
         },
         {
           "time": "11/21 06:00",
-          "weather": "맑음",
-          "temperature": "-3.0℃",
+          "weather": "구름많음",
+          "temperature": "-4.0℃",
+          "rain_probability": "5%",
+          "rain_amount": "0.00",
+          "snow_amount": "0.00",
+          "wind": "동북동풍",
+          "updated_at": "2026-11-21 02:17"
+        },
+        {
+          "time": "11/21 07:00",
+          "weather": "구름많음",
+          "temperature": "-4.0℃",
           "rain_probability": "0%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "북동풍",
-          "updated_at": "2026-11-20 16:19"
+          "updated_at": "2026-11-21 02:17"
         },
         {
-          "time": "11/21 07:00",
-          "weather": "맑음",
+          "time": "11/21 08:00",
+          "weather": "구름많음",
           "temperature": "-3.0℃",
           "rain_probability": "0%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "북북동풍",
-          "updated_at": "2026-11-20 16:19"
-        },
-        {
-          "time": "11/21 08:00",
-          "weather": "맑음",
-          "temperature": "-2.0℃",
-          "rain_probability": "0%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "북풍",
-          "updated_at": "2026-11-20 16:19"
+          "updated_at": "2026-11-21 02:17"
         }
       ]
     },
     {
       "provider": "웨더채널",
       "provider_code": "TWC",
-      "updated_at": "2026-11-20 16:13",
+      "updated_at": "2026-11-21 02:12",
       "rows": [
         {
           "time": "11/21 04:00",
-          "weather": "흐림",
+          "weather": "소낙눈",
           "temperature": "-3.0℃",
-          "rain_probability": "2%",
-          "rain_amount": "0.00",
+          "rain_probability": "39%",
+          "rain_amount": "0.04",
           "snow_amount": "0.00",
-          "wind": "서북서풍",
-          "updated_at": "2026-11-20 16:13"
+          "wind": "북북서풍",
+          "updated_at": "2026-11-21 02:12"
         },
         {
           "time": "11/21 05:00",
           "weather": "흐림",
-          "temperature": "-4.0℃",
-          "rain_probability": "2%",
+          "temperature": "-3.0℃",
+          "rain_probability": "16%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "북서풍",
-          "updated_at": "2026-11-20 16:13"
+          "wind": "북북서풍",
+          "updated_at": "2026-11-21 02:12"
         },
         {
           "time": "11/21 06:00",
           "weather": "흐림",
-          "temperature": "-4.0℃",
-          "rain_probability": "2%",
+          "temperature": "-3.0℃",
+          "rain_probability": "1%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "북풍",
-          "updated_at": "2026-11-20 16:13"
+          "wind": "북북서풍",
+          "updated_at": "2026-11-21 02:12"
         },
         {
           "time": "11/21 07:00",
@@ -105,7 +105,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "북북서풍",
-          "updated_at": "2026-11-20 16:13"
+          "updated_at": "2026-11-21 02:12"
         },
         {
           "time": "11/21 08:00",
@@ -114,15 +114,15 @@
           "rain_probability": "1%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "북서풍",
-          "updated_at": "2026-11-20 16:13"
+          "wind": "북북서풍",
+          "updated_at": "2026-11-21 02:12"
         }
       ]
     },
     {
       "provider": "웨더뉴스",
       "provider_code": "WEATHERNEWS",
-      "updated_at": "2026-11-20 16:33",
+      "updated_at": "2026-11-21 02:03",
       "rows": [
         {
           "time": "11/21 04:00",
@@ -131,8 +131,8 @@
           "rain_probability": "40%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
-          "wind": "북북동풍",
-          "updated_at": "2026-11-20 16:33"
+          "wind": "북풍",
+          "updated_at": "2026-11-21 02:03"
         },
         {
           "time": "11/21 05:00",
@@ -142,7 +142,7 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "북풍",
-          "updated_at": "2026-11-20 16:33"
+          "updated_at": "2026-11-21 02:03"
         },
         {
           "time": "11/21 06:00",
@@ -152,27 +152,27 @@
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "북풍",
-          "updated_at": "2026-11-20 16:33"
+          "updated_at": "2026-11-21 02:03"
         },
         {
           "time": "11/21 07:00",
-          "weather": "흐림",
-          "temperature": "-4.0℃",
-          "rain_probability": "40%",
-          "rain_amount": "0.00",
-          "snow_amount": "0.00",
-          "wind": "북풍",
-          "updated_at": "2026-11-20 16:33"
-        },
-        {
-          "time": "11/21 08:00",
           "weather": "흐림",
           "temperature": "-4.0℃",
           "rain_probability": "30%",
           "rain_amount": "0.00",
           "snow_amount": "0.00",
           "wind": "북풍",
-          "updated_at": "2026-11-20 16:33"
+          "updated_at": "2026-11-21 02:03"
+        },
+        {
+          "time": "11/21 08:00",
+          "weather": "구름 많음",
+          "temperature": "-3.0℃",
+          "rain_probability": "10%",
+          "rain_amount": "0.00",
+          "snow_amount": "0.00",
+          "wind": "북풍",
+          "updated_at": "2026-11-21 02:03"
         }
       ]
     }
